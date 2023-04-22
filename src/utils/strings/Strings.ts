@@ -1,5 +1,5 @@
-import { Comparator } from '../../core/comparators';
-import { Validator } from '../../core/validators';
+import { Comparator } from '../Comparator';
+import { Numbers } from '../numbers/Numbers';
 
 export abstract class Strings extends Comparator {
   static override compare(a: string, b: string): number {
@@ -9,7 +9,7 @@ export abstract class Strings extends Comparator {
   static equal(a: string, b: string): boolean;
   static equal(a: String, b: String): boolean;
   static equal<T extends string | String>(a: T, b: T): boolean {
-    if (Validator.isString(a) && Validator.isString(b)) {
+    if (Strings.isString(a) && Strings.isString(b)) {
       return a === b;
     }
 
@@ -42,27 +42,28 @@ export abstract class Strings extends Comparator {
   }
 
   static isNilOrEmpty(value?: string | null | undefined): value is null | undefined {
-    return Validator.isNullOrUndefined(value) || Strings.isEmpty(value);
+    return value === null || value === undefined || typeof value === 'undefined' || Strings.isEmpty(value);
   }
 
   static isNilOrWhiteSpace(value: string | null): value is null {
-    return Validator.isNullOrUndefined(value) || Strings.isWhiteSpace(value);
+    return Strings.isNullOrUndefined(value) || Strings.isWhiteSpace(value);
   }
 
   static isNullOrEmpty(value: string | null): value is null {
-    return Validator.isNull(value) || Strings.isEmpty(value);
+    return value === null || Strings.isEmpty(value);
   }
 
   static isNullOrWhiteSpace(value: string | null): value is null {
-    return Validator.isNull(value) || Strings.isWhiteSpace(value);
+    return value === null || Strings.isWhiteSpace(value);
   }
 
   static isString(value?: any): value is string {
-    return Validator.isString(value);
+    return typeof value === 'string';
   }
 
   static isStringObject(value?: any): value is String {
-    return Validator.isStringObject(value);
+    const proto = Object.prototype.toString.call(value);
+    return proto === '[object String]' && typeof value === 'object';
   }
 
   static isWhiteSpace(value: string): boolean {
@@ -70,7 +71,7 @@ export abstract class Strings extends Comparator {
   }
 
   static truncate(value: string, maxChars: number): string {
-    if (maxChars < 0 || !Validator.isNaturalNumber(maxChars)) {
+    if (maxChars < 0 || !Numbers.isNaturalNumber(maxChars)) {
       throw new TypeError(`Invalid string max length: ${maxChars}.`);
     }
 
@@ -79,5 +80,17 @@ export abstract class Strings extends Comparator {
     }
 
     return value;
+  }
+
+  private static isNull(value?: any): value is null {
+    return value === null;
+  }
+
+  private static isNullOrUndefined(value?: any): value is null | undefined {
+    return Strings.isNull(value) || Strings.isUndefined(value);
+  }
+
+  private static isUndefined(value?: any): value is undefined {
+    return value === undefined || typeof value === 'undefined';
   }
 }
