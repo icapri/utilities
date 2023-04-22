@@ -1,7 +1,7 @@
 import { Comparator } from '../Comparator';
 
 export abstract class Numbers extends Comparator {
-  static override compare(a: number, b: number): number {
+  public static override compare(a: number, b: number): number {
     return Comparator.compare(a, b);
   }
 

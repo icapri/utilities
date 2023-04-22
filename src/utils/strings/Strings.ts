@@ -2,13 +2,13 @@ import { Comparator } from '../Comparator';
 import { Numbers } from '../numbers/Numbers';
 
 export abstract class Strings extends Comparator {
-  static override compare(a: string, b: string): number {
+  public static override compare(a: string, b: string): number {
     return Comparator.compare(a, b);
   }
 
-  static equal(a: string, b: string): boolean;
-  static equal(a: String, b: String): boolean;
-  static equal<T extends string | String>(a: T, b: T): boolean {
+  public static equal(a: string, b: string): boolean;
+  public static equal(a: String, b: String): boolean;
+  public static equal<T extends string | String>(a: T, b: T): boolean {
     if (Strings.isString(a) && Strings.isString(b)) {
       return a === b;
     }
@@ -18,7 +18,7 @@ export abstract class Strings extends Comparator {
     return valueOfA === valueOfB;
   }
 
-  static hashCode(value: string): number {
+  public static hashCode(value: string): number {
     let hash = 0, i, chr;
     if (value.length === 0) {
       return hash;
@@ -33,44 +33,44 @@ export abstract class Strings extends Comparator {
     return hash;
   }
 
-  static hasWhiteSpace(value: string): boolean {
+  public static hasWhiteSpace(value: string): boolean {
     return value.indexOf(' ') >= 0;
   }
 
-  static isEmpty(value: string): boolean {
+  public static isEmpty(value: string): boolean {
     return !value.length;
   }
 
-  static isNilOrEmpty(value?: string | null | undefined): value is null | undefined {
-    return value === null || value === undefined || typeof value === 'undefined' || Strings.isEmpty(value);
+  public static isNilOrEmpty(value?: string | null | undefined): value is null | undefined {
+    return Strings.isNullOrUndefined(value) || Strings.isEmpty(value);
   }
 
-  static isNilOrWhiteSpace(value: string | null): value is null {
+  public static isNilOrWhiteSpace(value: string | null): value is null {
     return Strings.isNullOrUndefined(value) || Strings.isWhiteSpace(value);
   }
 
-  static isNullOrEmpty(value: string | null): value is null {
-    return value === null || Strings.isEmpty(value);
+  public static isNullOrEmpty(value: string | null): value is null {
+    return Strings.isNull(value) || Strings.isEmpty(value);
   }
 
-  static isNullOrWhiteSpace(value: string | null): value is null {
-    return value === null || Strings.isWhiteSpace(value);
+  public static isNullOrWhiteSpace(value: string | null): value is null {
+    return Strings.isNull(value) || Strings.isWhiteSpace(value);
   }
 
-  static isString(value?: any): value is string {
+  public static isString(value?: any): value is string {
     return typeof value === 'string';
   }
 
-  static isStringObject(value?: any): value is String {
+  public static isStringObject(value?: any): value is String {
     const proto = Object.prototype.toString.call(value);
     return proto === '[object String]' && typeof value === 'object';
   }
 
-  static isWhiteSpace(value: string): boolean {
+  public static isWhiteSpace(value: string): boolean {
     return !value.trim().length;
   }
 
-  static truncate(value: string, maxChars: number): string {
+  public static truncate(value: string, maxChars: number): string {
     if (maxChars < 0 || !Numbers.isNaturalNumber(maxChars)) {
       throw new TypeError(`Invalid string max length: ${maxChars}.`);
     }

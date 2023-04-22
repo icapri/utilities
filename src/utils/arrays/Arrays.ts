@@ -9,9 +9,9 @@ export abstract class Arrays {
    * @param unwantedValues Contains the values to be filtered out from the
    * array.
    */
-  static filterOut<T>(array: T[], unwantedValues: T[]): T[]
-  static filterOut<T>(array: readonly T[], unwantedValues: T[]): T[]
-  static filterOut<T>(array: T[] | readonly T[], unwantedValues: T[]): T[] | readonly T[] {
+  public static filterOut<T>(array: T[], unwantedValues: T[]): T[]
+  public static filterOut<T>(array: readonly T[], unwantedValues: T[]): T[]
+  public static filterOut<T>(array: T[] | readonly T[], unwantedValues: T[]): T[] | readonly T[] {
     return array.filter((value) => !unwantedValues.includes(value));
   }
 
@@ -22,9 +22,9 @@ export abstract class Arrays {
    * @param array Contains some array to be filtered.
    * @returns the filtered array.
    */
-  static filterTruthy<T>(array: T[]): T[]
-  static filterTruthy<T>(array: readonly T[]): readonly T[]
-  static filterTruthy<T>(array: T[] | readonly T[]): T[] | readonly T[] {
+  public static filterTruthy<T>(array: T[]): T[]
+  public static filterTruthy<T>(array: readonly T[]): readonly T[]
+  public static filterTruthy<T>(array: T[] | readonly T[]): T[] | readonly T[] {
     return array.filter(Boolean);
   }
 
@@ -34,9 +34,9 @@ export abstract class Arrays {
    * @param array Contains some array.
    * @returns the first array item.
    */
-  static first<T>(array: T[]): T | null;
-  static first<T>(array: readonly T[]): T | null;
-  static first<T>(array: T[] | readonly T[]): T | null {
+  public static first<T>(array: T[]): T | null;
+  public static first<T>(array: readonly T[]): T | null;
+  public static first<T>(array: T[] | readonly T[]): T | null {
     if (Arrays.isEmpty(array)) {
       return null;
     }
@@ -51,9 +51,9 @@ export abstract class Arrays {
    * @param item Contains the item to be checked whether it exists in the
    * given array.
    */
-  static has<T>(array: T[], item: T): boolean;
-  static has<T>(array: readonly T[], item: T): boolean;
-  static has<T>(array: T[] | readonly T[], item: T): boolean {
+  public static has<T>(array: T[], item: T): boolean;
+  public static has<T>(array: readonly T[], item: T): boolean;
+  public static has<T>(array: T[] | readonly T[], item: T): boolean {
     return array.includes(item);
   }
 
@@ -65,9 +65,9 @@ export abstract class Arrays {
    * @param item Contains the item or items to be inserted at the given index.
    * @returns the extended array.
    */
-  static insertAt<T>(array: T[], index: number, item: T): T[];
-  static insertAt<T>(array: T[], index: number, item: T[]): T[];
-  static insertAt<T>(array: T[], index: number, item: T | T[]): T[] {
+  public static insertAt<T>(array: T[], index: number, item: T): T[];
+  public static insertAt<T>(array: T[], index: number, item: T[]): T[];
+  public static insertAt<T>(array: T[], index: number, item: T | T[]): T[] {
     item = Arrays.isArray(item) ? item : [item];
     return [...array.slice(0, index), ...item, ...array.slice(index)]
   }
@@ -91,7 +91,7 @@ export abstract class Arrays {
    * @returns a new array where each of the items of the given array is followed
    * by the given separator item.
    */
-  static intersperse<T>(array: T[], separator: T): T[] {
+  public static intersperse<T>(array: T[], separator: T): T[] {
     const result: T[] = [];
     for (let i = 0; i < array.length; i++) {
       if (i !== 0) {
@@ -108,7 +108,7 @@ export abstract class Arrays {
    * @param value Contains some value.
    * @returns whether the given value is an array.
    */
-  static isArray(value?: any | any[]): value is any[] {
+  public static isArray(value?: any | any[]): value is any[] {
     return Object.prototype.toString.call(value) === '[object Array]';
   }
 
@@ -118,9 +118,9 @@ export abstract class Arrays {
    * @param array Contains some array.
    * @returns whether the given array is empty.
    */
-  static isEmpty<T>(array: T[]): boolean;
-  static isEmpty<T>(array: readonly T[]): boolean;
-  static isEmpty<T>(array: T[] | readonly T[]): boolean {
+  public static isEmpty<T>(array: T[]): boolean;
+  public static isEmpty<T>(array: readonly T[]): boolean;
+  public static isEmpty<T>(array: T[] | readonly T[]): boolean {
     return !array.length;
   }
 
@@ -130,7 +130,7 @@ export abstract class Arrays {
    * @param value Contains some value.
    * @returns whether the given value is a readonly array.
    */
-  static isReadonlyArray(value?: any | readonly any[]): value is readonly any[] {
+  public static isReadonlyArray(value?: any | readonly any[]): value is readonly any[] {
     return Arrays.isArray(value);
   }
 
@@ -140,9 +140,9 @@ export abstract class Arrays {
    * @param array Contains some array.
    * @returns the last array item.
    */
-  static last<T>(array: T[]): T | null
-  static last<T>(array: readonly T[]): T | null
-  static last<T>(array: T[] | readonly T[]): T | null {
+  public static last<T>(array: T[]): T | null
+  public static last<T>(array: readonly T[]): T | null
+  public static last<T>(array: T[] | readonly T[]): T | null {
     if (Arrays.isEmpty(array)) {
       return null;
     }
@@ -154,9 +154,9 @@ export abstract class Arrays {
    *
    * @param array Contains some array of numbers.
    */
-  static sum(array: number[]): number;
-  static sum(array: readonly number[]): number;
-  static sum(array: number[] | readonly number[]): number {
+  public static sum(array: number[]): number;
+  public static sum(array: readonly number[]): number;
+  public static sum(array: number[] | readonly number[]): number {
     return array.reduce(
       (prevValue: number, currValue: number) => prevValue + currValue,
       0
@@ -169,9 +169,9 @@ export abstract class Arrays {
    * @param array Contains some array.
    * @returns the array without duplicates.
    */
-  static unique<T>(array: T[]): T[];
-  static unique<T>(array: readonly T[]): readonly T[];
-  static unique<T>(array: T[] | readonly T[]): T[] | readonly T[] {
+  public static unique<T>(array: T[]): T[];
+  public static unique<T>(array: readonly T[]): readonly T[];
+  public static unique<T>(array: T[] | readonly T[]): T[] | readonly T[] {
     return array.filter((item, index, self) => self.indexOf(item) === index);
   }
 }
