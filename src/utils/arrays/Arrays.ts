@@ -44,12 +44,27 @@ export abstract class Arrays {
     return array[0];
   }
 
+  /**
+   * Checks whether the given array contains the given item.
+   *
+   * @param array Contains some array.
+   * @param item Contains the item to be checked whether it exists in the
+   * given array.
+   */
   static has<T>(array: T[], item: T): boolean;
   static has<T>(array: readonly T[], item: T): boolean;
   static has<T>(array: T[] | readonly T[], item: T): boolean {
     return array.includes(item);
   }
 
+  /**
+   * Inserts the given item or items at the given index in the given array. 
+   *
+   * @param array Contains some array.
+   * @param index Contains the index at which to add the given items.
+   * @param item Contains the item or items to be inserted at the given index.
+   * @returns the extended array.
+   */
   static insertAt<T>(array: T[], index: number, item: T): T[];
   static insertAt<T>(array: T[], index: number, item: T[]): T[];
   static insertAt<T>(array: T[], index: number, item: T | T[]): T[] {
