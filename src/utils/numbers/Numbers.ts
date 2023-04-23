@@ -16,4 +16,8 @@ export abstract class Numbers extends Comparator {
   public static isNumber(value?: any): value is number {
     return typeof value === 'number' && Number.isFinite(value);
   }
+
+  public static isPositiveInteger(value?: any): value is number {
+    return Numbers.isInteger(value) && value > 0;
+  }
 }

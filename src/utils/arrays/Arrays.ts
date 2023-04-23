@@ -58,7 +58,14 @@ export abstract class Arrays {
   }
 
   /**
-   * Inserts the given item or items at the given index in the given array. 
+   * Inserts the given item or items at the given index in the given array.
+   *
+   * **Example:**
+   * ```typescript
+   * const arr1 = ['f', 'o', 'o', 'b', 'r'];
+   * const arr2 = Arrays.insertAt(arr1, 4, 'a');
+   * console.log(arr2.join('')); // foobar 
+   * ```
    *
    * @param array Contains some array.
    * @param index Contains the index at which to add the given items.
@@ -122,6 +129,18 @@ export abstract class Arrays {
   public static isEmpty<T>(array: readonly T[]): boolean;
   public static isEmpty<T>(array: T[] | readonly T[]): boolean {
     return !array.length;
+  }
+
+  /**
+   * Checks whether the given array is empty.
+   *
+   * @param array Contains some array.
+   * @returns whether the given array is empty.
+   */
+  public static isNotEmpty<T>(array: T[]): boolean;
+  public static isNotEmpty<T>(array: readonly T[]): boolean;
+  public static isNotEmpty<T>(array: T[] | readonly T[]): boolean {
+    return array.length > 0;
   }
 
   /**
