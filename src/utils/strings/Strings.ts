@@ -374,7 +374,7 @@ export abstract class Strings extends Comparator {
       }
     }
 
-    return !equal;
+    return equal;
   }
 
   /**
