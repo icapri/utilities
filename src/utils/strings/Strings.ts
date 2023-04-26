@@ -10,7 +10,7 @@ export abstract class Strings extends Comparator {
    * Appends the given suffix to the given string in case the given string doesn't end
    * with the given suffix.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param suffix Contains the string suffix to be appended to the string in case it is
    * missing at the end of it.
    * @param ignoreCase Contains whether to ignore string case sensitivity.
@@ -18,24 +18,24 @@ export abstract class Strings extends Comparator {
    * @returns the extended string.
    */
   public static appendIfMissing(
-    s: string,
+    str: string,
     suffix: string,
     ignoreCase: boolean,
     ...suffixes: string[]
   ) {
-    if (Strings.isNilOrEmpty(suffix) || Strings.endsWith(s, suffix, ignoreCase)) {
-      return s;
+    if (Strings.isNilOrEmpty(suffix) || Strings.endsWith(str, suffix, ignoreCase)) {
+      return str;
     }
 
     if (Arrays.isNotEmpty(suffixes)) {
       suffixes.forEach((c) => {
-        if (Strings.endsWith(s, c, ignoreCase)) {
-          return s;
+        if (Strings.endsWith(str, c, ignoreCase)) {
+          return str;
         }
       });
     }
 
-    return s + suffix.toString();
+    return str + suffix.toString();
   }
 
   /**
@@ -46,86 +46,67 @@ export abstract class Strings extends Comparator {
    * console.log(Strings.capitalize(name)); // John
    * ```
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @returns the capitalized string.
    */
-  public static capitalize(s: string) {
-    if (Strings.isEmpty(s)) {
-      return s;
+  public static capitalize(str: string) {
+    if (Strings.isEmpty(str)) {
+      return str;
     }
 
-    return s.charAt(0).toUpperCase() + s.slice(1);
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
   /**
    * Removes the new line/-s from the given string if there are such ones.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @returns the chomped string.
    */
-  public static chomp(s: string): string {
-    if (Strings.isEmpty(s)) {
-      return s;
+  public static chomp(str: string): string {
+    if (Strings.isEmpty(str)) {
+      return str;
     }
 
-    if (s.length === 1) {
-      const firstChar = s.charAt(0);
+    if (str.length === 1) {
+      const firstChar = str.charAt(0);
       if (firstChar === Strings.CR || firstChar === Strings.LF) {
         return Strings.EMPTY;
       }
-      return s;
+      return str;
     }
 
-    let lastIndex = s.length - 1;
-    const lastChar = s.charAt(lastIndex);
-    if (lastChar === Strings.LF && s.charAt(lastIndex - 1) === Strings.CR) {
+    let lastIndex = str.length - 1;
+    const lastChar = str.charAt(lastIndex);
+    if (lastChar === Strings.LF && str.charAt(lastIndex - 1) === Strings.CR) {
       lastIndex--;
     } else if (lastChar !== Strings.CR) {
       lastIndex++;
     }
 
-    return s.substring(0, lastIndex);
+    return str.substring(0, lastIndex);
   }
 
   /**
    * Removes the last string character.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @returns the string without the last character.
    */
-  public static chop(s: string): string {
-    const length = s.length;
+  public static chop(str: string): string {
+    const length = str.length;
     if (length < 2) {
       return Strings.EMPTY;
     }
 
     const lastIndex = length - 1;
-    const result = s.substring(0, lastIndex);
-    const last = s.charAt(lastIndex);
+    const result = str.substring(0, lastIndex);
+    const last = str.charAt(lastIndex);
     if (last === Strings.LF && result.charAt(lastIndex - 1) === Strings.CR) {
       return result.substring(0, lastIndex - 1);
     }
 
     return result;
-  }
-
-  /**
-   * Coalesces the given string.
-   *
-   * @param s Contains some string.
-   * @returns the coalesced string.
-   */
-  public static coalesce(s?: string | null | undefined): string | null {
-    if (Strings.isNullOrUndefined(s)) {
-      return null;
-    }
-
-    s = s.trim();
-    if (Strings.isEmpty(s)) {
-      return null;
-    }
-
-    return s;
   }
 
   /**
@@ -160,92 +141,94 @@ export abstract class Strings extends Comparator {
   /**
    * Contains whether the given string contains the given sequence.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param sequence Contains some string sequence.
    * @param ignoreCase Contains whether to ignore case sensitivity.
    * @returns whether the given string contains the given sequence.
    */
-  public static contains(s: string, sequence: string, ignoreCase?: boolean): boolean {
+  public static contains(str: string, sequence: string, ignoreCase?: boolean): boolean {
     if (ignoreCase) {
-      return s.toLowerCase().includes(sequence.toLowerCase());
+      return str.toLowerCase().includes(sequence.toLowerCase());
     }
-    return s.includes(sequence);
+    return str.includes(sequence);
   }
 
   /**
    * Checks whether the given string contains either of the given string
    * sequences.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param sequences Contains some string sequences.
    * @returns whether the given string contains either of the given string
    * sequences.
    */
-  public static containsAny(s: string, ...sequences: string[]): boolean {
-    if (!s.length || !sequences.length) {
+  public static containsAny(str: string, ...sequences: string[]): boolean {
+    if (str.length === 0 || sequences.length === 0) {
       return false;
     }
 
-    return sequences.some((sequence) => s.includes(sequence));
+    return sequences.some((sequence) => str.includes(sequence));
   }
 
   /**
    * Checks whether the given string contains the given sequence by ignoring
    * case sensitivity.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param sequence Contains some string sequence.
    * @returns whether the given string contains the given sequence by ignoring
    * case sensitivity.
    */
-  public static containsIgnoreCase(s: string, sequence: string): boolean {
-    return Strings.contains(s, sequence, true);
+  public static containsIgnoreCase(str: string, sequence: string): boolean {
+    return Strings.contains(str, sequence, true);
   }
 
   /**
    * Checks whether the given string contains none of the given string
    * sequences.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param sequences Contains some string sequences.
    * @returns whether the given string contains none of the given string
    * sequences.
    */
-  public static containsNone(s: string, ...sequences: string[]): boolean {
-    if (!s.length || !sequences.length) {
+  public static containsNone(str: string, ...sequences: string[]): boolean {
+    if (!str.length || !sequences.length) {
       return false;
     }
 
-    return sequences.every((sequence) => !s.includes(sequence));
+    return sequences.every((sequence) => !str.includes(sequence));
   }
 
   /**
    * Counts the sequences that match the given string.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param sequence Contains some string sequence.
    * @returns the number of sequence the given string matches.
    */
-  public static countMatches(s: string, sequence: string): number {
-    if (!s.length || !sequence.length) {
+  public static countMatches(str: string, sequence: string): number {
+    if (!str.length || !sequence.length) {
       return 0;
     }
 
     const pattern = new RegExp(sequence, 'g');
-    return s.match(pattern)?.length ?? 0;
+    return str.match(pattern)?.length ?? 0;
   }
 
   /**
-   * Returns the given default string in case the given string is empty;
-   * otherwise the string itself.
+   * Returns the default string if the given string is empty.
    *
-   * @param s Contains some string.
-   * @param defaultString Contains some default string.
-   * @returns the given default string in case the given string is empty;
-   * otherwise the string itself.
+   * @param str Contains some string.
+   * @param defaultStr Contains some default string.
+   * @returns the default string if the given string is empty.
    */
-  public static defaultIfEmpty(s: string, defaultString: string): string {
-    return Strings.isEmpty(s) ? defaultString : s;
+  public static defaultIfEmpty(str: string, defaultStr: string): string {
+    if (Strings.isEmpty(str)) {
+      return defaultStr;
+    }
+
+    return str;
   }
 
   /**
@@ -254,7 +237,8 @@ export abstract class Strings extends Comparator {
    *
    * @param s1 Contains some string.
    * @param s2 Contains some other string.
-   * @returns 
+   * @returns the sequence of the second string which is not contained in
+   * the first string.
    */
   public static difference(s1: string, s2: string): string {
     const at = Strings.indexOfDifference(s1, s2);
@@ -266,71 +250,71 @@ export abstract class Strings extends Comparator {
   }
 
   /**
-   * Checks whether the given string ends with the given sequence.
+   * Checks whether a string ends with a given sequence.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param sequence Contains some string sequence.
    * @param ignoreCase Contains whether to ignore case sensitivity.
    * @returns whether the given string ends with the given sequence.
    */
-  public static endsWith(s: string, sequence: string, ignoreCase?: boolean): boolean {
-    if (Strings.isEmpty(s)) {
+  public static endsWith(str: string, sequence: string, ignoreCase?: boolean): boolean {
+    if (Strings.isEmpty(str)) {
       return false;
     }
 
     if (ignoreCase) {
-      return s.toLowerCase().endsWith(sequence.toLowerCase());
+      return str.toLowerCase().endsWith(sequence.toLowerCase());
     }
-    return s.endsWith(sequence);
+    return str.endsWith(sequence);
   }
 
   /**
    * Checks whether the given string ends with either of the given
    * string sequences.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param sequences Contains some string sequences.
    * @returns whether the given string ends with either of the given
    * string sequences.
    */
-  public static endsWithAny(s: string, ...sequences: string[]): boolean {
-    if (Strings.isEmpty(s) || Arrays.isEmpty(sequences)) {
+  public static endsWithAny(str: string, ...sequences: string[]): boolean {
+    if (Strings.isEmpty(str) || Arrays.isEmpty(sequences)) {
       return false;
     }
 
-    return sequences.some((sequence) => s.endsWith(sequence));
+    return sequences.some((sequence) => str.endsWith(sequence));
   }
 
   /**
    * Checks whether the given string ends with the given sequence (case-insensitive).
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param sequence Contains some string sequence.
    * @returns whether the given string ends with the given sequence (case-insensitive).
    */
-  public static endsWithIgnoreCase(s: string, sequence: string): boolean {
-    if (Strings.isEmpty(s)) {
+  public static endsWithIgnoreCase(str: string, sequence: string): boolean {
+    if (Strings.isEmpty(str)) {
       return false;
     }
 
-    return Strings.endsWith(s, sequence, true);
+    return Strings.endsWith(str, sequence, true);
   }
 
   /**
    * Checks whether the given string ends with neither of the given
    * string sequences.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param sequences Contains some string sequences.
    * @returns whether the given string ends with neither of the given
    * string sequences.
    */
-  public static endsWithNone(s: string, ...sequences: string[]): boolean {
-    if (Strings.isEmpty(s) || Arrays.isEmpty(sequences)) {
+  public static endsWithNone(str: string, ...sequences: string[]): boolean {
+    if (Strings.isEmpty(str) || Arrays.isEmpty(sequences)) {
       return false;
     }
 
-    return sequences.every((sequence) => !s.endsWith(sequence));
+    return sequences.every((sequence) => !str.endsWith(sequence));
   }
 
   /**
@@ -362,12 +346,13 @@ export abstract class Strings extends Comparator {
       return true;
     }
 
-    if (s1.length !== s2.length) {
+    const l1 = s1.length;
+    if (l1 !== s2.length) {
       return false;
     }
 
     let i, equal = true;
-    for (i = 0; i < s1.length; i++) {
+    for (i = 0; i < l1; i++) {
       if (s1.charAt(i).toLowerCase() !== s2.charAt(i).toLowerCase()) {
         equal = false;
         break;
@@ -380,53 +365,49 @@ export abstract class Strings extends Comparator {
   /**
    * Checks whether the given string equals any of the given sequences.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param sequences Contains some string sequences.
    * @returns whether the the given string equals any of the given sequences.
    */
-  public static equalsAny(s: string, ...sequences: string[]): boolean {
-    return sequences.some((sequence) => sequence === s);
+  public static equalsAny(str: string, ...sequences: string[]): boolean {
+    return sequences.some((sequence) => sequence === str);
   }
 
   /**
    * Checks whether the given string equals either of the given string sequences
    * by ignoring case sensitivity.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param sequences Contains some string sequences.
    * @returns whether the given string equals either of the given string sequences
    * by ignoring case sensitivity.
    */
-  public static equalsAnyIgnoreCase(s: string, ...sequences: string[]): boolean {
-    return sequences.some((sequence) => sequence.toLowerCase() === s.toLowerCase());
+  public static equalsAnyIgnoreCase(str: string, ...sequences: string[]): boolean {
+    const lowerStr = str.toLowerCase();
+    return sequences.some((sequence) => sequence.toLowerCase() === lowerStr);
   }
 
   /**
    * Gets the string bytes.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @returns the string bytes.
    */
-  public static getBytes(s: string): number {
+  public static getBytes(str: string): number {
     const textEncoder = new TextEncoder();
-    return textEncoder.encode(s).length;
+    return textEncoder.encode(str).length;
   }
 
   /**
-   * Gets the hash code from the given string. Adapted from:
-   * [StackOverflow](https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript)
+   * Gets the hash code from the given string.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @returns the hash code.
    */
-  public static hashCode(s: string): number {
-    let hash = 0, i, charCode;
-    if (s.length === 0) {
-      return hash;
-    }
-
-    for (i = 0; i < s.length; i++) {
-      charCode = s.charCodeAt(i);
+  public static hashCode(str: string): number {
+    let hash = 0, i, charCode, length = str.length;
+    for (i = 0; i < length; i++) {
+      charCode = str.charCodeAt(i);
       hash = ((hash << 5) - hash) + charCode;
       // convert the hash to a 32-bit integer
       hash |= 0;
@@ -437,11 +418,11 @@ export abstract class Strings extends Comparator {
   /**
    * Checks whether the given string has white spaces.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @returns whether the given string has white spaces.
    */
-  public static hasWhitespace(s: string): boolean {
-    return s.indexOf(' ') >= 0;
+  public static hasWhitespace(str: string): boolean {
+    return str.indexOf(' ') >= 0;
   }
 
   /**
@@ -449,7 +430,7 @@ export abstract class Strings extends Comparator {
    * the given sequence is not contained in the given string, -1 is
    * returned.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param sequence Contains some string sequence.
    * @param position Contains the index at which to begin searching
    * the String object. If omitted, search starts at the beginning
@@ -458,26 +439,26 @@ export abstract class Strings extends Comparator {
    * the given sequence is not contained in the given string, -1 is
    * returned.
    */
-  public static indexOf(s: string, sequence: string, position?: number): number {
-    return s.indexOf(sequence, position);
+  public static indexOf(str: string, sequence: string, position?: number): number {
+    return str.indexOf(sequence, position);
   }
 
   /**
    * Gets the first index of any of the given sequences in the given string.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param sequences Contains some string sequences.
    * @returns the first index of any of the given sequences in the given string.
    */
-  public static indexOfAny(s: string, ...sequences: string[]): number {
-    if (Strings.isEmpty(s) || Arrays.isEmpty(sequences)) {
+  public static indexOfAny(str: string, ...sequences: string[]): number {
+    if (Strings.isEmpty(str) || Arrays.isEmpty(sequences)) {
       return Strings.NF_INDEX;
     }
 
     let resultIndex = -1;
     sequences.forEach((sequence) => {
-      if (s.indexOf(sequence) >= 0) {
-        resultIndex = s.indexOf(sequence);
+      if (str.indexOf(sequence) >= 0) {
+        resultIndex = str.indexOf(sequence);
         return;
       }
     });
@@ -486,80 +467,87 @@ export abstract class Strings extends Comparator {
   }
 
   /**
-   * Gets the index at which the chars of both strings begin to differ.
+   * Gets the first index at which the characters of both strings begin to differ.
    *
-   * @param s1 Contains some string.
-   * @param s2 Contains some other string.
-   * @returns the index at which the chars of both strings begin to differ.
+   * @param str1 Contains some string.
+   * @param str2 Contains some other string.
+   * @returns the index at which the characters of both strings begin to differ.
    */
-  public static indexOfDifference(s1: string, s2: string): number {
-    if (s1 === s2) {
-      return Strings.NF_INDEX;
-    }
+  public static indexOfDifference(str1: string, str2: string): number {
+    if (str1 !== str2) {
+      let i, l1 = str1.length, l2 = str2.length;
+      for (i = 0; i < l1 && i < l2; ++i) {
+        if (str1.charAt(i) !== str2.charAt(i)) {
+          break;
+        }
+      }
 
-    let i;
-    for (i = 0; i < s1.length && i < s2.length; ++i) {
-      if (s1.charAt(i) !== s2.charAt(i)) {
-        break;
+      if (i < l2 || i < l1) {
+        return i;
       }
     }
 
-    return i < s2.length || i < s1.length ? i : Strings.NF_INDEX;
+    return Strings.NF_INDEX;
   }
 
   /**
    * Gets the index of the given sequence in the given string (case-insensitive).
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param sequence Contains some string sequence.
    * @param position Contains the string index at which to begin starting in
    * the given string.
    * @returns the index of the given sequence in the given string (case-insensitive).
    */
-  public static indexOfIgnoreCase(s: string, sequence: string, position?: number): number {
-    return s.toLowerCase().indexOf(sequence.toLowerCase(), position);
+  public static indexOfIgnoreCase(str: string, sequence: string, position?: number): number {
+    return str.toLowerCase().indexOf(sequence.toLowerCase(), position);
   }
 
   /**
    * Checks whether the given string is all blank i. e. white space.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @returns whether the given string is all blank i. e. white space.
    */
-  public static isAllBlank(s: string): boolean {
-    return Strings.isWhitespace(s);
+  public static isAllBlank(str: string): boolean {
+    return Strings.isWhitespace(str);
+  }
+
+  /**
+   * Checks whether the given string is binary i. e. each character of the
+   * string occupies only one byte.
+   *
+   * **Example:**
+   * ```typescript
+   * const str = '☻';
+   * console.log(Strings.isBinary(str)); // false
+   * ```
+   *
+   * @param str Contains some string.
+   * @returns whether each character of the string occupies only one byte.
+   */
+  public static isBinary(str: string) {
+    return !/[^\u0000-\u00ff]/.test(str);
   }
 
   /**
    * Checks whether the given string is empty/blank.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @returns whether the given string is empty/blank.
    */
-  public static isBlank(s: string): boolean {
-    return Strings.isEmpty(s);
+  public static isBlank(str: string): boolean {
+    return Strings.isEmpty(str);
   }
 
   /**
    * Checks whether the given string is empty/blank.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @returns whether the given string is empty/blank.
    */
-  public static isEmpty(s: string): boolean {
-    return !s.length;
-  }
-
-  /**
-   * Checks whether the given char is with high code-points in the
-   * UTF-16 encoding scheme.
-   *
-   * @param c Contains some character.
-   * @returns whether the given char is with high code-points in the
-   * UTF-16 encoding scheme.
-   */
-  public static isHighSurrogate(c: string): boolean {
-    return /[^\\uD800-\\uDBFF]/.test(c);
+  public static isEmpty(str: string): boolean {
+    return str.length === 0;
   }
 
   /**
@@ -585,81 +573,79 @@ export abstract class Strings extends Comparator {
   }
 
   /**
-   * Checks whether the given char is with low code-points in the
-   * UTF-16 encoding scheme.
-   *
-   * @param c Contains some character.
-   * @returns whether the given char is with low code-points in the
-   * UTF-16 encoding scheme.
-   */
-  public static isLowSurrogate(c: string): boolean {
-    return /[^\\uDC00-\\uDFFF]/.test(c);
-  }
-
-  /**
    * Checks  whether the given string value is `null`, `undefined` or `""`.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @returns whether the given string value is `null`, `undefined` or `""`.
    */
-  public static isNilOrEmpty(s?: string | null | undefined): s is null | undefined {
-    if (Strings.isNullOrUndefined(s)) {
+  public static isNilOrEmpty(str?: string | null | undefined): str is null | undefined {
+    if (Strings.isNullOrUndefined(str)) {
       return true;
     }
 
-    return Strings.isEmpty(s);
+    return Strings.isEmpty(str);
   }
 
   /**
    * Checks whether the given string is `null`, `undefined` or white space.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @returns whether the given string is `null`, `undefined` or white space.
    */
-  public static isNilOrWhitespace(s: string | null): s is null {
-    if (Strings.isNullOrUndefined(s)) {
+  public static isNilOrWhitespace(str: string | null): str is null {
+    if (Strings.isNullOrUndefined(str)) {
       return true;
     }
 
-    return Strings.isWhitespace(s);
+    return Strings.isWhitespace(str);
+  }
+
+  /**
+   * Checks whether the given string is not empty.
+   *
+   * @param str Contains some string.
+   * @returns whether the given string is not empty.
+   */
+  public static isNotEmpty(str: string): boolean {
+    return !Strings.isEmpty(str);
   }
 
   /**
    * Checks whether the given string is `null` or `""`.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @returns whether the given string is `null` or `""`.
    */
-  public static isNullOrEmpty(s: string | null): s is null {
-    if (Strings.isNull(s)) {
+  public static isNullOrEmpty(str: string | null): str is null {
+    if (Strings.isNull(str)) {
       return true;
     }
 
-    return Strings.isEmpty(s);
+    return Strings.isEmpty(str);
   }
 
   /**
    * Checks whether the given string is `null` or white space.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @returns whether the given string is `null` or white space.
    */
-  public static isNullOrWhiteSpace(s: string | null): s is null {
-    if (Strings.isNull(s)) {
+  public static isNullOrWhiteSpace(str: string | null): str is null {
+    if (Strings.isNull(str)) {
       return true;
     }
 
-    return Strings.isWhitespace(s);
+    return Strings.isWhitespace(str);
   }
 
   /**
    * Checks whether the given string represents a stringified number.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @returns whether the given string represents a stringified number.
    */
-  public static isNumeric(s: string) {
-    return !Number.isNaN(s) && !Number.isNaN(parseFloat(s));
+  public static isNumeric(str: string) {
+    return !Number.isNaN(str) && !Number.isNaN(parseFloat(str));
   }
 
   /**
@@ -686,13 +672,13 @@ export abstract class Strings extends Comparator {
   /**
    * Checks whether the given string is upper case.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @returns whether the given string is upper case.
    */
-  public static isUpperCase(s: string): boolean {
+  public static isUpperCase(str: string): boolean {
     let i, result = true;
-    for (i = 0; i < s.length; i++) {
-      const c = s.charAt(i);
+    for (i = 0; i < str.length; i++) {
+      const c = str.charAt(i);
       if (Strings.isNumeric(c)) {
         continue;
       }
@@ -708,79 +694,79 @@ export abstract class Strings extends Comparator {
   /**
    * Checks whether the given string is white space.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @returns whether the given string is white space.
    */
-  public static isWhitespace(s: string): boolean {
-    return !s.trim().length;
+  public static isWhitespace(str: string): boolean {
+    return !str.trim().length;
   }
 
   /**
    * Joins a given string with other strings.
    *
-   * @param s Contains some string.
-   * @param otherStrings Contains some other strings.
+   * @param str Contains some string.
+   * @param otherStrs Contains some other strings.
    * @returns a string composed of a concatenation of all the given strings.
    */
-  public static join(s: string, ...otherStrings: string[]): string {
-    return s.concat(otherStrings.join(''));
+  public static join(str: string, ...otherStrs: string[]): string {
+    return str.concat(otherStrs.join(''));
   }
 
   /**
    * Gets the last index at which the given string sequence is located in the
    * given string.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param sequence Contains some string sequence.
    * @param position Contains the index at which to begin searching in the given
    * string. If omitted, the search begins at the end of the string.
    * @returns the last index at which the given string sequence is located in the
    * given string.
    */
-  public static lastIndexOf(s: string, sequence: string, position?: number): number {
-    return s.lastIndexOf(sequence, position)
+  public static lastIndexOf(str: string, sequence: string, position?: number): number {
+    return str.lastIndexOf(sequence, position)
   }
 
   /**
    * Gets the last index at which the given string sequence is located in the
    * given string (case-insensitive).
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param sequence Contains some string sequence.
    * @param position Contains the last index at which to begin searching in the given
    * string. If omitted, the search begins at the end of the string.
    * @returns the last index at which the given string sequence is located in the
    * given string (case-insensitive).
    */
-  public static lastIndexOfIgnoreCase(s: string, sequence: string, position?: number): number {
-    return s.toLowerCase().lastIndexOf(sequence.toLowerCase(), position);
+  public static lastIndexOfIgnoreCase(str: string, sequence: string, position?: number): number {
+    return str.toLowerCase().lastIndexOf(sequence.toLowerCase(), position);
   }
 
   /**
    * Gets the `length` leftmost characters of the given string.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param length Contains the number of strings to take from the string end.
    * @returns the last `length` characters of the string as a substring.
    */
-  public static left(s: string, length: number): string {
+  public static left(str: string, length: number): string {
     if (length < 0) {
       return Strings.EMPTY;
     }
-    if (s.length <= length) {
-      return s;
+    if (str.length <= length) {
+      return str;
     }
-    return s.substring(0, length);
+    return str.substring(0, length);
   }
 
   /**
    * Converts the given string to upper case.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @returns the string converted to upper case.
    */
-  public static lowerCase(s: string): string {
-    return s.toLowerCase();
+  public static lowerCase(str: string): string {
+    return str.toLowerCase();
   }
 
   /**
@@ -793,182 +779,182 @@ export abstract class Strings extends Comparator {
    * console.log(str2); // "Lorem ipsum dolor sit"
    * ```
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param to Contains the value to show in case the string is `null`, `undefined`
    * or white space. Defaults to `""`.
    * @returns the normalized string.
    */
-  public static normalize(s: string, to: null): string | null;
-  public static normalize(s: string, to: undefined): string | undefined;
-  public static normalize(s: string, to: ''): string;
-  public static normalize(s: string, to: null | undefined | '' = ''): string | null | undefined {
-    s = s.trim();
-    if (Strings.isEmpty(s)) {
+  public static normalize(str: string, to: null): string | null;
+  public static normalize(str: string, to: undefined): string | undefined;
+  public static normalize(str: string, to: ''): string;
+  public static normalize(str: string, to: null | undefined | '' = ''): string | null | undefined {
+    str = str.trim();
+    if (Strings.isEmpty(str)) {
       return to;
     }
 
-    return s.replace(/\s+/g, ' ');
+    return str.replace(/\s+/g, ' ');
   }
 
   /**
    * Appends the given prefix to the beginning of the given string.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param prefix Contains some string prefix.
    * @returns the string prepended by the given prefix.
    */
-  public static prepend(s: string, prefix: string): string {
-    return prefix.concat(s);
+  public static prepend(str: string, prefix: string): string {
+    return prefix.concat(str);
   }
 
   /**
    * Appends the given string sequence to the beginning of the string in
    * case the string does not begin with it.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param prefix Contains some string prefix.
    * @param ignoreCase Contains whether to ignore case sensitivity.
    * @returns the extended string.
    */
-  public static prependIfMissing(s: string, prefix: string, ignoreCase: boolean) {
-    if (Strings.isEmpty(prefix) || Strings.startsWith(s, prefix, ignoreCase)) {
-      return s;
+  public static prependIfMissing(str: string, prefix: string, ignoreCase: boolean) {
+    if (Strings.isEmpty(prefix) || Strings.startsWith(str, prefix, ignoreCase)) {
+      return str;
     }
 
-    return prefix + s;
+    return prefix.concat(str);
   }
 
   /**
    * Appends the given string sequence to the beginning of the string in
    * case the string does not begin with it (case-insensitive).
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param prefix Contains some string prefix.
    * @returns the extended string.
    */
-  public static prependIfMissingIgnoreCase(s: string, prefix: string): string {
-    return Strings.prependIfMissing(s, prefix, true);
+  public static prependIfMissingIgnoreCase(str: string, prefix: string): string {
+    return Strings.prependIfMissing(str, prefix, true);
   }
 
   /**
    * Removes all the string sequences which match the given sequence.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param sequence Contains some sequence to be removed from the given string.
    * @returns the string without the given sequence.
    */
-  public static remove(s: string, sequence: string): string {
-    if (Strings.isEmpty(s) || Strings.isEmpty(sequence)) {
-      return s;
+  public static remove(str: string, sequence: string): string {
+    if (Strings.isEmpty(str) || Strings.isEmpty(sequence)) {
+      return str;
     }
 
-    if (s.indexOf(sequence) === Strings.NF_INDEX) {
-      return s;
+    if (str.indexOf(sequence) === Strings.NF_INDEX) {
+      return str;
     }
 
     const regex = new RegExp(sequence, 'gm');
-    return s.replace(regex, '');
+    return str.replace(regex, '');
   }
 
   /**
    * Removes the given sequence from the given string if the string ends with
    * it; otherwise simply returns the given string.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param sequence Contains some string sequence.
    * @returns the string without the given sequence in case it ends with it;
    * otherwise the given string is returned.
    */
-  public static removeEnd(s: string, sequence: string): string {
-    if (Strings.isEmpty(s) || Strings.isEmpty(sequence)) {
-      return s;
+  public static removeEnd(str: string, sequence: string): string {
+    if (Strings.isEmpty(str) || Strings.isEmpty(sequence)) {
+      return str;
     }
-    if (s.endsWith(sequence)) {
-      return s.substring(0, s.length - sequence.length);
+    if (str.endsWith(sequence)) {
+      return str.substring(0, str.length - sequence.length);
     }
-    return s;
+    return str;
   }
 
   /**
    * Removes the given sequence from the given string if the string ends with
    * it; otherwise simply returns the given string (case-insensitive).
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param sequence Contains some string sequence.
    * @returns the string without the given sequence in case it ends with it;
    * otherwise the given string is returned (case-insensitive).
    */
-  public static removeEndIgnoreCase(s: string, sequence: string): string {
-    if (Strings.isEmpty(s) || Strings.isEmpty(sequence)) {
-      return s;
+  public static removeEndIgnoreCase(str: string, sequence: string): string {
+    if (Strings.isEmpty(str) || Strings.isEmpty(sequence)) {
+      return str;
     }
-    if (Strings.endsWithIgnoreCase(s, sequence)) {
-      return s.substring(0, s.length - sequence.length);
+    if (Strings.endsWithIgnoreCase(str, sequence)) {
+      return str.substring(0, str.length - sequence.length);
     }
-    return s;
+    return str;
   }
 
   /**
    * Removes white spaces from the given string.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @returns the string without white space.
    */
-  public static removeWhitespace(s: string) {
-    if (Strings.isEmpty(s)) {
-      return s;
+  public static removeWhitespace(str: string) {
+    if (Strings.isEmpty(str)) {
+      return str;
     }
 
-    return s.replace(/\s/g, '');
+    return str.replace(/\s/g, '');
   }
 
   /**
    * Repeats the given string the given number of times.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param times Contains the number of times to repeat the given string.
    * @returns the `times`-repeated string.
    */
-  public static repeat(s: string, times: number): string {
-    if (Strings.isEmpty(s) || !Numbers.isPositiveInteger(times)) {
+  public static repeat(str: string, times: number): string {
+    if (Strings.isEmpty(str) || !Numbers.isPositiveInteger(times)) {
       return Strings.EMPTY;
     }
 
-    return Array(times + 1).join(s);
+    return Array(times + 1).join(str);
   }
 
   /**
    * Checks whether the given string ends with the given string sequence.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param sequence Contains some string sequence.
    * @param ignoreCase Contains whether to ignore case-sensitivity.
    * @param position Contains the index at which to begin searching
    * in the given string. If omitted, it starts with the string end.
    * @returns whether the given string ends with the given string sequence.
    */
-  public static startsWith(s: string, sequence: string, ignoreCase: boolean, position?: number): boolean {
+  public static startsWith(str: string, sequence: string, ignoreCase: boolean, position?: number): boolean {
     if (ignoreCase) {
-      return s.toLowerCase().startsWith(sequence.toLowerCase(), position);
+      return str.toLowerCase().startsWith(sequence.toLowerCase(), position);
     }
-    return s.startsWith(sequence, position);
+    return str.startsWith(sequence, position);
   }
 
   /**
    * Removes white spaces from the beginning and from the end of the given
    * string.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @returns the trimmed string.
    */
-  public static strip(s: string): string {
-    return s.trim();
+  public static strip(str: string): string {
+    return str.trim();
   }
 
   /**
    * Converts the given string to title case.
    *
-   * This method was extracted from
+   * Adapted from
    * [this StackOverflow Question](https://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript).
    * @param str Contains some string.
    * @returns the title case string.
@@ -986,41 +972,44 @@ export abstract class Strings extends Comparator {
    * Removes white spaces from the beginning and from the end of the given
    * string.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @returns the trimmed string.
    */
-  public static trim(s: string): string {
-    return s.trim();
+  public static trim(str: string): string {
+    if (Strings.isEmpty(str)) {
+      return str;
+    }
+    return str.trim();
   }
 
   /**
    * Truncates the given string to the given number of chars. The rest
    * of the chars is replaced by "...".
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @param maxChars Contains the max number of chars to show.
    * @returns the truncated string.
    */
-  public static truncate(s: string, maxChars: number): string {
+  public static truncate(str: string, maxChars: number): string {
     if (maxChars < 0 || !Numbers.isNaturalNumber(maxChars)) {
       throw new TypeError(`Invalid string max length: ${maxChars}.`);
     }
 
-    if (s.length > maxChars) {
-      return `${s.substring(0, maxChars - 1)}\u2026`;
+    if (str.length > maxChars) {
+      return `${str.substring(0, maxChars - 1)}\u2026`;
     }
 
-    return s;
+    return str;
   }
 
   /**
    * Converts the given string to upper case.
    *
-   * @param s Contains some string.
+   * @param str Contains some string.
    * @returns the string converted to upper case.
    */
-  public static upperCase(s: string): string {
-    return s.toUpperCase();
+  public static upperCase(str: string): string {
+    return str.toUpperCase();
   }
 
   /**
