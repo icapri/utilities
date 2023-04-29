@@ -1,6 +1,7 @@
 import { Arrays } from '../arrays/Arrays';
 import { Comparator } from '../Comparator';
 import { Numbers } from '../numbers/Numbers';
+import { Util } from '../Util';
 
 /**
  * Defines an abstract class with string utilities.
@@ -408,7 +409,7 @@ export abstract class Strings extends Comparator {
     let hash = 0, i, charCode, length = str.length;
     for (i = 0; i < length; i++) {
       charCode = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + charCode;
+      hash = (hash << 5) - hash + charCode;
       // convert the hash to a 32-bit integer
       hash |= 0;
     }
@@ -579,7 +580,7 @@ export abstract class Strings extends Comparator {
    * @returns whether the given string value is `null`, `undefined` or `""`.
    */
   public static isNilOrEmpty(str?: string | null | undefined): str is null | undefined {
-    if (Strings.isNullOrUndefined(str)) {
+    if (Util.isNullOrUndefined(str)) {
       return true;
     }
 
@@ -593,7 +594,7 @@ export abstract class Strings extends Comparator {
    * @returns whether the given string is `null`, `undefined` or white space.
    */
   public static isNilOrWhitespace(str: string | null): str is null {
-    if (Strings.isNullOrUndefined(str)) {
+    if (Util.isNullOrUndefined(str)) {
       return true;
     }
 
@@ -617,7 +618,7 @@ export abstract class Strings extends Comparator {
    * @returns whether the given string is `null` or `""`.
    */
   public static isNullOrEmpty(str: string | null): str is null {
-    if (Strings.isNull(str)) {
+    if (Util.isNull(str)) {
       return true;
     }
 
@@ -631,7 +632,7 @@ export abstract class Strings extends Comparator {
    * @returns whether the given string is `null` or white space.
    */
   public static isNullOrWhiteSpace(str: string | null): str is null {
-    if (Strings.isNull(str)) {
+    if (Util.isNull(str)) {
       return true;
     }
 
@@ -1010,42 +1011,6 @@ export abstract class Strings extends Comparator {
    */
   public static upperCase(str: string): string {
     return str.toUpperCase();
-  }
-
-  /**
-   * Checks whether the given value is null.
-   *
-   * @param s Contains some value.
-   * @returns whether the given value is `null`.
-   *
-   * @private
-   */
-  private static isNull(s?: any): s is null {
-    return s === null;
-  }
-
-  /**
-   * Checks whether the given value is `null` or `undefined`.
-   *
-   * @param s Contains some value.
-   * @returns whether the given value is `null` or `undefined`.
-   *
-   * @private
-   */
-  private static isNullOrUndefined(s?: any): s is null | undefined {
-    return Strings.isNull(s) || Strings.isUndefined(s);
-  }
-
-  /**
-   * Checks whether the given value is not defined.
-   *
-   * @param s Contains some value.
-   * @returns whether the given value is not defined.
-   *
-   * @private
-   */
-  private static isUndefined(s?: any): s is undefined {
-    return s === undefined || typeof s === 'undefined';
   }
 
   /**

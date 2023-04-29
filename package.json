@@ -1,8 +1,9 @@
 {
   "name": "utilities",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "TypeScript Utilities",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,14 +12,21 @@
     "type": "git",
     "url": "git+https://github.com/icapri/utilities.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "Util",
+    "Utilities",
+    "Utils"
+  ],
+  "author": "icapri",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/icapri/utilities/issues"
   },
   "homepage": "https://github.com/icapri/utilities#readme",
   "devDependencies": {
     "typescript": "^5.0.4"
-  }
+  },
+  "files": [
+    "lib/**/*"
+  ]
 }
