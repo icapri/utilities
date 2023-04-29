@@ -134,6 +134,26 @@ export abstract class Util {
   }
 
   /**
+   * Checks whether the given value is defined.
+   *
+   * @param value Contains some value.
+   * @returns whether the given value is defined.
+   */
+  public static isDefined<T>(value?: T | undefined): value is T {
+    return !Util.isUndefined(value);
+  }
+
+  /**
+   * Checks whether the given value is a function.
+   *
+   * @param value Contains some value.
+   * @returns whether the given value is a function.
+   */
+  public static isFunction(value?: any): value is Function {
+    return typeof value === 'function';
+  }
+
+  /**
    * Checks whether the given value is null.
    *
    * @param value Contains some value.
