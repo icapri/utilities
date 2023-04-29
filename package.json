@@ -1,6 +1,6 @@
 {
-  "name": "utilities",
-  "version": "1.0.0",
+  "name": "utilitates",
+  "version": "1.0.1",
   "description": "TypeScript Utilities",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
