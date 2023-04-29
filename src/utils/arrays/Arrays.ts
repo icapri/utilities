@@ -1,7 +1,58 @@
+type EachFn<T> = (item: T, index: number, self: T[]) => void;
+type ReadonlyEachFn<T> = (item: T, index: number, self: T[]) => void;
+
 /**
  * Defines an abstract class with array utilities.
  */
 export abstract class Arrays {
+  /**
+   * 
+   * @param array Contains some array.
+   * @param item Contains some array item.
+   * @returns 
+   */
+  public static addFirst<T>(array: T[], item: T): T[] {
+    if (Arrays.isEmpty(array)) {
+      return [item];
+    }
+
+    let i, result: T[] = [item];
+    for (i = 0; i < array.length; i++) {
+      result.push(array[i]);
+    }
+
+    return result;
+  }
+
+  /**
+   * Clones an array.
+   *
+   * @param array Contains some array.
+   * @returns the cloned array.
+   */
+  public static clone<T>(array: T[]): T[] {
+    return [...array];
+  }
+
+  /**
+   * Calls the given predicate for each array element.
+   *
+   * @param array Contains some array.
+   * @param predicate Contains some predicate to be executed for each array item.
+   */
+  public static each<T>(array: readonly T[], predicate: ReadonlyEachFn<T>): void;
+  public static each<T>(array: T[], predicate: EachFn<T>): void;
+  public static each<T>(
+    array: T[] | readonly T[],
+    predicate: EachFn<T> | ReadonlyEachFn<T>
+  ): void {
+    let i = 0, length = array.length;
+    while (i < length) {
+      predicate(array[i], i, array as any[]);
+      i++;
+    }
+  }
+
   /**
    * Filters out unwanted values from the given array.
    *
@@ -90,7 +141,7 @@ export abstract class Arrays {
    * console.log(arr2); // 'a', 'x', 'b', 'x', 'c'
    * ```
    * This method has been adopted from an article about readonly arrays written by
-   * [Marius Schulz](https://mariusschulz.com/blog/read-only-array-and-tuple-types-in-typescript)
+   * [Marius Schulz](https://mariusschulz.com/blog/read-only-array-and-tuple-types-in-typescript).
    *
    * @param array Contains some array.
    * @param separator Contains some separator array item which appears after each
@@ -166,6 +217,45 @@ export abstract class Arrays {
       return null;
     }
     return array[array.length - 1];
+  }
+
+  /**
+   * Sorts an array using the Quicksort Algorithm.
+   *
+   * @param array Contains some array.
+   * @returns the sorted array.
+   */
+  public static sort<T extends number>(array: T[]): T[];
+  public static sort<T extends string>(array: T[]): T[];
+  public static sort<T extends Date>(array: T[]): T[];
+  public static sort<T extends number | string | Date>(array: T[]): T[] {
+    const length = array.length;
+    if (length < 2) {
+      return array;
+    }
+
+    const pivot = array[Math.floor(Math.random() * length)];
+
+    const left: T[] = [];
+    const right: T[] = [];
+    const equal: T[] = [];
+
+    array.reduce((acc, item) => {
+      if (item < pivot) {
+        left.push(item);
+      } else if (item > pivot) {
+        right.push(item);
+      } else {
+        equal.push(item);
+      }
+      return acc;
+    }, []);
+
+    return [
+      ...Arrays.sort<any>(left),
+      ...equal,
+      ...Arrays.sort<any>(right)
+    ];
   }
 
   /**

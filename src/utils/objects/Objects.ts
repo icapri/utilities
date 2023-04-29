@@ -3,6 +3,17 @@
  */
 export abstract class Objects {
   /**
+   * Checks whether the given object has a property with the given key.
+   *
+   * @param o Contains some object.
+   * @param key Contains some key.
+   * @returns whether the given object has a property with the given key.
+   */
+  public static hasProperty<T extends object>(o: T, key: string | number | symbol): key is keyof T {
+    return Object.prototype.hasOwnProperty.call(o, key);
+  }
+
+  /**
    * Checks whether the given object is empty.
    *
    * @param o Contains some object.
