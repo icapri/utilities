@@ -5,9 +5,14 @@ import { Util } from '../Util';
  */
 type Entries<T> = Generator<(Extract<keyof T, string> | T[Extract<keyof T, string>])[], void, unknown>;
 
-export type {
-  Entries
-};
+type StringKeys<T extends object> = Omit<keyof T, number | symbol>;
+
+/**
+ * Represents the type of an iterable object.
+ */
+type IterableObject<T extends object> = Iterable<[StringKeys<T>, T[keyof T]]>;
+
+export type { Entries, IterableObject };
 
 /**
  * Gets the object entries.
@@ -163,6 +168,21 @@ export abstract class Objects {
       }
     });
     return result;
+  }
+
+  /**
+   * Makes the given object iterable.
+   *
+   * @param o Contains some object.
+   * @returns an iterable object.
+   */
+  public static toIterable<T extends object>(o: T): IterableObject<T> {
+    return {
+      ...o,
+      *[Symbol.iterator]() {
+        yield* Object.entries(o);
+      }
+    }
   }
 
   /**
