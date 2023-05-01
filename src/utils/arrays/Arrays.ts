@@ -6,10 +6,11 @@ type ReadonlyEachFn<T> = (item: T, index: number, self: T[]) => void;
  */
 export abstract class Arrays {
   /**
-   * 
+   * Adds the specified item to the beginning of the given array.
+   *
    * @param array Contains some array.
    * @param item Contains some array item.
-   * @returns 
+   * @returns an array.
    */
   public static addFirst<T>(array: T[], item: T): T[] {
     if (Arrays.isEmpty(array)) {

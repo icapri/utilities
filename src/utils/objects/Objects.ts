@@ -112,6 +112,12 @@ export abstract class Objects {
     return value !== null && typeof value === 'object';
   }
 
+  /**
+   * Checks whether the specified object has no property `null` or `undefined`.
+   *
+   * @param o Contains some object.
+   * @returns whether the specified object has no property `null` or `undefined`.
+   */
   public static noNilProps<T extends object>(o: T): boolean {
     const values = Object.values(o);
     let i = 0, length = values.length;
