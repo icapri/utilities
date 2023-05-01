@@ -281,6 +281,6 @@ export abstract class Arrays {
   public static unique<T>(array: T[]): T[];
   public static unique<T>(array: readonly T[]): readonly T[];
   public static unique<T>(array: T[] | readonly T[]): T[] | readonly T[] {
-    return array.filter((item, index, self) => self.indexOf(item) === index);
+    return [...new Set(array)];
   }
 }

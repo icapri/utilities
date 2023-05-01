@@ -96,15 +96,9 @@ export abstract class Objects {
    * @param o Contains some object.
    * @returns whether the given object is not empty.
    */
-  public static isNotEmpty<T extends object>(
-    o: T | Record<string, never>
-  ): o is Record<string, never>;
-  public static isNotEmpty<T extends Object>(
-    o: T | Record<string, never>
-  ): o is Record<string, never>;
-  public static isNotEmpty<T extends object | Object>(
-    o: T | Record<string, never>
-  ): o is Record<string, never> {
+  public static isNotEmpty<T extends object>(o: T): boolean;
+  public static isNotEmpty<T extends Object>(o: T): boolean;
+  public static isNotEmpty<T extends object | Object>(o: T): boolean {
     return !Objects.isEmpty(o);
   }
 
