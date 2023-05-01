@@ -761,6 +761,23 @@ export abstract class Strings extends Comparator {
   }
 
   /**
+   * Gets the longest of the given strings.
+   *
+   * @param strs Contains some strings.
+   * @returns the longest of the given strings.
+   */
+  public static longest(...strs: string[]): string {
+    let longestStr = Strings.EMPTY;
+    for (let str of strs) {
+      if (str.length > longestStr.length) {
+        longestStr = str;
+      }
+    }
+
+    return longestStr;
+  }
+
+  /**
    * Converts the given string to upper case.
    *
    * @param str Contains some string.

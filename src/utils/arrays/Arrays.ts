@@ -221,41 +221,33 @@ export abstract class Arrays {
   }
 
   /**
-   * Sorts an array using the Quicksort Algorithm.
+   * Sorts the specified array.
    *
    * @param array Contains some array.
    * @returns the sorted array.
    */
-  public static sort<T extends number>(array: T[]): T[];
-  public static sort<T extends string>(array: T[]): T[];
-  public static sort<T extends Date>(array: T[]): T[];
-  public static sort<T extends number | string | Date>(array: T[]): T[] {
+  public static sort<T>(array: T[]): T[] {
     const length = array.length;
     if (length < 2) {
       return array;
     }
 
-    const pivot = array[Math.floor(Math.random() * length)];
-
-    const left: T[] = [];
-    const right: T[] = [];
-    const equal: T[] = [];
-
+    const pivot = array[Math.floor(Math.random() * length)], l: T[] = [], r: T[] = [], e: T[] = [];
     array.reduce((acc, item) => {
       if (item < pivot) {
-        left.push(item);
+        l.push(item);
       } else if (item > pivot) {
-        right.push(item);
+        r.push(item);
       } else {
-        equal.push(item);
+        e.push(item);
       }
       return acc;
     }, []);
 
     return [
-      ...Arrays.sort<any>(left),
-      ...equal,
-      ...Arrays.sort<any>(right)
+      ...Arrays.sort<any>(l),
+      ...e,
+      ...Arrays.sort<any>(r)
     ];
   }
 
@@ -268,7 +260,7 @@ export abstract class Arrays {
   public static sum(array: readonly number[]): number;
   public static sum(array: number[] | readonly number[]): number {
     return array.reduce(
-      (prevValue: number, currValue: number) => prevValue + currValue,
+      (prev: number, curr: number) => prev + curr,
       0
     );
   }

@@ -51,7 +51,7 @@ console.log(normalized); // "Lorem ipsum dolor sit"
 
 ## Support
 
-Something is wrong with the library? Feel free to create an issue on GitHub and our team will work on it.
+Something isn't working as expected in this library? Feel free to create an issue on GitHub and our team will work on it.
 
 ## Contribution
 
@@ -59,4 +59,4 @@ Please contact me if you would like to contribute to utilitates.
 
 ## License
 
-[MIT License](https://github.com/icapri/utilities/blob/main/LICENSE)
+Licensed under [the MIT License](https://github.com/icapri/utilities/blob/main/LICENSE)

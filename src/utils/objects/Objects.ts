@@ -5,12 +5,10 @@ import { Util } from '../Util';
  */
 type Entries<T> = Generator<(Extract<keyof T, string> | T[Extract<keyof T, string>])[], void, unknown>;
 
-type StringKeys<T extends object> = Omit<keyof T, number | symbol>;
-
 /**
  * Represents the type of an iterable object.
  */
-type IterableObject<T extends object> = Iterable<[StringKeys<T>, T[keyof T]]>;
+type IterableObject<T extends object> = Iterable<[Omit<keyof T, number | symbol>, T[keyof T]]>;
 
 export type { Entries, IterableObject };
 
@@ -34,7 +32,64 @@ export abstract class Objects {
   /**
    * Contains an empty object.
    */
-  private static get EMPTY(): Record<string, never> { return {}; }
+  public static readonly EMPTY: {} = {} as const;
+
+  /**
+   * Checks whether the specified objects deep equal.
+   *
+   * **Example:**
+   * ```typescript
+   * const o1 = {a: '55', b: 4, c: false};
+   * const o2 = {c: false, a: '55', b: 4};
+   *
+   * console.log(Objects.deepEqual(o1, o2)); // true
+   * ```
+   *
+   * @param o1 Contains some object.
+   * @param o2 Contains some other object.
+   * @returns whether the specified objects deep equal.
+   *
+   * **Note:** According to ES3
+   */
+  public static deepEqual<T extends object>(o1: T, o2: T): boolean {
+    if (o1 === o2) {
+      return true;
+    }
+
+    if (!(o1 instanceof Object) || !(o2 instanceof Object)) {
+      return false;
+    }
+
+    if (o1.constructor !== o2.constructor) {
+      return false;
+    }
+
+    for (var p in o1) {
+      if (!Objects.hasProperty(o1, p)) {
+        continue;
+      }
+
+      if (!Objects.hasProperty(o2, p)) {
+        return false;
+      }
+
+      if (o1[p] === o2[p]) {
+        continue;
+      }
+
+      if (!Objects.isObject(o1[p]) || !Objects.deepEqual((o1 as any)[p], o2[p])) {
+        return false;
+      }
+    }
+
+    for (p in o2) {
+      if (Objects.hasProperty(o2, p) && !Objects.hasProperty(o1, p)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 
   /**
    * Gets the object entries.
@@ -44,19 +99,6 @@ export abstract class Objects {
    */
   public static entries<T extends object>(o: T): Entries<T> {
     return __entries(o);
-  }
-
-  /**
-   * Checks whether two objects are equal.
-   *
-   * @param o1 Contains some object.
-   * @param o2 Contains some other object.
-   * @param enforcePropsOrder Contains whether to consider property order during the value comparison.
-   * @param cyclic — Contains whether to check for cycles in cyclic objects.
-   * @returns whether the two objects are equal.
-   */
-  public static equal<T extends object>(o1: T, o2: T, enforcePropsOrder?: boolean, cyclic?: boolean): boolean {
-    return Util.equal(o1, o2, enforcePropsOrder, cyclic);
   }
 
   /**
@@ -171,6 +213,31 @@ export abstract class Objects {
   }
 
   /**
+   * Converts the given object to a JSON string. This method also handles
+   * circular object references.
+   *
+   * **Example:**
+   * ```typescript
+   * const obj = {self: {}};
+   * obj.self = obj;
+   *
+   * JSON.stringify(obj); // throws "TypeError: cyclic object value"
+   *
+   * console.log(Objects.toJSON(obj)); // "{}"
+   * ```
+   *
+   * @param o Contains some object.
+   * @param indent Contains the text indent to be used in the JSON string.
+   * Defaults to `2` white spaces.
+   * @returns a JSON string.
+   *
+   * @see `Objects.toJSON()`
+   */
+  public static serialize<T extends object>(o: T, indent: number | string = 2): string {
+    return Objects.toJSON(o, indent);
+  }
+
+  /**
    * Makes the given object iterable.
    *
    * @param o Contains some object.
@@ -183,6 +250,42 @@ export abstract class Objects {
         yield* Object.entries(o);
       }
     }
+  }
+
+  /**
+   * Converts the given object to a JSON string. This method also handles
+   * circular object references.
+   *
+   * **Example:**
+   * ```typescript
+   * const obj = {self: {}};
+   * obj.self = obj;
+   *
+   * JSON.stringify(obj); // throws "TypeError: cyclic object value"
+   *
+   * console.log(Objects.toJSON(obj)); // "{}"
+   * ```
+   *
+   * @param o Contains some object.
+   * @param indent Contains the text indent to be used in the JSON string.
+   * Defaults to `2` white spaces.
+   * @returns a JSON string.
+   *
+   * @see `Objects.serialize()`
+   */
+  public static toJSON<T extends object>(o: T, indent: number | string = 2): string {
+    let cache = new WeakSet<object>();
+    const json = JSON.stringify(o, (_, value) => Objects.isObject(value)
+      ? cache.has(value)
+        ? undefined // circular object reference detected
+        : cache.add(value) && value // Store value in our collection
+      : value,
+      indent
+    );
+
+    // after the cache has been used by the replacer, it can be garbage collected
+    cache = null as unknown as WeakSet<object>;
+    return json;
   }
 
   /**
