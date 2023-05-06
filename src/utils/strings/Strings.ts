@@ -6,7 +6,12 @@ import { Util } from '../Util';
 /**
  * Defines an abstract class with string utilities.
  */
-export abstract class Strings extends Comparator {
+export abstract class Strings {
+  /** @private */
+  private constructor() {
+    throw new Error('Cannot create an instance of an abstract class.');
+  }
+
   /**
    * Appends the given suffix to the given string in case the given string doesn't end
    * with the given suffix.
@@ -120,7 +125,7 @@ export abstract class Strings extends Comparator {
    * * `0`  if `a` equals `b`.
    * * `1`  if `a` is greater than `b`.
    */
-  public static override compare(a: string, b: string): number {
+  public static compare(a: string, b: string): number {
     return Comparator.compare(a, b);
   }
 

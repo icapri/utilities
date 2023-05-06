@@ -1,3 +1,4 @@
+import { Comparator } from '../Comparator';
 import { Numbers } from '../numbers/Numbers';
 
 /**
@@ -42,7 +43,7 @@ export abstract class Dates {
   /**
    * Contains the number of milliseconds in an hour.
    */
-  public static readonly MS_IN_HOUR: number = 36e5 as const;
+  public static readonly MS_IN_HOUR: number = 3.6e6 as const;
 
   /**
    * Contains the number of milliseconds in a minute.
@@ -79,6 +80,11 @@ export abstract class Dates {
    */
   public static readonly SECS_IN_YEAR: number = 31556952e3 as const;
 
+  /** @private */
+  private constructor() {
+    throw new Error('Cannot create an instance of an abstract class.');
+  }
+
   /**
    * Adds the given number of days to the date object.
    *
@@ -86,14 +92,14 @@ export abstract class Dates {
    * @param days Contains the number of days to add.
    * @returns a date object.
    */
-  public static addDays(date: Date, days: number): Date {
-    Dates.validateNaturalNumber(days);
+  public static addDays(date: string | number | Date, days: number): Date {
+    Dates.nonNegative(days);
+    const dateObj = Dates.tryParse(date);
     if (days === 0) {
-      return date;
+      return dateObj;
     }
 
-    Dates.validate(date);
-    const result = new Date(date.valueOf());
+    const result = new Date(dateObj);
     result.setDate(result.getDate() + days);
     return result;
   }
@@ -105,14 +111,14 @@ export abstract class Dates {
    * @param ms Contains the number of milliseconds to add to the given date.
    * @returns a date object.
    */
-  public static addMilliseconds(date: Date, ms: number): Date {
-    Dates.validateNaturalNumber(ms);
+  public static addMilliseconds(date: string | number | Date, ms: number): Date {
+    Dates.nonNegative(ms);
+    const dateObj = Dates.tryParse(date);
     if (ms === 0) {
-      return date;
+      return dateObj;
     }
 
-    Dates.validate(date);
-    return new Date(date.getTime() + ms);
+    return new Date(dateObj.getTime() + ms);
   }
 
   /**
@@ -122,14 +128,14 @@ export abstract class Dates {
    * @param minutes Contains the number of minutes to add to the specified date.
    * @returns a date object.
    */
-  public static addMinutes(date: Date, minutes: number): Date {
-    Dates.validateNaturalNumber(minutes);
+  public static addMinutes(date: string | number | Date, minutes: number): Date {
+    Dates.nonNegative(minutes);
+    const dateObj = Dates.tryParse(date);
     if (minutes === 0) {
-      return date;
+      return dateObj;
     }
 
-    Dates.validate(date);
-    return Dates.addMilliseconds(date, minutes * Dates.MS_IN_MINUTE);
+    return new Date(dateObj.getTime() + minutes * Dates.MS_IN_MINUTE);
   }
 
   /**
@@ -139,13 +145,14 @@ export abstract class Dates {
    * @param months Contains the number of months to add to the specified date.
    * @returns a date object.
    */
-  public static addMonths(date: Date, months: number): Date {
-    Dates.validateNaturalNumber(months);
+  public static addMonths(date: string | number | Date, months: number): Date {
+    Dates.nonNegative(months);
+    const dateObj = Dates.tryParse(date);
     if (months === 0) {
-      return date;
+      return dateObj;
     }
 
-    return new Date(date.setMonth(date.getMonth() + months));
+    return new Date(dateObj.setMonth(dateObj.getMonth() + months));
   }
 
   /**
@@ -155,13 +162,15 @@ export abstract class Dates {
    * @param seconds Contains the number of seconds to add to the specified date.
    * @returns a date object.
    */
-  public static addSeconds(date: Date, seconds: number): Date {
-    Dates.validateNaturalNumber(seconds);
+  public static addSeconds(date: string | number | Date, seconds: number): Date {
+    Dates.nonNegative(seconds);
+    const dateObj = Dates.tryParse(date);
     if (seconds === 0) {
-      return date;
+      return dateObj;
     }
 
-    return Dates.addMilliseconds(date, seconds * Dates.MS_IN_SECOND);
+    dateObj.setSeconds(dateObj.getSeconds() + seconds);
+    return dateObj;
   }
 
   /**
@@ -171,14 +180,15 @@ export abstract class Dates {
    * @param weeks Contains the number of weeks to add to the specified date.
    * @returns a date object.
    */
-  public static addWeeks(date: Date, weeks: number): Date {
-    Dates.validateNaturalNumber(weeks);
+  public static addWeeks(date: string | number | Date, weeks: number): Date {
+    Dates.nonNegative(weeks);
+    const dateObj = Dates.tryParse(date);
     if (weeks === 0) {
-      return date;
+      return dateObj;
     }
 
-    const days = weeks * 7;
-    return Dates.addDays(date, days);
+    dateObj.setDate(dateObj.getDate() + (weeks * 7));
+    return dateObj;
   }
 
   /**
@@ -188,20 +198,46 @@ export abstract class Dates {
    * @param years Contains the number of years to add to the specified date.
    * @returns a date object.
    */
-  public static addYears(date: Date, years: number): Date {
-    Dates.validateNaturalNumber(years);
+  public static addYears(date: string | number | Date, years: number): Date {
+    Dates.nonNegative(years);
+    const dateObj = Dates.tryParse(date);
     if (years === 0) {
-      return date;
+      return dateObj;
     }
 
-    return Dates.addMonths(date, years * 12);
+    dateObj.setFullYear(dateObj.getFullYear() + years);
+    return dateObj;
   }
 
   /**
-   * Gets the date after tomorrow. The time is ignored.
+   * Gets the date after tomorrow at midnight i. e. at start of the day.
    */
   public static get afterTomorrow(): Date {
-    return Dates.addDays(Dates.today, 2);
+    const afterTomorrow = Dates.now;
+    afterTomorrow.setDate(afterTomorrow.getDate() + 2);
+    return Dates.dateOnly(afterTomorrow);
+  }
+
+  /**
+   * Gets the start of the day i. e. the midnight date.
+   *
+   * **Example:**
+   * ```typescript
+   * const date = new Date("2023-05-06T11:59:04.623Z");
+   * const midnight = Dates.atStartOfDay(date); // "2023-05-06T00:00:00.000Z"
+   * ```
+   *
+   * @param date Contains some date object. If this is not defined
+   * the midnight date of the current date is used.
+   * @returns a date object.
+   */
+  public static atStartOfDay(date?: string | number | Date): Date {
+    if (date) {
+      const dateObj = Dates.tryParse(date);
+      return Dates.dateOnly(dateObj);
+    }
+
+    return Dates.dateOnly(Dates.now);
   }
 
   /**
@@ -211,8 +247,21 @@ export abstract class Dates {
    * @returns a cloned copy of the given date object. 
    */
   public static clone(date: Date): Date {
-    Dates.validate(date);
-    return new Date(date.getTime());
+    return Dates.tryParse(date);
+  }
+
+  /**
+   * Compares two date objects. Useful for array sorting.
+   *
+   * @param a Contains some date object.
+   * @param b Contains some other date object.
+   * @returns
+   * * `-1` if `a` is before than `b`.
+   * * `0`  if `a` equals `b`.
+   * * `1`  if `a` is after than `b`.
+   */
+  public static compare(a: Date, b: Date): number {
+    return Comparator.compare(a, b);
   }
 
   /**
@@ -222,22 +271,32 @@ export abstract class Dates {
    * @returns only the date part of the date object i. e. the time
    * is zeroed.
    */
-  public static dateOnly(date: Date): Date {
-    Dates.validate(date);
-    const dateStr = date.toISOString();
-    return new Date(dateStr.substring(0, dateStr.indexOf('T')));
+  public static dateOnly(date: string | number | Date): Date {
+    return Dates.atStartOfDay(date);
   }
 
   /**
    * Gets the days difference between the two dates.
    *
+   * _Note:_ The time of the day object is not taken into account from this
+   * method.
+   *
+   * **Example:**
+   * ```typescript
+   * const now = Dates.now; // "2023-05-06T14:31:13.661Z"
+   * const afterTomorrow = Dates.afterTomorrow; // "2023-05-08T14:31:13.662Z"
+   * const daysDiff = Dates.daysDifference(now, afterTomorrow); // 3
+   * ```
+   *
    * @param date Contains some date object.
    * @param other Contains some other date object.
    * @returns the days difference between the two dates.
    */
-  public static daysDifference(date: Date, other: Date): number {
-    const timeDifference = Dates.timeDifference(date, other);
-    return Math.ceil(timeDifference / Dates.MS_IN_DAY);
+  public static daysDifference(date: string | number | Date, other: string | number | Date): number {
+    const dateObj = Dates.tryParse(date);
+    const otherObj = Dates.tryParse(other);
+    const timeDiff = Dates.timeDifference(dateObj, otherObj);
+    return Math.ceil(timeDiff / Dates.MS_IN_DAY);
   }
 
   /**
@@ -249,15 +308,62 @@ export abstract class Dates {
    * objects during the comparison.
    * @returns whether the two date objects are equal.
    */
-  public static equal(a: Date, b: Date, ignoreTime: boolean = false): boolean {
-    Dates.validate(a);
-    Dates.validate(b);
+  public static equal(
+    a: string | number | Date,
+    b: string | number | Date,
+    ignoreTime: boolean = false
+  ): boolean {
+    const aObj = Dates.tryParse(a);
+    const bObj = Dates.tryParse(b);
     if (ignoreTime) {
       const x = Dates.dateOnly(a);
       const y = Dates.dateOnly(b);
       return x.getTime() === y.getTime();
     }
-    return a.getTime() === b.getTime();
+
+    return aObj.getTime() === bObj.getTime();
+  }
+
+  /**
+   * Parses the given value as a date object.
+   *
+   * @param value Contains some string, number or Date object. If this argument
+   * is not defined, the current date is returned.
+   * @returns a date object in case the specified value can be parsed as a
+   * date object; otherwise `null`.
+   */
+  public static from(value?: string | number | Date): Date | null {
+    if (Dates.isDate(value) && Dates.isValid(value)) {
+      return value;
+    }
+
+    value ??= new Date();
+    let date: Date;
+    if (typeof value === 'string' && value.match(/(-\d\d|(\+|-)\d{2}:\d{2}|Z)$/gm)) {
+      date = new Date(value);
+    } else {
+      if (!(value instanceof Date)) {
+        value = new Date(value);
+      }
+
+      date = new Date(
+        Date.UTC(
+          value.getFullYear(),
+          value.getMonth(),
+          value.getDate(),
+          value.getHours(),
+          value.getMinutes(),
+          value.getSeconds(),
+          value.getMilliseconds()
+        )
+      );
+    }
+
+    if (Dates.isValid(date)) {
+      return date;
+    }
+
+    return null;
   }
 
   /**
@@ -268,15 +374,15 @@ export abstract class Dates {
    * @returns the number of ms between midnight, January 1, 1970 Universal
    * Coordinated Time a. k. a. GMT and the given date.
    */
-  public static getUTC(fromDate: Date): number {
-    Dates.validate(fromDate);
-    const yy = fromDate.getFullYear();
-    const MM = fromDate.getMonth();
-    const dd = fromDate.getDate();
-    const hh = fromDate.getHours();
-    const mm = fromDate.getMinutes();
-    const ss = fromDate.getSeconds();
-    const ms = fromDate.getMilliseconds();
+  public static getUTC(fromDate: string | number | Date): number {
+    const fromDateObj = Dates.tryParse(fromDate);
+    const yy = fromDateObj.getFullYear();
+    const MM = fromDateObj.getMonth();
+    const dd = fromDateObj.getDate();
+    const hh = fromDateObj.getHours();
+    const mm = fromDateObj.getMinutes();
+    const ss = fromDateObj.getSeconds();
+    const ms = fromDateObj.getMilliseconds();
     return Date.UTC(yy, MM, dd, hh, mm, ss, ms);
   }
 
@@ -288,9 +394,9 @@ export abstract class Dates {
    * @returns the difference in hours between the two specified dates.
    */
   public static hoursDifference(date: Date, other: Date): number {
-    Dates.validate(date);
-    Dates.validate(other);
-    return Math.abs(date.getTime() - other.getTime()) / Dates.MS_IN_HOUR;
+    const dateObj = Dates.tryParse(date);
+    const otherObj = Dates.tryParse(other);
+    return Numbers.abs(dateObj.getTime() - otherObj.getTime()) / Dates.MS_IN_HOUR;
   }
 
   /**
@@ -302,15 +408,20 @@ export abstract class Dates {
    * objects during the comparison.
    * @returns whether the first date is after the second one.
    */
-  public static isAfter(date: Date, other: Date, ignoreTime: boolean = false): boolean {
-    Dates.validate(date);
-    Dates.validate(other);
+  public static isAfter(
+    date: string | number | Date,
+    other: string | number | Date,
+    ignoreTime: boolean = false
+  ): boolean {
     if (ignoreTime) {
       const x = Dates.dateOnly(date);
       const y = Dates.dateOnly(other);
       return x.getTime() > y.getTime();
     }
-    return date.getTime() > other.getTime();
+
+    const dateObj = Dates.tryParse(date);
+    const otherObj = Dates.tryParse(other);
+    return dateObj.getTime() > otherObj.getTime();
   }
 
   /**
@@ -322,15 +433,20 @@ export abstract class Dates {
    * objects during the comparison.
    * @returns whether the first date is before the second one.
    */
-  public static isBefore(date: Date, other: Date, ignoreTime: boolean = false): boolean {
-    Dates.validate(date);
-    Dates.validate(other);
+  public static isBefore(
+    date: string | number | Date,
+    other: string | number | Date,
+    ignoreTime: boolean = false
+  ): boolean {
     if (ignoreTime) {
       const x = Dates.dateOnly(date);
       const y = Dates.dateOnly(other);
       return x.getTime() < y.getTime();
     }
-    return date.getTime() < other.getTime();
+
+    const dateObj = Dates.tryParse(date);
+    const otherObj = Dates.tryParse(other);
+    return dateObj.getTime() < otherObj.getTime();
   }
 
   /**
@@ -343,9 +459,9 @@ export abstract class Dates {
    * @returns whether the given date is between the given date range.
    */
   public static isBetween(
-    date: Date,
-    from: Date,
-    to: Date,
+    date: string | number | Date,
+    from: string | number | Date,
+    to: string | number | Date,
     incl: '(]' | '()' | '[]' | '[)' = '()'
   ): boolean {
     if (!['()', '[]', '(]', '[)'].includes(incl)) {
@@ -389,15 +505,15 @@ export abstract class Dates {
    * objects during the comparison.
    * @returns whether the given date is in the future.
    */
-  public static isFuture(date: Date, ignoreTime: boolean = false): boolean {
-    Dates.validate(date);
-    const today = Dates.today;
+  public static isFuture(date: string | number | Date, ignoreTime: boolean = false): boolean {
+    const now = Dates.now;
+    const dateObj = Dates.tryParse(date);
     if (ignoreTime) {
-      const x = Dates.dateOnly(date);
-      return Dates.isAfter(x, today);
+      const x = Dates.dateOnly(dateObj);
+      return Dates.isAfter(x, now);
     }
 
-    return Dates.isAfter(date, today);
+    return Dates.isAfter(dateObj, now);
   }
 
   /**
@@ -417,10 +533,10 @@ export abstract class Dates {
    * @param other Contains some other date object.
    * @returns the difference in milliseconds between the two specified dates.
    */
-  public static millisecondsDifference(date: Date, other: Date): number {
-    Dates.validate(date);
-    Dates.validate(other);
-    return date.getTime() - other.getTime();
+  public static millisecondsDifference(date: string | number | Date, other: string | number | Date): number {
+    const dateObj = Dates.tryParse(date);
+    const otherObj = Dates.tryParse(other);
+    return Numbers.abs(dateObj.getTime() - otherObj.getTime());
   }
 
   /**
@@ -430,9 +546,7 @@ export abstract class Dates {
    * @param other Contains some other date object.
    * @returns the difference in minutes between the two specified dates.
    */
-  public static minutesDifference(date: Date, other: Date): number {
-    Dates.validate(date);
-    Dates.validate(other);
+  public static minutesDifference(date: string | number | Date, other: string | number | Date): number {
     const msDifference = Dates.millisecondsDifference(date, other);
     return Math.round(((msDifference % Dates.MS_IN_DAY) % 36e5) / 6e4);
   }
@@ -444,23 +558,23 @@ export abstract class Dates {
    * @param other Contains some other date object.
    * @returns the difference in months between the two specified dates.
    */
-  public static monthsDifference(date: Date, other: Date) {
+  public static monthsDifference(date: string | number | Date, other: string | number | Date) {
+    const dateObj = Dates.tryParse(date);
+    const otherObj = Dates.tryParse(other);
     let months;
-    months = (other.getFullYear() - date.getFullYear()) * 12;
-    months -= date.getMonth();
-    months += other.getMonth();
-    if (months <= 0) {
-      return 0;
-    }
-
-    return months;
+    months = (otherObj.getFullYear() - dateObj.getFullYear()) * 12;
+    months -= dateObj.getMonth();
+    months += otherObj.getMonth();
+    return Numbers.abs(months);
   }
 
   /**
-   * Gets the date and time now.
+   * Gets the local date and time now.
    */
   public static get now(): Date {
-    return new Date();
+    const dateNow = new Date();
+    const offset = Dates.getTimezoneOffset(dateNow);
+    return new Date(dateNow.valueOf() - offset);
   }
 
   /**
@@ -471,18 +585,11 @@ export abstract class Dates {
    * a valid date; otherwise null.
    */
   public static parse(value?: any): Date | null {
-    if (Dates.isValid(value)) {
+    if (Dates.isDate(value) && Dates.isValid(value)) {
       return value;
     }
 
-    const ms = Date.parse(value);
-    const date = new Date(ms);
-    if (Dates.isValid(date)) {
-      const offset = Dates.getTimezoneOffset(date);
-      return new Date(date.getTime() - offset);
-    }
-
-    return null;
+    return Dates.from(value);
   }
 
   /**
@@ -492,16 +599,15 @@ export abstract class Dates {
    * @param days Contains the number of days to remove.
    * @returns a date object.
    */
-  public static removeDays(date: Date, days: number): Date {
-    Dates.validateNaturalNumber(days);
+  public static removeDays(date: string | number | Date, days: number): Date {
+    Dates.nonNegative(days);
+    const dateObj = Dates.tryParse(date);
     if (days === 0) {
-      return date;
+      return dateObj;
     }
 
-    Dates.validate(date);
-    const result = new Date(date.valueOf());
-    result.setDate(result.getDate() - days);
-    return result;
+    dateObj.setDate(dateObj.getDate() - days);
+    return dateObj;
   }
 
   /**
@@ -511,26 +617,66 @@ export abstract class Dates {
    * @param other Contains some other date object.
    * @returns the time difference between the two dates in milliseconds.
    */
-  public static timeDifference(date: Date, other: Date): number {
-    Dates.validate(date);
-    Dates.validate(other);
-    return Math.abs(date.getTime() - other.getTime());
+  public static timeDifference(
+    date: string | number | Date,
+    other: string | number | Date
+  ): number {
+    const dateObj = Dates.tryParse(date);
+    const otherObj = Dates.tryParse(other);
+    return Numbers.abs(otherObj.getTime() - dateObj.getTime());
   }
 
   /**
-   * Gets the date today. The time is ignored.
+   * Gets the date today at midnight i. e. at start of the day.
    */
   public static get today(): Date {
-    const date = Dates.now.toISOString();
-    const dateOnly = date.substring(0, date.indexOf('T'));
-    return new Date(dateOnly);
+    return Dates.dateOnly(Dates.now);
   }
 
   /**
-   * Gets the date tomorrow. The time is ignored.
+   * Converts a Universal Coordinated Time (UTC) date object to a local
+   * date object.
+   *
+   * **Example:**
+   * ```typescript
+   * // some utc date
+   * const date = new Date(); // "2023-05-06T12:10:12.191Z" (MESZ)
+   * // assume the local date is UTC/GMT +2 hrs
+   * const localDate = Dates.toLocalDate(date); // "2023-05-06T14:10:12.191Z"
+   * ```
+   *
+   * @param date Contains some date object.
+   * @returns a date object representing the local date.
+   */
+  public static toLocalDate(date: string | number | Date) {
+    const dateObj = Dates.tryParse(date);
+    const offsetInMs = dateObj.getTimezoneOffset() * Dates.MS_IN_MINUTE;
+    const localDate = new Date(dateObj.getTime() + offsetInMs);
+    const offset = dateObj.getTimezoneOffset() / 60;
+    const hours = dateObj.getHours();
+    localDate.setHours(hours - offset);
+    return localDate;
+  }
+
+  /**
+   * Gets the date tomorrow at the same time of day.
    */
   public static get tomorrow(): Date {
+    return Dates.addDays(Dates.now, 1);
+  }
+
+  /**
+   * Gets the date tomorrow at midnight i. e. at start of the day.
+   */
+  public static get tomorrowAtMidnight(): Date {
     return Dates.addDays(Dates.today, 1);
+  }
+
+  /**
+   * Gets the Coordinated Universal Time (UTC) right now.
+   */
+  public static get utcNow(): Date {
+    return new Date();
   }
 
   /**
@@ -540,16 +686,24 @@ export abstract class Dates {
    * @param other Contains some other date object.
    * @returns the difference in years between the two specified dates.
    */
-  public static yearsDifference(date: Date, other: Date): number {
-    Dates.validate(date);
-    Dates.validate(other);
+  public static yearsDifference(
+    date: string | number | Date,
+    other: string | number | Date
+  ): number {
     return Dates.monthsDifference(date, other) / 12;
   }
 
   /**
-   * Gets the date yesterday. The time is ignored.
+   * Gets the date yesterday at the same time of day.
    */
   public static get yesterday(): Date {
+    return Dates.removeDays(Dates.now, 1);
+  }
+
+  /**
+   * Gets the date yesterday at midnight i. e. at start of day.
+   */
+  public static get yesterdayAtMidnight(): Date {
     return Dates.removeDays(Dates.today, 1);
   }
 
@@ -561,32 +715,27 @@ export abstract class Dates {
    */
   private static getTimezoneOffset(date: Date): number {
     const utc = new Date(Dates.getUTC(date));
-    utc.setUTCFullYear(date.getFullYear())
-    return date.getTime() - utc.getTime()
+    utc.setUTCFullYear(date.getFullYear());
+    return date.getTime() - utc.getTime();
   }
 
   /**
-   * Validates a date object.
-   *
-   * @param date Contains some date object.
-   *
    * @private
    */
-  private static validate(date: Date): void {
-    if (!Dates.isValid(date)) {
-      throw new TypeError(`"${String(date)}" is not a valid date object.`);
+  private static tryParse(value: string | number | Date): Date {
+    const date = Dates.from(value);
+    if (date === null) {
+      throw new TypeError(`Failed to parse date: "${value}".`);
     }
+
+    return date;
   }
 
   /**
-   * Validates a natural number.
-   *
-   * @param nr Contains some number.
-   *
    * @private
    */
-  private static validateNaturalNumber(nr: number): void {
-    if (!Numbers.isNaturalNumber(nr)) {
+  private static nonNegative(nr: number): void {
+    if (nr < 0) {
       throw new TypeError(`${String(nr)} is not a valid natural number.`);
     }
   }

@@ -2,6 +2,23 @@
  * Defines a base utility class.
  */
 export abstract class Util {
+  /** @private */
+  private constructor() {
+    throw new Error('Cannot create an instance of an abstract class.');
+  }
+
+  /**
+   * Gets the class name of the specified argument.
+   *
+   * **Example:**
+   * ```typescript
+   * console.log(Util.getClassOf(9)); // "[object Number]"
+   * ```
+   *
+   * @returns the class name of the specified argument.
+   */
+  public static getClassOf = Function.prototype.call.bind(Object.prototype.toString);
+
   /**
    * Checks whether the given value is of boolean type.
    *
@@ -20,6 +37,20 @@ export abstract class Util {
    */
   public static isDefined<T>(value?: T | undefined): value is T {
     return !Util.isUndefined(value);
+  }
+
+  /**
+   * Checks whether the given value is falsy i. e.: `null`, `undefined`,
+   * `false`, `NaN`, `0`, `-0`, `0n` or `''`.
+   *
+   * @param value Contains some value.
+   * @returns whether the given value is falsy.
+   */
+  public static isFalsy(value?: any): value is null | undefined | false | 0 | -0 | 0n | '' {
+    return [
+      // @ts-expect-error
+      null, undefined, false, Number.NaN, 0, -0, 0n, '' 
+    ].includes(value);
   }
 
   /**
@@ -99,6 +130,17 @@ export abstract class Util {
     | symbol
     | undefined {
     return value !== Object(value);
+  }
+
+  /**
+   * Checks whether the given value is not falsy i. e. not: `null`, `undefined`,
+   * `false`, `NaN`, `0`, `-0`, `0n` or `''`.
+   *
+   * @param value Contains some value.
+   * @returns whether the given value is not falsy.
+   */
+  public static isTruthy<T>(value: T | null | undefined | false | 0 | -0 | 0n | ''): value is T {
+    return !Util.isFalsy(value);
   }
 
   /**

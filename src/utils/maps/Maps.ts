@@ -2,6 +2,11 @@
  * Defines an abstract class with map utilities.
  */
 export abstract class Maps {
+  /** @private */
+  private constructor() {
+    throw new Error('Cannot create an instance of an abstract class.');
+  }
+
   /**
    * Checks whether the given map is empty.
    *

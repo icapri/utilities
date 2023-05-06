@@ -34,6 +34,11 @@ export abstract class Objects {
    */
   public static readonly EMPTY: {} = {} as const;
 
+  /** @private */
+  private constructor() {
+    throw new Error('Cannot create an instance of an abstract class.');
+  }
+
   /**
    * Checks whether the specified objects deep equal.
    *
@@ -64,6 +69,7 @@ export abstract class Objects {
       return false;
     }
 
+    // intentional dec. with "var" for access out of the "for" block
     for (var p in o1) {
       if (!Objects.hasProperty(o1, p)) {
         continue;

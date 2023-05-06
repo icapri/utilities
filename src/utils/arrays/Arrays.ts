@@ -1,3 +1,6 @@
+import { Objects } from '../objects/Objects';
+import { Util } from '../Util';
+
 type EachFn<T> = (item: T, index: number, self: T[]) => void;
 type ReadonlyEachFn<T> = (item: T, index: number, self: T[]) => void;
 
@@ -5,6 +8,11 @@ type ReadonlyEachFn<T> = (item: T, index: number, self: T[]) => void;
  * Defines an abstract class with array utilities.
  */
 export abstract class Arrays {
+  /** @private */
+  private constructor() {
+    throw new Error('Cannot create an instance of an abstract class.');
+  }
+
   /**
    * Adds the specified item to the beginning of the given array.
    *
@@ -138,7 +146,7 @@ export abstract class Arrays {
    * **Example:**
    * ```typescript
    * const arr1 = ['a', 'b', 'c'];
-   * const arr2 = Arrays.intersperse(array, 'x');
+   * const arr2 = Arrays.intersperse(arr1, 'x');
    * console.log(arr2); // 'a', 'x', 'b', 'x', 'c'
    * ```
    * This method has been adopted from an article about readonly arrays written by
@@ -181,6 +189,37 @@ export abstract class Arrays {
   public static isEmpty<T>(array: readonly T[]): boolean;
   public static isEmpty<T>(array: T[] | readonly T[]): boolean {
     return !array.length;
+  }
+
+  public static isHomogeneous<T>(array: T[]): boolean;
+  public static isHomogeneous<T>(array: readonly T[]): boolean;
+  public static isHomogeneous<T>(array: T[] | readonly T[]): boolean {
+    // the method does not apply for array with at most 1 item
+    const length = array.length;
+    if (length < 2) {
+      return true;
+    }
+
+    // for primitive types, we check by using `typeof`
+    if (array.every((item) => Util.isPrimitive(item))) {
+      return new Set(array.map((item) => typeof item)).size <= 1;
+    }
+
+    const _1stType = Util.getClassOf(array[0]);
+    if (array.every((item) => Objects.isObject(item))) {
+      let i = 1, x = true;
+      while (i < length) {
+        if (_1stType !== Util.getClassOf(array[i])) {
+          x = false;
+          break;
+        }
+        i++;
+      }
+
+      return x;
+    }
+
+    return true;
   }
 
   /**

@@ -2,6 +2,11 @@
  * Defines an abstract class with set utilities.
  */
 export abstract class Sets {
+  /** @private */
+  private constructor() {
+    throw new Error('Cannot create an instance of an abstract class.');
+  }
+
   /**
    * Checks whether the given set is empty.
    *
