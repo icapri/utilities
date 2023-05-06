@@ -272,7 +272,9 @@ export abstract class Dates {
    * is zeroed.
    */
   public static dateOnly(date: string | number | Date): Date {
-    return Dates.atStartOfDay(date);
+    const dateObj = Dates.tryParse(date);
+    const timeFromMidnight = dateObj.getTime() % Dates.MS_IN_DAY;
+    return new Date(dateObj.getTime() - timeFromMidnight);
   }
 
   /**
