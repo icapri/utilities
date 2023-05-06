@@ -56,8 +56,8 @@ export abstract class Objects {
    *
    * **Note:** According to ES3
    */
-  public static deepEqual<T extends object>(o1: T, o2: T): boolean {
-    if (o1 === o2) {
+  public static deepEquals(o1: object, o2: object): boolean {
+    if (Objects.equals(o1, o2)) {
       return true;
     }
 
@@ -83,7 +83,7 @@ export abstract class Objects {
         continue;
       }
 
-      if (!Objects.isObject(o1[p]) || !Objects.deepEqual((o1 as any)[p], o2[p])) {
+      if (!Objects.isObject(o1[p]) || !Objects.deepEquals((o1 as any)[p], o2[p])) {
         return false;
       }
     }
@@ -108,7 +108,29 @@ export abstract class Objects {
   }
 
   /**
-   * Checks whether the given object has a property with the given key.
+   * Checks whether the two specified objects strictly equal.
+   *
+   * **Example:**
+   * ```typescript
+   * const obj1 = {
+   *   a: 'string',
+   *   b: false,
+   *   c: 44,
+   * };
+   * const obj2 = obj1;
+   * console.log(Objects.equals(obj1, obj2)); // true
+   * ```
+   *
+   * @param a Contains some object.
+   * @param b Contains some other object.
+   * @returns whether the two specified objects strictly equal.
+   */
+  public static equals(a: object, b: object): boolean {
+    return a === b;
+  }
+
+  /**
+   * Checks whether the given object has a property with the given name.
    *
    * @param o Contains some object.
    * @param key Contains some key.
@@ -148,6 +170,30 @@ export abstract class Objects {
   public static isNotEmpty<T extends Object>(o: T): boolean;
   public static isNotEmpty<T extends object | Object>(o: T): boolean {
     return !Objects.isEmpty(o);
+  }
+
+  /**
+   * Checks whether the given object is not null.
+   *
+   * @param o Contains some object.
+   * @returns whether the given object is not null.
+   */
+  public static isNotNull<T extends object>(o?: T | null): o is T;
+  public static isNotNull<T extends Object>(o?: T | null): o is T;
+  public static isNotNull<T extends object | Object>(o?: T | null): o is T {
+    return Util.isNotNil(o);
+  }
+
+  /**
+   * Checks whether the given object is null.
+   *
+   * @param o Contains some object.
+   * @returns whether the given object is null.
+   */
+  public static isNull<T extends object>(o?: T | null | undefined): o is null | undefined;
+  public static isNull<T extends Object>(o?: T | null | undefined): o is null | undefined;
+  public static isNull<T extends object | Object>(o?: T | null | undefined): o is null | undefined {
+    return Util.isNullOrUndefined(o);
   }
 
   /**

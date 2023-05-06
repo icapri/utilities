@@ -26,6 +26,9 @@ const users = await getUsers();
 if (Arrays.isNotEmpty(users)) {
   // do something..
 }
+
+const array = ['Cat', 'Dog', 'Rabbit'];
+const last = Arrays.last(array); // "Rabbit"
 ```
 
 ```typescript
@@ -51,7 +54,7 @@ console.log(normalized); // "Lorem ipsum dolor sit"
 
 ## Support
 
-Something isn't working as expected in this library? Feel free to create an issue on GitHub and our team will work on it.
+Something isn't working as expected in this library? Feel free to create an issue on GitHub and I will work on it.
 
 ## Contribution
 

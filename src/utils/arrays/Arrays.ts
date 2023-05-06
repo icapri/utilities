@@ -1,9 +1,6 @@
 import { Objects } from '../objects/Objects';
 import { Util } from '../Util';
 
-type EachFn<T> = (item: T, index: number, self: T[]) => void;
-type ReadonlyEachFn<T> = (item: T, index: number, self: T[]) => void;
-
 /**
  * Defines an abstract class with array utilities.
  */
@@ -49,11 +46,11 @@ export abstract class Arrays {
    * @param array Contains some array.
    * @param predicate Contains some predicate to be executed for each array item.
    */
-  public static each<T>(array: readonly T[], predicate: ReadonlyEachFn<T>): void;
-  public static each<T>(array: T[], predicate: EachFn<T>): void;
+  public static each<T>(array: readonly T[], predicate: (item: T, index: number, self: T[]) => void): void;
+  public static each<T>(array: T[], predicate: (item: T, index: number, self: T[]) => void): void;
   public static each<T>(
     array: T[] | readonly T[],
-    predicate: EachFn<T> | ReadonlyEachFn<T>
+    predicate: ((item: T, index: number, self: T[]) => void) | ((item: T, index: number, self: T[]) => void)
   ): void {
     let i = 0, length = array.length;
     while (i < length) {
