@@ -1,5 +1,3 @@
-import { Comparator } from '../Comparator';
-
 /**
  * Defines an abstract class with number utilities.
  */
@@ -35,7 +33,15 @@ export abstract class Numbers {
    * * `1`  if `a` is greater than `b`.
    */
   public static compare(a: number, b: number): number {
-    return Comparator.compare(a, b);
+    if (a < b) {
+      return -1;
+    }
+
+    if (a > b) {
+      return 1;
+    }
+
+    return 0;
   }
 
   /**

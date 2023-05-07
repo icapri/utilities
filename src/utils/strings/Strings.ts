@@ -1,5 +1,4 @@
 import { Arrays } from '../arrays/Arrays';
-import { Comparator } from '../Comparator';
 import { Numbers } from '../numbers/Numbers';
 import { Util } from '../Util';
 
@@ -7,6 +6,69 @@ import { Util } from '../Util';
  * Defines an abstract class with string utilities.
  */
 export abstract class Strings {
+  /**
+   * Contains the backslash escape character "`\`".
+   */
+  public static readonly BACKSLASH: string = '\\' as const;
+
+  /**
+   * Contains the backspace escape character "`\b`".
+   */
+  public static readonly BACKSPACE: string = '\b' as const;
+
+  /**
+   * Contains the carriage return escape character "`\r`". Unicode: `000d`.
+   */
+  public static readonly CR: string = '\r' as const;
+
+  /**
+   * Contains the double quote escape character "`"`".
+   */
+  public static readonly DBL_QUOTE: string = '\"' as const;
+
+  /**
+   * Contains an empty string.
+   */
+  public static readonly EMPTY: string = '' as const;
+
+  /**
+   * Contains the form feed escape character "`\f`".
+   */
+  public static readonly FF: string = '\f' as const;
+
+  /**
+   * Contains the horizontal tabulator escape character "`\t`".
+   */
+  public static readonly HT: string = '\t' as const;
+
+  /**
+   * Contains the "new line" a. k. a. linefeed escape character "`\n`". Unicode: `000a`.
+   */
+  public static readonly LF: string = '\n' as const;
+
+  /**
+   * Contains the single quote escape character "`'`".
+   */
+  public static readonly SINGLE_QUOTE: string = '\'' as const;
+
+  /**
+   * Contains a white space.
+   */
+  public static readonly SPACE: string = ' ' as const;
+
+  /**
+   * Contains the vertical tabulator escape character "`\v`".
+   */
+  public static readonly VT: string = '\v' as const;
+
+  /**
+   * Gets the index returned when some sequence is not found in some
+   * string.
+   *
+   * @private
+   */
+  private static readonly NOT_FOUND: number = -1 as const;
+
   /** @private */
   private constructor() {
     throw new Error('Cannot create an instance of an abstract class.');
@@ -19,26 +81,16 @@ export abstract class Strings {
    * @param str Contains some string.
    * @param suffix Contains the string suffix to be appended to the string in case it is
    * missing at the end of it.
-   * @param ignoreCase Contains whether to ignore string case sensitivity.
-   * @param suffixes Contains additional suffixes that are valid terminators. 
+   * @param ignoreCase Contains whether to ignore string case sensitivity. Default: `false`
    * @returns the extended string.
    */
   public static appendIfMissing(
     str: string,
     suffix: string,
-    ignoreCase: boolean,
-    ...suffixes: string[]
+    ignoreCase: boolean = false
   ) {
     if (Strings.isNilOrEmpty(suffix) || Strings.endsWith(str, suffix, ignoreCase)) {
       return str;
-    }
-
-    if (Arrays.isNotEmpty(suffixes)) {
-      suffixes.forEach((c) => {
-        if (Strings.endsWith(str, c, ignoreCase)) {
-          return str;
-        }
-      });
     }
 
     return str + suffix.toString();
@@ -46,14 +98,17 @@ export abstract class Strings {
 
   /**
    * Capitalizes the given string.
+   *
    * **Example:**
    * ```typescript
-   * const name = 'john';
-   * console.log(Strings.capitalize(name)); // John
+   * Strings.capitalize('john'); // John
+   * Strings.capitalize('jOHN'); // JOHN
    * ```
    *
    * @param str Contains some string.
    * @returns the capitalized string.
+   *
+   * @see `Strings.upperFirst()`
    */
   public static capitalize(str: string) {
     if (Strings.isEmpty(str)) {
@@ -64,55 +119,70 @@ export abstract class Strings {
   }
 
   /**
-   * Removes the new line/-s from the given string if there are such ones.
+   * Chomps the specified string i. e. removes a newline from the end
+   * of the specified string if there is such one.
+   *
+   * **Example:**
+   * ```typescript
+   * const str = Strings.chomp('Lorem ipsum\r\n'); // "Lorem ipsum"
+   * ```
    *
    * @param str Contains some string.
    * @returns the chomped string.
    */
   public static chomp(str: string): string {
-    if (Strings.isEmpty(str)) {
+    const length = str.length;
+    if (length === 0) {
       return str;
     }
 
-    if (str.length === 1) {
-      const firstChar = str.charAt(0);
-      if (firstChar === Strings.CR || firstChar === Strings.LF) {
+    if (length === 1) {
+      if ([Strings.CR, Strings.LF].includes(str.charAt(0))) {
         return Strings.EMPTY;
       }
+
       return str;
     }
 
-    let lastIndex = str.length - 1;
-    const lastChar = str.charAt(lastIndex);
-    if (lastChar === Strings.LF && str.charAt(lastIndex - 1) === Strings.CR) {
-      lastIndex--;
+    let end = length - 1;
+    const lastChar = str.charAt(end);
+    if (lastChar === Strings.LF) {
+      if (str.charAt(end - 1) === Strings.CR) {
+        end--;
+      }
     } else if (lastChar !== Strings.CR) {
-      lastIndex++;
+      end++;
     }
 
-    return str.substring(0, lastIndex);
+    return str.substring(0, end);
   }
 
   /**
-   * Removes the last string character.
+   * Removes the last character from the specified string.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.chop(''); // ""
+   * Strings.chop('Germany'); // "German"
+   * ```
    *
    * @param str Contains some string.
-   * @returns the string without the last character.
+   * @returns the string without its last character.
    */
   public static chop(str: string): string {
-    const length = str.length;
-    if (length < 2) {
+    const l = str.length;
+    if (l <= 1) {
       return Strings.EMPTY;
     }
 
-    const lastIndex = length - 1;
-    const result = str.substring(0, lastIndex);
-    const last = str.charAt(lastIndex);
-    if (last === Strings.LF && result.charAt(lastIndex - 1) === Strings.CR) {
-      return result.substring(0, lastIndex - 1);
+    const end = l - 1, r = str.substring(0, end), c = str.charAt(end);
+    if (c === Strings.LF) {
+      if (r.charAt(end - 1) === Strings.CR) {
+        return r.substring(0, end - 1);
+      }
     }
 
-    return result;
+    return r;
   }
 
   /**
@@ -126,7 +196,7 @@ export abstract class Strings {
    * * `1`  if `a` is greater than `b`.
    */
   public static compare(a: string, b: string): number {
-    return Comparator.compare(a, b);
+    return a.localeCompare(b);
   }
 
   /**
@@ -199,7 +269,7 @@ export abstract class Strings {
    * sequences.
    */
   public static containsNone(str: string, ...sequences: string[]): boolean {
-    if (!str.length || !sequences.length) {
+    if (str.length === 0 || sequences.length === 0) {
       return false;
     }
 
@@ -214,7 +284,7 @@ export abstract class Strings {
    * @returns the number of sequence the given string matches.
    */
   public static countMatches(str: string, sequence: string): number {
-    if (!str.length || !sequence.length) {
+    if (str.length === 0 || sequence.length === 0) {
       return 0;
     }
 
@@ -224,6 +294,11 @@ export abstract class Strings {
 
   /**
    * Returns the default string if the given string is empty.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.defaultIfEmpty('', '--'); // "--"
+   * ```
    *
    * @param str Contains some string.
    * @param defaultStr Contains some default string.
@@ -247,12 +322,16 @@ export abstract class Strings {
    * the first string.
    */
   public static difference(s1: string, s2: string): string {
-    const at = Strings.indexOfDifference(s1, s2);
-    if (at === Strings.NF_INDEX) {
+    const diffIndex = Strings.indexOfDifference(s1, s2);
+    if (diffIndex === Strings.NOT_FOUND) {
       return Strings.EMPTY;
     }
 
-    return s2.substring(at);
+    if (s1.length > s2.length) {
+      return s1.substring(diffIndex);
+    } else {
+      return s2.substring(diffIndex);
+    }
   }
 
   /**
@@ -330,9 +409,9 @@ export abstract class Strings {
    * @param b Contains some other string.
    * @returns whether the given strings equal.
    */
-  public static equal(a: string, b: string): boolean;
-  public static equal(a: String, b: String): boolean;
-  public static equal<T extends string | String>(a: T, b: T): boolean {
+  public static equals(a: string, b: string): boolean;
+  public static equals(a: String, b: String): boolean;
+  public static equals<T extends string | String>(a: T, b: T): boolean {
     if (Strings.isString(a) && Strings.isString(b)) {
       return a === b;
     }
@@ -347,7 +426,7 @@ export abstract class Strings {
    * @param s2 Contains some other string.
    * @returns whether the given strings equal
    */
-  public static equalIgnoreCase(s1: string, s2: string): boolean {
+  public static equalsIgnoreCase(s1: string, s2: string): boolean {
     if (s1 === s2) {
       return true;
     }
@@ -357,8 +436,8 @@ export abstract class Strings {
       return false;
     }
 
-    let i, equal = true;
-    for (i = 0; i < l1; i++) {
+    let i = 0, equal = true;
+    for (; i < l1; i++) {
       if (s1.charAt(i).toLowerCase() !== s2.charAt(i).toLowerCase()) {
         equal = false;
         break;
@@ -422,13 +501,45 @@ export abstract class Strings {
   }
 
   /**
-   * Checks whether the given string has white spaces.
+   * Checks whether the given string has whitespaces.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.hasWhitespace('Lorem'); // false
+   * Strings.hasWhitespace('Lor em'); // true
+   * Strings.hasWhitespace('Lorem\n'); // true
+   * Strings.hasWhitespace('Lorem\r'); // true
+   * Strings.hasWhitespace('Lorem\t'); // true
+   * Strings.hasWhitespace('Lorem\f'); // true
+   * Strings.hasWhitespace(''); // false
+   * ```
    *
    * @param str Contains some string.
-   * @returns whether the given string has white spaces.
+   * @returns whether the given string has whitespaces.
    */
   public static hasWhitespace(str: string): boolean {
-    return str.indexOf(' ') >= 0;
+    if (Strings.isEmpty(str)) {
+      return false;
+    }
+
+    const l = str.length;
+    if (l === 1) {
+      const c = str.charAt(0);
+      if (Strings.isSpaceChar(c)) {
+        return true;
+      }
+    }
+
+    let i = l, r = false;
+    while (i > 0) {
+      const c = str.charAt(--i);
+      if (Strings.isSpaceChar(c)) {
+        r = true;
+        break;
+      }
+    }
+
+    return r;
   }
 
   /**
@@ -457,19 +568,20 @@ export abstract class Strings {
    * @returns the first index of any of the given sequences in the given string.
    */
   public static indexOfAny(str: string, ...sequences: string[]): number {
-    if (Strings.isEmpty(str) || Arrays.isEmpty(sequences)) {
-      return Strings.NF_INDEX;
+    if (str.length === 0 || sequences.length === 0) {
+      return Strings.NOT_FOUND;
     }
 
-    let resultIndex = -1;
-    sequences.forEach((sequence) => {
-      if (str.indexOf(sequence) >= 0) {
-        resultIndex = str.indexOf(sequence);
-        return;
+    let j = 0, r = -1;
+    while (j < sequences.length) {
+      const s = sequences[j++], sIndex = Strings.indexOf(str, s);
+      if (sIndex >= 0) {
+        r = sIndex;
+        break;
       }
-    });
+    }
 
-    return resultIndex;
+    return r;
   }
 
   /**
@@ -493,7 +605,7 @@ export abstract class Strings {
       }
     }
 
-    return Strings.NF_INDEX;
+    return Strings.NOT_FOUND;
   }
 
   /**
@@ -510,10 +622,27 @@ export abstract class Strings {
   }
 
   /**
-   * Checks whether the given string is all blank i. e. white space.
+   * Checks whether the specified string is all blank i. e. white space.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.isAllBlank(''); // true
+   * Strings.isAllBlank(' '); // true
+   * Strings.isAllBlank('\n'); // true
+   * Strings.isAllBlank('\t'); // true
+   * Strings.isAllBlank('\r'); // true
+   * Strings.isAllBlank('\f'); // true
+   * Strings.isAllBlank('\f\n'); // true
+   * Strings.isAllBlank('\f\r'); // true
+   * Strings.isAllBlank('\t\r\f'); // true
+   * Strings.isAllBlank('\f\t\r\n\n'); // true
+   * Strings.isAllBlank('\f\t\r\n\na'); // false
+   * ```
    *
    * @param str Contains some string.
-   * @returns whether the given string is all blank i. e. white space.
+   * @returns whether the specified string is all blank i. e. white space.
+   *
+   * @see `Strings.isWhitespace()`
    */
   public static isAllBlank(str: string): boolean {
     return Strings.isWhitespace(str);
@@ -598,7 +727,7 @@ export abstract class Strings {
    * @param str Contains some string.
    * @returns whether the given string is `null`, `undefined` or white space.
    */
-  public static isNilOrWhitespace(str: string | null): str is null {
+  public static isNilOrWhitespace(str?: string | null): str is null {
     if (Util.isNullOrUndefined(str)) {
       return true;
     }
@@ -636,7 +765,7 @@ export abstract class Strings {
    * @param str Contains some string.
    * @returns whether the given string is `null` or white space.
    */
-  public static isNullOrWhiteSpace(str: string | null): str is null {
+  public static isNullOrWhitespace(str: string | null): str is null {
     if (Util.isNull(str)) {
       return true;
     }
@@ -652,6 +781,21 @@ export abstract class Strings {
    */
   public static isNumeric(str: string) {
     return !Number.isNaN(str) && !Number.isNaN(parseFloat(str));
+  }
+
+  /**
+   * Checks whether the specified character is a space i. e. `" "`,
+   * `"\t"`, `"\r"`, `"\n"`, `"\f"`.
+   *
+   * @param char Contains some character.
+   * @returns whether the specified character is a space.
+   */
+  public static isSpaceChar(char: string): boolean {
+    return char === Strings.SPACE
+      || char === Strings.HT
+      || char === Strings.CR
+      || char === Strings.LF
+      || char === Strings.FF;
   }
 
   /**
@@ -698,13 +842,51 @@ export abstract class Strings {
   }
 
   /**
-   * Checks whether the given string is white space.
+   * Checks whether the specified string is all blank i. e. white space.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.isWhitespace(''); // true
+   * Strings.isWhitespace(' '); // true
+   * Strings.isWhitespace('\n'); // true
+   * Strings.isWhitespace('\t'); // true
+   * Strings.isWhitespace('\r'); // true
+   * Strings.isWhitespace('\f'); // true
+   * Strings.isWhitespace('\f\n'); // true
+   * Strings.isWhitespace('\f\r'); // true
+   * Strings.isWhitespace('\t\r\f'); // true
+   * Strings.isWhitespace('\f\t\r\n\n'); // true
+   * Strings.isWhitespace('\f\t\r\n\na'); // false
+   * ```
    *
    * @param str Contains some string.
-   * @returns whether the given string is white space.
+   * @returns whether the specified string is all blank i. e. white space.
+   *
+   * @see `Strings.isAllBlank()`
    */
   public static isWhitespace(str: string): boolean {
-    return !str.trim().length;
+    if (Strings.isEmpty(str)) {
+      return true;
+    }
+
+    const l = str.length;
+    if (l === 1) {
+      const c = str.charAt(0);
+      if (Strings.isSpaceChar(c)) {
+        return true;
+      }
+    }
+
+    let i = l, r = true;
+    while (i > 0) {
+      const c = str.charAt(--i);
+      if (!Strings.isSpaceChar(c)) {
+        r = false;
+        break;
+      }
+    }
+
+    return r;
   }
 
   /**
@@ -871,7 +1053,7 @@ export abstract class Strings {
       return str;
     }
 
-    if (str.indexOf(sequence) === Strings.NF_INDEX) {
+    if (str.indexOf(sequence) === Strings.NOT_FOUND) {
       return str;
     }
 
@@ -1036,39 +1218,20 @@ export abstract class Strings {
   }
 
   /**
-   * Gets the carriage return character. Unicode: `000d`.
+   * Capitalizes the specified string.
    *
-   * @private
-   */
-  private static get CR(): string {
-    return '\r';
-  }
-
-  /**
-   * Gets the empty string.
+   * **Example:**
+   * ```typescript
+   * Strings.upperFirst('john'); // John
+   * Strings.upperFirst('jOHN'); // JOHN
+   * ```
    *
-   * @private
-   */
-  private static get EMPTY(): string {
-    return '';
-  }
-
-  /**
-   * Gets the linefeed character. Unicode: `000a`.
+   * @param str Contains some string.
+   * @returns the capitalized string.
    *
-   * @private
+   * @see `Strings.capitalize()`
    */
-  private static get LF(): string {
-    return '\n';
-  }
-
-  /**
-   * Gets the index returned when some sequence is not found in some
-   * string.
-   *
-   * @private
-   */
-  private static get NF_INDEX(): number {
-    return -1;
+  public static upperFirst(str: string): string {
+    return Strings.capitalize(str);
   }
 }

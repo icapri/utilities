@@ -1,4 +1,3 @@
-import { Comparator } from '../Comparator';
 import { Numbers } from '../numbers/Numbers';
 
 /**
@@ -261,7 +260,15 @@ export abstract class Dates {
    * * `1`  if `a` is after than `b`.
    */
   public static compare(a: Date, b: Date): number {
-    return Comparator.compare(a, b);
+    if (a < b) {
+      return -1;
+    }
+
+    if (a > b) {
+      return 1;
+    }
+
+    return 0;
   }
 
   /**

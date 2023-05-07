@@ -1,18 +1,6 @@
 import { Util } from '../Util';
 
 /**
- * Represents the type of the object entries.
- */
-type Entries<T> = Generator<(Extract<keyof T, string> | T[Extract<keyof T, string>])[], void, unknown>;
-
-/**
- * Represents the type of an iterable object.
- */
-type IterableObject<T extends object> = Iterable<[Omit<keyof T, number | symbol>, T[keyof T]]>;
-
-export type { Entries, IterableObject };
-
-/**
  * Gets the object entries.
  *
  * @param o Contains some object.
@@ -103,7 +91,9 @@ export abstract class Objects {
    * @param o Contains some object.
    * @returns the object entries as an array of key-value pair tuples.
    */
-  public static entries<T extends object>(o: T): Entries<T> {
+  public static entries<T extends object>(
+    o: T
+  ): Generator<(Extract<keyof T, string> | T[Extract<keyof T, string>])[], void, unknown> {
     return __entries(o);
   }
 
@@ -290,22 +280,24 @@ export abstract class Objects {
   }
 
   /**
-   * Makes the given object iterable.
+   * Makes the specified object iterable.
    *
-   * @param o Contains some object.
+   * @param obj Contains some object.
    * @returns an iterable object.
    */
-  public static toIterable<T extends object>(o: T): IterableObject<T> {
+  public static toIterable<T extends object>(
+    obj: T
+  ): Iterable<[Omit<keyof T, number | symbol>, T[keyof T]]> {
     return {
-      ...o,
+      ...obj,
       *[Symbol.iterator]() {
-        yield* Object.entries(o);
+        yield* Object.entries(obj);
       }
     }
   }
 
   /**
-   * Converts the given object to a JSON string. This method also handles
+   * Converts the specified object to a JSON string. This method also handles
    * circular object references.
    *
    * **Example:**
