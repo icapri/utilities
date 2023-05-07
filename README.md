@@ -60,6 +60,10 @@ Something isn't working as expected in this library? Feel free to create an issu
 
 Please contact me if you would like to contribute to utilitates.
 
+## Roadmap
+
+Latest stable: v1.2.4
+
 ## License
 
 Licensed under [the MIT License](https://github.com/icapri/utilities/blob/main/LICENSE)

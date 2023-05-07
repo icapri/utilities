@@ -187,6 +187,7 @@ describe('Strings', () => {
     expect(Strings.indexOf('', '')).toEqual(0)
     expect(Strings.indexOf('Lorem', 'em')).toEqual(3)
     expect(Strings.indexOf('Lorem', 'am')).toEqual(-1)
+    expect(Strings.indexOf('Lorem', 'rem')).toEqual(2)
   })
 
   test('Strings.indexOfAny()', () => {
@@ -347,6 +348,129 @@ describe('Strings', () => {
   test('Strings.join()', () => {
     expect(Strings.join('')).toEqual('')
     expect(Strings.join('', '')).toEqual('')
+    expect(Strings.join('Lorem')).toEqual('Lorem')
     expect(Strings.join('Lorem', ' ', 'ipsum', ' ', 'dolor')).toEqual('Lorem ipsum dolor')
+    expect(Strings.join('Crux', ' ', 'sacra', ' ', 'sit', ' ', 'mihi', ' ', 'lux')).toEqual('Crux sacra sit mihi lux')
+  })
+
+  test('Strings.lastIndexOf()', () => {
+    expect(Strings.lastIndexOf('', '')).toEqual(0)
+    expect(Strings.lastIndexOf('d', 'd')).toEqual(0)
+    expect(Strings.lastIndexOf('d', 'da')).toEqual(-1)
+    expect(Strings.lastIndexOf('Abcddemmaxdemala', 'dem')).toEqual(10)
+  })
+
+  test('Strings.lastIndexOfIgnoreCase()', () => {
+    expect(Strings.lastIndexOfIgnoreCase('', '')).toEqual(0)
+    expect(Strings.lastIndexOfIgnoreCase('d', 'd')).toEqual(0)
+    expect(Strings.lastIndexOfIgnoreCase('d', 'da')).toEqual(-1)
+    expect(Strings.lastIndexOfIgnoreCase('Abcddemmaxdemala', 'dEM')).toEqual(10)
+  })
+
+  test('Strings.left()', () => {
+    expect(Strings.left('', 1)).toEqual('')
+    expect(Strings.left('Alphabet', 5)).toEqual('Alpha')
+    expect(Strings.left('Johndoe', 4)).toEqual('John')
+  })
+
+  test('Strings.longest()', () => {
+    expect(Strings.longest()).toEqual('')
+    expect(Strings.longest('')).toEqual('')
+    expect(Strings.longest('Alphabet', 'Alpha')).toEqual('Alphabet')
+    expect(Strings.longest('Johndoe', 'John')).toEqual('Johndoe')
+    expect(Strings.longest('Johndoe', 'John', 'jsdcdscsdcd')).toEqual('jsdcdscsdcd')
+  })
+
+  test('Strings.lowerCase()', () => {
+    expect(Strings.lowerCase('JOHNDOE')).toEqual('johndoe')
+    expect(Strings.lowerCase('')).toEqual('')
+    expect(Strings.lowerCase('123')).toEqual('123')
+    expect(Strings.lowerCase('A123BC')).toEqual('a123bc')
+  })
+
+  test('Strings.normalize()', () => {
+    expect(Strings.normalize('')).toEqual(Strings.EMPTY)
+    expect(Strings.normalize(' ')).toEqual(Strings.EMPTY)
+    expect(Strings.normalize('Abcddemmaxdemala   \n\r\t\f')).toEqual('Abcddemmaxdemala')
+  })
+
+  test('Strings.prepend()', () => {
+    expect(Strings.prepend('', 'abc')).toEqual('abc')
+    expect(Strings.prepend('a', 'bc')).toEqual('bca')
+    expect(Strings.prepend('a', '')).toEqual('a')
+  })
+
+  test('Strings.prependIfMissing()', () => {
+    expect(Strings.prependIfMissing('', 'abc')).toEqual('abc')
+    expect(Strings.prependIfMissing('a', 'bc')).toEqual('bca')
+    expect(Strings.prependIfMissing('a', '')).toEqual('a')
+    expect(Strings.prependIfMissing('abcde', 'ab')).toEqual('abcde')
+    expect(Strings.prependIfMissing('ABcde', 'ab', true)).toEqual('ABcde')
+  })
+
+  test('Strings.prependIfMissingIgnoreCase()', () => {
+    expect(Strings.prependIfMissingIgnoreCase('', 'abc')).toEqual('abc')
+    expect(Strings.prependIfMissingIgnoreCase('a', 'bc')).toEqual('bca')
+    expect(Strings.prependIfMissingIgnoreCase('a', '')).toEqual('a')
+    expect(Strings.prependIfMissingIgnoreCase('abcde', 'ab')).toEqual('abcde')
+    expect(Strings.prependIfMissingIgnoreCase('ABcde', 'ab')).toEqual('ABcde')
+    expect(Strings.prependIfMissingIgnoreCase('a', 'A')).toEqual('a')
+  })
+
+  test('Strings.remove()', () => {
+    expect(Strings.remove('abcdefg', 'abc')).toEqual('defg')
+    expect(Strings.remove('John Jack Doe', 'Jack ')).toEqual('John Doe')
+    expect(Strings.remove('', 'abc')).toEqual('')
+    expect(Strings.remove('abc', '')).toEqual('abc')
+  })
+
+  test('Strings.removeEnd()', () => {
+    expect(Strings.removeEnd('', 'abc')).toEqual('')
+    expect(Strings.removeEnd('abc', '')).toEqual('abc')
+    expect(Strings.removeEnd('abcdefgh', 'fgh')).toEqual('abcde')
+  })
+
+  test('Strings.removeEndIgnoreCase()', () => {
+    expect(Strings.removeEndIgnoreCase('', 'abc')).toEqual('')
+    expect(Strings.removeEndIgnoreCase('abc', '')).toEqual('abc')
+    expect(Strings.removeEndIgnoreCase('abcdefgh', 'fgh')).toEqual('abcde')
+    expect(Strings.removeEndIgnoreCase('abcdefgh', 'FGh')).toEqual('abcde')
+  })
+
+  test('Strings.removeWhitespace()', () => {
+    expect(Strings.removeWhitespace('Abcddemmaxdemala   \n\r\t\f')).toEqual('Abcddemmaxdemala')
+    expect(Strings.removeWhitespace('John Doe\njohn@email.com\t')).toEqual('JohnDoejohn@email.com')
+    expect(Strings.removeWhitespace('')).toEqual('')
+    expect(Strings.removeWhitespace(' ')).toEqual('')
+  })
+
+  test('Strings.repeat()', () => {
+    expect(Strings.repeat(' ', 1)).toEqual(' ')
+    expect(Strings.repeat(' ', 2)).toEqual('  ')
+    expect(Strings.repeat(' ', -1)).toEqual('')
+    expect(Strings.repeat(' ', 1.33)).toEqual('')
+    expect(Strings.repeat(' ', 3)).toEqual('   ')
+    expect(Strings.repeat('+', 10)).toEqual('++++++++++')
+  })
+
+  test('Strings.startsWith()', () => {
+    expect(Strings.startsWith('', '')).toEqual(true)
+    expect(Strings.startsWith('abc', 'ab')).toEqual(true)
+    expect(Strings.startsWith('abc', 'A', true)).toEqual(true)
+    expect(Strings.startsWith('abc', 'b')).toEqual(false)
+    expect(Strings.startsWith('abc', 'C', true)).toEqual(false)
+  })
+
+  test('Strings.strip()', () => {
+    expect(Strings.strip('')).toEqual('')
+    expect(Strings.strip(' ')).toEqual('')
+    expect(Strings.strip('  John ')).toEqual('John')
+    expect(Strings.strip('\nJohn Doe\t\r\f')).toEqual('John Doe')
+  })
+
+  test('Strings.toTitleCase()', () => {
+    expect(Strings.toTitleCase('')).toEqual('')
+    expect(Strings.toTitleCase('jOhn')).toEqual('John')
+    expect(Strings.toTitleCase('iNdEpendENCe')).toEqual('Independence')
   })
 })

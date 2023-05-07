@@ -549,15 +549,53 @@ export abstract class Strings {
    *
    * @param str Contains some string.
    * @param sequence Contains some string sequence.
-   * @param position Contains the index at which to begin searching
-   * the String object. If omitted, search starts at the beginning
-   * of the string.
    * @returns the index of the given sequence in the given string. If
    * the given sequence is not contained in the given string, -1 is
    * returned.
    */
-  public static indexOf(str: string, sequence: string, position?: number): number {
-    return str.indexOf(sequence, position);
+  public static indexOf(str: string, sequence: string): number {
+    const len = str.length, sqLen = sequence.length;
+    // if both the string and the sequence are empty, return 0;
+    if (len === 0 && sqLen === 0) {
+      return 0;
+    }
+
+    if (len === 1 && sqLen === 1) {
+      return str.charAt(0) === sequence.charAt(0) ? 0 : Strings.NOT_FOUND;
+    }
+
+    // if the length of the sequence is greater than the length of the string
+    // it doesn't seem to be found somewhere in the specified string
+    if (sqLen > len) {
+      return Strings.NOT_FOUND;
+    }
+
+    let i = 0, res = Strings.NOT_FOUND;
+
+    // this is the case where the length of the specified string is >=
+    // the length of the sequence
+    while (i < len) {
+      const cStr = str.charAt(i);
+      const cSeq = sequence.charAt(0);
+      if (cStr === cSeq) {
+        // check whether the remaining length of the string is at least equal
+        // the length of the specified sequence
+        const strRem = len - i;
+        if (sqLen <= strRem) {
+          // now substring the specified string to the length of the sequence
+          // to check whether they are equal
+          const s = str.substring(i, i + sqLen);
+          if (s === sequence) {
+            res = i;
+            break;
+          }
+        }
+      }
+
+      i++;
+    }
+
+    return res;
   }
 
   /**
@@ -613,12 +651,55 @@ export abstract class Strings {
    *
    * @param str Contains some string.
    * @param sequence Contains some string sequence.
-   * @param position Contains the string index at which to begin starting in
-   * the given string.
    * @returns the index of the given sequence in the given string (case-insensitive).
    */
-  public static indexOfIgnoreCase(str: string, sequence: string, position?: number): number {
-    return str.toLowerCase().indexOf(sequence.toLowerCase(), position);
+  public static indexOfIgnoreCase(str: string, sequence: string): number {
+    const len = str.length,
+      sqLen = sequence.length,
+      sqLower = sequence.toLowerCase(),
+      sq1st = sequence.charAt(0).toLowerCase();
+
+    // if both the string and the sequence are empty, return 0;
+    if (len === 0 && sqLen === 0) {
+      return 0;
+    }
+
+    if (len === 1 && sqLen === 1) {
+      return str.charAt(0).toLowerCase() === sq1st ? 0 : Strings.NOT_FOUND;
+    }
+
+    // if the length of the sequence is greater than the length of the string
+    // it doesn't seem to be found somewhere in the specified string
+    if (sqLen > len) {
+      return Strings.NOT_FOUND;
+    }
+
+    let i = 0, res = Strings.NOT_FOUND;
+
+    // this is the case where the length of the specified string is >=
+    // the length of the sequence
+    while (i < len) {
+      const cStr = str.charAt(i).toLowerCase();
+      const cSeq = sq1st;
+      if (cStr === cSeq) {
+        // check whether the remaining length of the string is at least equal
+        // the length of the specified sequence
+        const strRem = len - i;
+        if (sqLen <= strRem) {
+          // now substring the specified string to the length of the sequence
+          // to check whether they are equal
+          const s = str.substring(i, i + sqLen);
+          if (s.toLowerCase() === sqLower) {
+            res = i;
+            break;
+          }
+        }
+      }
+
+      i++;
+    }
+
+    return res;
   }
 
   /**
@@ -654,8 +735,7 @@ export abstract class Strings {
    *
    * **Example:**
    * ```typescript
-   * const str = '☻';
-   * console.log(Strings.isBinary(str)); // false
+   * Strings.isBinary('☻'); // false
    * ```
    *
    * @param str Contains some string.
@@ -890,29 +970,94 @@ export abstract class Strings {
   }
 
   /**
-   * Joins a given string with other strings.
+   * Concatenates the specified string with other strings.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.join('John', ' ', 'Doe'); // "John Doe"
+   * ```
    *
    * @param str Contains some string.
    * @param otherStrs Contains some other strings.
    * @returns a string composed of a concatenation of all the given strings.
    */
   public static join(str: string, ...otherStrs: string[]): string {
-    return str.concat(otherStrs.join(''));
+    const arrLen = otherStrs.length;
+    if (arrLen === 0) {
+      return str;
+    }
+
+    if (arrLen === 1) {
+      return str + otherStrs[0];
+    }
+
+    let i = 0, res = str;
+    while (i < arrLen) {
+      // using the performance API this way of concatenating strings seems
+      // to be the most efficient
+      res += otherStrs[i++];
+    }
+
+    return res;
   }
 
   /**
    * Gets the last index at which the given string sequence is located in the
    * given string.
    *
+   * **Example:**
+   * ```typescript
+   * Strings.lastIndexOf('Abcddemmaxdemala', 'dem'); // 10
+   * ```
+   *
    * @param str Contains some string.
    * @param sequence Contains some string sequence.
-   * @param position Contains the index at which to begin searching in the given
-   * string. If omitted, the search begins at the end of the string.
    * @returns the last index at which the given string sequence is located in the
    * given string.
    */
-  public static lastIndexOf(str: string, sequence: string, position?: number): number {
-    return str.lastIndexOf(sequence, position)
+  public static lastIndexOf(str: string, sequence: string): number {
+    const len = str.length, sqLen = sequence.length;
+    // if both the string and the sequence are empty, return 0;
+    if (len === 0 && sqLen === 0) {
+      return 0;
+    }
+
+    if (len === 1 && sqLen === 1) {
+      return str.charAt(0) === sequence.charAt(0) ? 0 : Strings.NOT_FOUND;
+    }
+
+    // if the length of the sequence is greater than the length of the string
+    // it doesn't seem to be found somewhere in the specified string
+    if (sqLen > len) {
+      return Strings.NOT_FOUND;
+    }
+
+    let i = len, res = Strings.NOT_FOUND;
+
+    // this is the case where the length of the specified string is >=
+    // the length of the sequence
+    while (i > 0) {
+      const cStr = str.charAt(i);
+      const cSeq = sequence.charAt(0);
+      if (cStr === cSeq) {
+        // check whether the remaining length of the string is at least equal
+        // the length of the specified sequence
+        const strRem = len - i;
+        if (sqLen <= strRem) {
+          // now substring the specified string to the length of the sequence
+          // to check whether they are equal
+          const s = str.substring(i, i + sqLen);
+          if (s === sequence) {
+            res = i;
+            break;
+          }
+        }
+      }
+
+      i--;
+    }
+
+    return res;
   }
 
   /**
@@ -921,29 +1066,79 @@ export abstract class Strings {
    *
    * @param str Contains some string.
    * @param sequence Contains some string sequence.
-   * @param position Contains the last index at which to begin searching in the given
-   * string. If omitted, the search begins at the end of the string.
    * @returns the last index at which the given string sequence is located in the
    * given string (case-insensitive).
    */
-  public static lastIndexOfIgnoreCase(str: string, sequence: string, position?: number): number {
-    return str.toLowerCase().lastIndexOf(sequence.toLowerCase(), position);
+  public static lastIndexOfIgnoreCase(str: string, sequence: string): number {
+    const len = str.length,
+      sqLen = sequence.length,
+      sqLower = sequence.toLowerCase(),
+      cSeq = sequence.charAt(0).toLowerCase();
+
+    // if both the string and the sequence are empty, return 0;
+    if (len === 0 && sqLen === 0) {
+      return 0;
+    }
+
+    if (len === 1 && sqLen === 1) {
+      return str.charAt(0).toLowerCase() === cSeq ? 0 : Strings.NOT_FOUND;
+    }
+
+    // if the length of the sequence is greater than the length of the string
+    // it doesn't seem to be found somewhere in the specified string
+    if (sqLen > len) {
+      return Strings.NOT_FOUND;
+    }
+
+    let i = len, res = Strings.NOT_FOUND;
+
+    // this is the case where the length of the specified string is >=
+    // the length of the sequence
+    while (i > 0) {
+      const cStr = str.charAt(i).toLowerCase();
+      if (cStr === cSeq) {
+        // check whether the remaining length of the string is at least equal
+        // the length of the specified sequence
+        const strRem = len - i;
+        if (sqLen <= strRem) {
+          // now substring the specified string to the length of the sequence
+          // to check whether they are equal
+          const s = str.substring(i, i + sqLen);
+          if (s.toLowerCase() === sqLower) {
+            res = i;
+            break;
+          }
+        }
+      }
+
+      i--;
+    }
+
+    return res;
   }
 
   /**
    * Gets the `length` leftmost characters of the given string.
    *
+   * **Example:**
+   * ```typescript
+   * Strings.left('Alphabet', 5); // "Alpha"
+   * ```
+   *
    * @param str Contains some string.
-   * @param length Contains the number of strings to take from the string end.
-   * @returns the last `length` characters of the string as a substring.
+   * @param length Contains the number of characters to pick from the
+   * beginning of the specified string.
+   * @returns the first `length` characters of the string.
    */
   public static left(str: string, length: number): string {
     if (length < 0) {
       return Strings.EMPTY;
     }
+
     if (str.length <= length) {
       return str;
     }
+
     return str.substring(0, length);
   }
 
@@ -954,14 +1149,29 @@ export abstract class Strings {
    * @returns the longest of the given strings.
    */
   public static longest(...strs: string[]): string {
-    let longestStr = Strings.EMPTY;
-    for (let str of strs) {
-      if (str.length > longestStr.length) {
-        longestStr = str;
+    const length = strs.length;
+    if (length === 0) {
+      return Strings.EMPTY;
+    }
+
+    if (length === 1) {
+      return strs[0];
+    }
+
+    if (length === 2) {
+      const str0 = strs[0];
+      const str1 = strs[1];
+      return str0.length > str1.length ? str0 : str1;
+    }
+
+    let res = Strings.EMPTY;
+    for (const str of strs) {
+      if (str.length > res.length) {
+        res = str;
       }
     }
 
-    return longestStr;
+    return res;
   }
 
   /**
@@ -980,25 +1190,19 @@ export abstract class Strings {
    * **Example:**
    * ```typescript
    * const str1 = '  Lorem  ipsum dolor sit ';
-   * const str2 = Strings.normalize(str1);
-   * console.log(str2); // "Lorem ipsum dolor sit"
+   * const str2 = Strings.normalize(str1); // "Lorem ipsum dolor sit"
    * ```
    *
    * @param str Contains some string.
-   * @param to Contains the value to show in case the string is `null`, `undefined`
-   * or white space. Defaults to `""`.
    * @returns the normalized string.
    */
-  public static normalize(str: string, to: null): string | null;
-  public static normalize(str: string, to: undefined): string | undefined;
-  public static normalize(str: string, to: ''): string;
-  public static normalize(str: string, to: null | undefined | '' = ''): string | null | undefined {
-    str = str.trim();
-    if (Strings.isEmpty(str)) {
-      return to;
+  public static normalize(str: string): string {
+    const s = str.trim();
+    if (Strings.isEmpty(s)) {
+      return Strings.EMPTY;
     }
 
-    return str.replace(/\s+/g, ' ');
+    return s.replace(/\s+/g, ' ');
   }
 
   /**
@@ -1021,7 +1225,7 @@ export abstract class Strings {
    * @param ignoreCase Contains whether to ignore case sensitivity.
    * @returns the extended string.
    */
-  public static prependIfMissing(str: string, prefix: string, ignoreCase: boolean) {
+  public static prependIfMissing(str: string, prefix: string, ignoreCase?: boolean) {
     if (Strings.isEmpty(prefix) || Strings.startsWith(str, prefix, ignoreCase)) {
       return str;
     }
@@ -1071,12 +1275,15 @@ export abstract class Strings {
    * otherwise the given string is returned.
    */
   public static removeEnd(str: string, sequence: string): string {
-    if (Strings.isEmpty(str) || Strings.isEmpty(sequence)) {
+    const strLen = str.length, sqLen = sequence.length;
+    if (strLen === 0 || sqLen === 0) {
       return str;
     }
+
     if (str.endsWith(sequence)) {
-      return str.substring(0, str.length - sequence.length);
+      return str.substring(0, strLen - sqLen);
     }
+
     return str;
   }
 
@@ -1090,12 +1297,15 @@ export abstract class Strings {
    * otherwise the given string is returned (case-insensitive).
    */
   public static removeEndIgnoreCase(str: string, sequence: string): string {
-    if (Strings.isEmpty(str) || Strings.isEmpty(sequence)) {
+    const strLen = str.length, sqLen = sequence.length;
+    if (strLen === 0 || sqLen === 0) {
       return str;
     }
+
     if (Strings.endsWithIgnoreCase(str, sequence)) {
-      return str.substring(0, str.length - sequence.length);
+      return str.substring(0, strLen - sqLen);
     }
+
     return str;
   }
 
@@ -1106,11 +1316,24 @@ export abstract class Strings {
    * @returns the string without white space.
    */
   public static removeWhitespace(str: string) {
-    if (Strings.isEmpty(str)) {
+    const len = str.length;
+    if (len === 0) {
       return str;
     }
 
-    return str.replace(/\s/g, '');
+    if (len === 1 && Strings.isSpaceChar(str.charAt(0))) {
+      return Strings.EMPTY;
+    }
+
+    let res = Strings.EMPTY, i = 0;
+    while (i < len) {
+      const c = str.charAt(i++);
+      if (!Strings.isSpaceChar(c)) {
+        res += c;
+      }
+    }
+
+    return res;
   }
 
   /**
@@ -1121,11 +1344,24 @@ export abstract class Strings {
    * @returns the `times`-repeated string.
    */
   public static repeat(str: string, times: number): string {
-    if (Strings.isEmpty(str) || !Numbers.isPositiveInteger(times)) {
+    if (Strings.isEmpty(str) || !Numbers.isInteger(times) || times < 0) {
       return Strings.EMPTY;
     }
 
-    return Array(times + 1).join(str);
+    if (times === 1) {
+      return str;
+    }
+
+    if (times === 2) {
+      return str + str;
+    }
+
+    let res = str, i = 0;
+    while (++i < times) {
+      res += str;
+    }
+
+    return res;
   }
 
   /**
@@ -1138,10 +1374,11 @@ export abstract class Strings {
    * in the given string. If omitted, it starts with the string end.
    * @returns whether the given string ends with the given string sequence.
    */
-  public static startsWith(str: string, sequence: string, ignoreCase: boolean, position?: number): boolean {
+  public static startsWith(str: string, sequence: string, ignoreCase?: boolean, position?: number): boolean {
     if (ignoreCase) {
       return str.toLowerCase().startsWith(sequence.toLowerCase(), position);
     }
+
     return str.startsWith(sequence, position);
   }
 
@@ -1151,9 +1388,11 @@ export abstract class Strings {
    *
    * @param str Contains some string.
    * @returns the trimmed string.
+   *
+   * @see `Strings.trim()`
    */
   public static strip(str: string): string {
-    return str.trim();
+    return Strings.trim(str);
   }
 
   /**
@@ -1179,11 +1418,14 @@ export abstract class Strings {
    *
    * @param str Contains some string.
    * @returns the trimmed string.
+   *
+   * @see `Strings.strip()`
    */
   public static trim(str: string): string {
     if (Strings.isEmpty(str)) {
       return str;
     }
+
     return str.trim();
   }
 
