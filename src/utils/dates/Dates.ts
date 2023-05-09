@@ -1,4 +1,5 @@
 import { Numbers } from '../numbers/Numbers';
+import { Strings } from '../strings/Strings';
 
 /**
  * Defines an abstract class with date utilities.
@@ -309,6 +310,21 @@ export abstract class Dates {
   }
 
   /**
+   * Gets the number of days in the specified month of the specified year.
+   *
+   * @param month Contains the month index. The indexes start from `1` (January).
+   * @param year Contains the year.
+   * @returns the number of days in the given month of the given year.
+   */
+  public static daysOfMonth(month: number, year: number): number {
+    if (month < 1 || month > 12 || year < 0 || year > 9999) {
+      return -1;
+    }
+
+    return new Date(year, month, 0).getDate();
+  }
+
+  /**
    * Checks whether the two date objects are equal.
    *
    * @param a Contains some date object.
@@ -599,6 +615,280 @@ export abstract class Dates {
     }
 
     return Dates.from(value);
+  }
+
+  /**
+   * Parses an ISO 8601 date string (`YYYY-MM-DDTHH:mm:ss.sssZ`) as a date
+   * object.
+   *
+   * **Example:**
+   * ```typescript
+   * Dates.parseISO('2023'); // Date: "2023-01-01T00:00:00.000Z"
+   * Dates.parseISO('2023-05'); // Date: "2023-05-01T00:00:00.000Z"
+   * Dates.parseISO('2023-05-09T23'); // Date: "2023-05-09T23:00:00.000Z"
+   * Dates.parseISO('2023-05-09T23:15'); // Date: "2023-05-09T23:15:00.000Z"
+   * Dates.parseISO('2023-05-09T23:15:22'); // Date: "2023-05-09T23:15:22.000Z"
+   * Dates.parseISO('2023-05-09T23:15:22.123Z'); // Date: "2023-05-09T23:15:22.123Z"
+   * ```
+   *
+   * @param str Contains some string.
+   * @returns a date object if the specified string is a valid
+   * ISO 8601 date string; otherwise `null`.
+   */
+  public static parseISO(str?: string): Date | null {
+    // checking whether the argument is of type string is still worth
+    // it because of sth. like "Dates.parseISO(false as unknown as string)"
+    if (!Strings.isString(str) || str.length === 0) {
+      return null;
+    }
+
+    // DevNote: Refactor this method so that its # of code lines < 100
+    const iso = str;
+    const len = iso.length;
+    // according to the ISO 8601, the shortest ISO string could be 4
+    // characters long for the YYYY
+    if (len < 4) {
+      return null;
+    }
+
+    // YYYY
+    if (len === 4) {
+      // the string should be in range 0000 - 9999
+      const year = +iso;
+      if (!Numbers.isNatural(year)) {
+        return null;
+      }
+
+      if (year >= 0 && year <= 9999) {
+        const date = new Date(year, 0, 1, 0, 0, 0, 0);
+        const offset = Dates.getTimezoneOffset(date);
+        return new Date(date.valueOf() - offset);
+      }
+    }
+
+    // YYYY-MM
+    if (len === 7) {
+      if (iso.charAt(4) !== '-') {
+        return null;
+      }
+
+      const year = +iso.substring(0, 4);
+      const month = +iso.substring(5);
+      if (!Numbers.isNatural(year) || !Numbers.isNatural(month)) {
+        return null;
+      }
+
+      if (year >= 0 && year <= 9999 && month > 0 && month <= 12) {
+        const date = new Date(year, month - 1, 1, 0, 0, 0, 0);
+        const offset = Dates.getTimezoneOffset(date);
+        return new Date(date.valueOf() - offset);
+      }
+    }
+
+    // YYYY-MM-DD
+    if (len === 10) {
+      if (iso.charAt(4) !== '-' || iso.charAt(7) !== '-') {
+        return null;
+      }
+
+      const year = +iso.substring(0, 4);
+      const month = +iso.substring(5, 7);
+      const day = +iso.substring(8);
+      if (!Numbers.isNatural(year) || !Numbers.isNatural(month) || !Numbers.isNatural(day)) {
+        return null;
+      }
+
+      if (year >= 0 && year <= 9999 && month > 0 && month <= 12) {
+        const daysOfMonth = Dates.daysOfMonth(month, year);
+        if (day > 0 && day <= daysOfMonth) {
+          const date = new Date(year, month - 1, day, 0, 0, 0, 0);
+          const offset = Dates.getTimezoneOffset(date);
+          return new Date(date.valueOf() - offset);
+        }
+
+        return null;
+      }
+    }
+
+    // YYYY-MM-DDThh
+    if (len === 13) {
+      if (iso.charAt(4) !== '-' || iso.charAt(7) !== '-' || iso.charAt(10) !== 'T') {
+        return null;
+      }
+
+      const year = +iso.substring(0, 4);
+      const month = +iso.substring(5, 7);
+      const day = +iso.substring(8, 10);
+      const hour = +iso.substring(11);
+      if (!Numbers.isNatural(year)
+        || !Numbers.isNatural(month)
+        || !Numbers.isNatural(day)
+        || !Numbers.isNatural(hour)
+      ) {
+        return null;
+      }
+
+      if (year >= 0 && year <= 9999 && month > 0 && month <= 12 && hour >= 0 && hour <= 24) {
+        const daysOfMonth = Dates.daysOfMonth(month, year);
+        if (day > 0 && day <= daysOfMonth) {
+          const date = new Date(year, month - 1, day, hour, 0, 0, 0);
+          const offset = Dates.getTimezoneOffset(date);
+          return new Date(date.valueOf() - offset);
+        }
+
+        return null;
+      }
+    }
+
+    // YYYY-MM-DDThh:mm
+    if (len === 16) {
+      if (iso.charAt(4) !== '-'
+        || iso.charAt(7) !== '-'
+        || iso.charAt(10) !== 'T'
+        || iso.charAt(13) !== ':'
+      ) {
+        return null;
+      }
+
+      const year = +iso.substring(0, 4);
+      const month = +iso.substring(5, 7);
+      const day = +iso.substring(8, 10);
+      const hour = +iso.substring(11, 13);
+      const minutes = +iso.substring(14);
+      if (!Numbers.isNatural(year)
+        || !Numbers.isNatural(month)
+        || !Numbers.isNatural(day)
+        || !Numbers.isNatural(hour)
+        || !Numbers.isNatural(minutes)
+      ) {
+        return null;
+      }
+
+      if (year >= 0
+        && year <= 9999
+        && month > 0
+        && month <= 12
+        && hour >= 0
+        && hour <= 24
+        && minutes >= 0
+        && minutes <= 59
+      ) {
+        const daysOfMonth = Dates.daysOfMonth(month, year);
+        if (day > 0 && day <= daysOfMonth) {
+          const date = new Date(year, month - 1, day, hour, minutes, 0, 0);
+          const offset = Dates.getTimezoneOffset(date);
+          return new Date(date.valueOf() - offset);
+        }
+
+        return null;
+      }
+    }
+
+    // YYYY-MM-DDThh:mm:ss
+    if (len === 19) {
+      if (iso.charAt(4) !== '-'
+        || iso.charAt(7) !== '-'
+        || iso.charAt(10) !== 'T'
+        || iso.charAt(13) !== ':'
+        || iso.charAt(16) !== ':'
+      ) {
+        return null;
+      }
+
+      const year = +iso.substring(0, 4);
+      const month = +iso.substring(5, 7);
+      const day = +iso.substring(8, 10);
+      const hour = +iso.substring(11, 13);
+      const minutes = +iso.substring(14, 16);
+      const seconds = +iso.substring(17);
+      if (!Numbers.isNatural(year)
+        || !Numbers.isNatural(month)
+        || !Numbers.isNatural(day)
+        || !Numbers.isNatural(hour)
+        || !Numbers.isNatural(minutes)
+        || !Numbers.isNatural(seconds)
+      ) {
+        return null;
+      }
+
+      if (year >= 0
+        && year <= 9999
+        && month > 0
+        && month <= 12
+        && hour >= 0
+        && hour <= 24
+        && minutes >= 0
+        && minutes <= 59
+        && seconds >= 0
+        && seconds <= 60 // Note: because of the s. c. "leap second"
+      ) {
+        const daysOfMonth = Dates.daysOfMonth(month, year);
+        if (day > 0 && day <= daysOfMonth) {
+          const date = new Date(year, month - 1, day, hour, minutes, seconds, 0);
+          const offset = Dates.getTimezoneOffset(date);
+          return new Date(date.valueOf() - offset);
+        }
+
+        return null;
+      }
+    }
+
+    // YYYY-MM-DDThh:mm:ss.sssZ
+    if (len === 24) {
+      if (iso.charAt(4) !== '-'
+        || iso.charAt(7) !== '-'
+        || iso.charAt(10) !== 'T'
+        || iso.charAt(13) !== ':'
+        || iso.charAt(16) !== ':'
+        || iso.charAt(19) !== '.'
+        || iso.charAt(len - 1) !== 'Z'
+      ) {
+        return null;
+      }
+
+      const year = +iso.substring(0, 4);
+      const month = +iso.substring(5, 7);
+      const day = +iso.substring(8, 10);
+      const hour = +iso.substring(11, 13);
+      const minutes = +iso.substring(14, 16);
+      const seconds = +iso.substring(17, 19);
+      const milliseconds = +iso.substring(20, 23);
+      if (!Numbers.isNatural(year)
+        || !Numbers.isNatural(month)
+        || !Numbers.isNatural(day)
+        || !Numbers.isNatural(hour)
+        || !Numbers.isNatural(minutes)
+        || !Numbers.isNatural(seconds)
+        || !Numbers.isNatural(milliseconds)
+      ) {
+        return null;
+      }
+
+      if (year >= 0
+        && year <= 9999
+        && month > 0
+        && month <= 12
+        && hour >= 0
+        && hour <= 24
+        && minutes >= 0
+        && minutes <= 59
+        && seconds >= 0
+        && seconds <= 60 // Note: because of the s. c. "leap second"
+        && milliseconds >= 0
+        && milliseconds <= 999
+      ) {
+        const daysOfMonth = Dates.daysOfMonth(month, year);
+        if (day > 0 && day <= daysOfMonth) {
+          const date = new Date(year, month - 1, day, hour, minutes, seconds, milliseconds);
+          const offset = Dates.getTimezoneOffset(date);
+          return new Date(date.valueOf() - offset);
+        }
+
+        return null;
+      }
+    }
+
+    return null;
   }
 
   /**

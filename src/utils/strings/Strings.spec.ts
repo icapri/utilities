@@ -2,11 +2,24 @@ import { Strings } from './Strings'
 
 describe('Strings', () => {
   test('Strings.appendIfMissing()', () => {
-    const str = ''
-    const suffix = ''
-    expect(Strings.appendIfMissing(str, suffix)).toEqual('')
+    expect(Strings.appendIfMissing('', '')).toEqual('')
     expect(Strings.appendIfMissing('Lorem ', 'ipsum')).toEqual('Lorem ipsum')
     expect(Strings.appendIfMissing('Lorem ipsum', 'ipSum', true)).toEqual('Lorem ipsum')
+  })
+
+  test('Strings.at()', () => {
+    expect(Strings.at('', 0)).toEqual('')
+    expect(Strings.at('', -1)).toEqual('')
+    expect(Strings.at('', -0)).toEqual('')
+    expect(Strings.at(' ', 0)).toEqual(' ')
+    expect(Strings.at('abc', -23)).toEqual('')
+    expect(Strings.at('abc', 3)).toEqual('')
+    expect(Strings.at('abcde', 4)).toEqual('e')
+    expect(Strings.at('\\\r', 0)).toEqual('\\')
+    expect(Strings.at('\\\r', 1)).toEqual('\r')
+    expect(Strings.at('\\\r\t', 2)).toEqual('\t')
+    expect(Strings.at('\n\t\f\n', 2)).toEqual('\f')
+    expect(Strings.at('\t\f\n', 2)).toEqual('\n')
   })
 
   test('Strings.capitalize()', () => {
@@ -81,6 +94,7 @@ describe('Strings', () => {
   })
 
   test('Strings.countMatches()', () => {
+    expect(Strings.countMatches('', '')).toEqual(0)
     expect(Strings.countMatches('Lorem ipsum dolor sit', 'or')).toEqual(2)
     expect(Strings.countMatches('ho ho ho', 'ho')).toEqual(3)
     expect(Strings.countMatches('ho ho ho', '')).toEqual(0)
@@ -160,6 +174,18 @@ describe('Strings', () => {
   test('Strings.getBytes()', () => {
     expect(Strings.getBytes('Lorem')).toEqual(5)
     expect(Strings.getBytes('sdcscdcsdsd')).toEqual(11)
+  })
+
+  test('Strings.hasChar()', () => {
+    expect(Strings.hasChar('', '')).toEqual(false)
+    expect(Strings.hasChar('', 's')).toEqual(false)
+    expect(Strings.hasChar('d', '')).toEqual(false)
+    // this next expectation is false because the second arg is not a char
+    expect(Strings.hasChar('Lorem', 'em')).toEqual(false)
+    expect(Strings.hasChar('Lorem', 'e')).toEqual(true)
+    expect(Strings.hasChar('Ipsum', 'u')).toEqual(true)
+    expect(Strings.hasChar('Ipsum', '\\')).toEqual(false)
+    expect(Strings.hasChar('Ips\\um', '\\')).toEqual(true)
   })
 
   test('Strings.hashCode()', () => {
@@ -325,6 +351,16 @@ describe('Strings', () => {
     expect(Strings.isStringObject(new String('abc'))).toEqual(true)
   })
 
+  test('Strings.isSurrogatePair()', () => {
+    expect(Strings.isSurrogatePair('🐑🐑🐑😀💖', 0)).toEqual(true)
+    expect(Strings.isSurrogatePair('😀💖', 0)).toEqual(true)
+    expect(Strings.isSurrogatePair('', 0)).toEqual(false)
+    expect(Strings.isSurrogatePair('abc', 1)).toEqual(false)
+    expect(Strings.isSurrogatePair('', -1)).toEqual(false)
+    expect(Strings.isSurrogatePair('', 2.4)).toEqual(false)
+    expect(Strings.isSurrogatePair('😀😀💖', 4)).toEqual(true)
+  })
+
   test('Strings.isUpperCase()', () => {
     expect(Strings.isUpperCase('')).toEqual(true)
     expect(Strings.isUpperCase('ABCD')).toEqual(true)
@@ -461,6 +497,17 @@ describe('Strings', () => {
     expect(Strings.startsWith('abc', 'C', true)).toEqual(false)
   })
 
+  test('Strings.startsWithAny()', () => {
+    expect(Strings.startsWithAny('')).toEqual(false)
+    expect(Strings.startsWithAny('', '')).toEqual(true)
+    expect(Strings.startsWithAny('abc', 'ab')).toEqual(true)
+    expect(Strings.startsWithAny('abc', 'A')).toEqual(false)
+    expect(Strings.startsWithAny('abc', 'b')).toEqual(false)
+    expect(Strings.startsWithAny('abc', 'C')).toEqual(false)
+    expect(Strings.startsWithAny('abc', 'C', 'z', 'a')).toEqual(true)
+    expect(Strings.startsWithAny('abc def', ...['C', 'z', 'a'])).toEqual(true)
+  })
+
   test('Strings.strip()', () => {
     expect(Strings.strip('')).toEqual('')
     expect(Strings.strip(' ')).toEqual('')
@@ -468,9 +515,21 @@ describe('Strings', () => {
     expect(Strings.strip('\nJohn Doe\t\r\f')).toEqual('John Doe')
   })
 
+  test('Strings.toCharArray()', () => {
+    expect(Strings.toCharArray('')).toEqual([])
+    expect(Strings.toCharArray('I 💖 U')).toEqual(['I', ' ', '💖', ' ', 'U'])
+    expect(Strings.toCharArray('🐑🐑🐑')).toEqual(['🐑', '🐑', '🐑'])
+    expect(Strings.toCharArray('abc')).toEqual(['a', 'b', 'c'])
+  })
+
   test('Strings.toTitleCase()', () => {
     expect(Strings.toTitleCase('')).toEqual('')
     expect(Strings.toTitleCase('jOhn')).toEqual('John')
     expect(Strings.toTitleCase('iNdEpendENCe')).toEqual('Independence')
+    expect(Strings.toTitleCase('lOREM iPsum dOlOR sIT')).toEqual('Lorem Ipsum Dolor Sit')
+    expect(Strings.toTitleCase('lOREM  iPsum\tdOlOR\nsIT')).toEqual('Lorem  Ipsum\tDolor\nSit')
+    expect(Strings.toTitleCase('\t\nlOREM  iPsum\tdOlOR\nsIT')).toEqual('\t\nLorem  Ipsum\tDolor\nSit')
+    expect(Strings.toTitleCase('\nabC')).toEqual('\nAbc')
+    expect(Strings.toTitleCase("ab\t\f\t\nc")).toEqual('Ab\t\f\t\nC')
   })
 })

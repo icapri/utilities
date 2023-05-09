@@ -61,7 +61,7 @@ export abstract class Numbers {
    * @returns whether the given value is a natural number i. e. greater
    * than or equal 0.
    */
-  public static isNaturalNumber(value?: any): value is number {
+  public static isNatural(value?: any): value is number {
     return Numbers.isInteger(value) && value >= 0;
   }
 

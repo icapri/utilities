@@ -97,6 +97,22 @@ export abstract class Strings {
   }
 
   /**
+   * Gets the character at the specified position in the given string.
+   *
+   * @param str Contains some string.
+   * @param index Contains the index of the character to be returned.
+   * @returns the character at the specified position in the given string.
+   */
+  public static at(str: string, index: number): string {
+    const l = str.length;
+    if (l > 0 && Numbers.isNatural(index) && index < l) {
+      return str.charAt(index);
+    }
+
+    return Strings.EMPTY;
+  }
+
+  /**
    * Capitalizes the given string.
    *
    * **Example:**
@@ -116,6 +132,22 @@ export abstract class Strings {
     }
 
     return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  /**
+   * Capitalizes the first letter of the specified string and then converts
+   * the rest of the string to lower case.
+   *
+   * @param str Contains some string.
+   * @returns the specified string where the first letter is capitalized
+   * and the rest of the letters are converted to lower case.
+   */
+  public static capitalizeFirstLetter(str: string): string {
+    if (str.length === 0) {
+      return str;
+    }
+
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   }
 
   /**
@@ -277,19 +309,53 @@ export abstract class Strings {
   }
 
   /**
-   * Counts the sequences that match the given string.
+   * Gets the number of times the specified string sequence appears in the
+   * specified string.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.countMatches('', ''); // 0
+   * Strings.countMatches('', 'ho'); // 0
+   * Strings.countMatches('ho', ''); // 0
+   * Strings.countMatches('ho ho ho', 'ho'); // 3
+   * ```
    *
    * @param str Contains some string.
    * @param sequence Contains some string sequence.
    * @returns the number of sequence the given string matches.
    */
   public static countMatches(str: string, sequence: string): number {
-    if (str.length === 0 || sequence.length === 0) {
-      return 0;
+    let r = 0, l = str.length, sl = sequence.length, i = 0;
+    if (l === 0 || sl === 0 || sl > l) {
+      return r;
     }
 
-    const pattern = new RegExp(sequence, 'g');
-    return str.match(pattern)?.length ?? 0;
+    if (l === sl) {
+      return str === sequence ? 1 : 0;
+    }
+
+    // now the length of the string is greater than that of the sequence
+    while (i < l) {
+      const c = str.charAt(i);
+      const cs = sequence.charAt(0);
+      if (c === cs) {
+        // check whether the remaining length of the string is at least equal
+        // the length of the specified sequence
+        const rem = l - i;
+        if (sl <= rem) {
+          // now substring the specified string to the length of the sequence
+          // to check whether they are equal
+          const s = str.substring(i, i + sl);
+          if (s === sequence) {
+            r++;
+          }
+        }
+      }
+
+      i++;
+    }
+
+    return r;
   }
 
   /**
@@ -481,6 +547,37 @@ export abstract class Strings {
   public static getBytes(str: string): number {
     const textEncoder = new TextEncoder();
     return textEncoder.encode(str).length;
+  }
+
+  /**
+   * Checks whether the specified string contains the specified character.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.hasChar('abc', ''); // false
+   * Strings.hasChar('', ''); // false
+   * Strings.hasChar('', 'a'); // false
+   * Strings.hasChar('', 'ab'); // false
+   * Strings.hasChar('abc', 'b'); // true
+   * ```
+   *
+   * @param str Contains some string.
+   * @param char Contains some character.
+   * @returns whether the specified string contains the specified character.
+   */
+  public static hasChar(str: string, char: string): boolean {
+    let i = 0, l = str.length;
+    if (l === 0 || char.length !== 1) {
+      return false;
+    }
+
+    for (; i < l; i++) {
+      if (str.charAt(i) === char) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   /**
@@ -766,6 +863,30 @@ export abstract class Strings {
   }
 
   /**
+   * Checks whether the string character at the specified index is high
+   * surrogate. A high surrogate character is a 16-bit code character
+   * between `U+D800` and `U+DBFF`.
+   *
+   * @param str Contains some string.
+   * @param index Contains the index of the character to be checked
+   * whether it is low surrogate.
+   * @returns whether the string character at the specified index is
+   * low surrogate.
+   */
+  public static isHighSurrogate(str: string, index: number): boolean {
+    if (index >= str.length - 1 || Strings.isEmpty(str)) {
+      return false;
+    }
+
+    const charCode = str.charCodeAt(index);
+    if (Number.isNaN(charCode)) {
+      return false;
+    }
+
+    return 0xD800 <= charCode && charCode <= 0xDBFF;
+  }
+
+  /**
    * Checks whether the given string is lower case.
    *
    * @param s Contains some string.
@@ -785,6 +906,30 @@ export abstract class Strings {
     }
 
     return result;
+  }
+
+  /**
+   * Checks whether the string character at the specified index is a
+   * low surrogate. A low surrogate character is a 16-bit code character
+   * between `U+D800` and `U+DBFF`.
+   *
+   * @param str Contains some string.
+   * @param index Contains the index of the character to be checked
+   * whether it is low surrogate.
+   * @returns whether the string character at the specified index is
+   * low surrogate.
+   */
+  public static isLowSurrogate(str: string, index: number): boolean {
+    if (index < 1 || Strings.isEmpty(str)) {
+      return false;
+    }
+
+    const charCode = str.charCodeAt(index);
+    if (Number.isNaN(charCode)) {
+      return false;
+    }
+
+    return 0xDC00 <= charCode && charCode <= 0xDFFF;
   }
 
   /**
@@ -897,6 +1042,41 @@ export abstract class Strings {
   public static isStringObject(s?: any): s is String {
     const proto = Object.prototype.toString.call(s);
     return proto === '[object String]' && typeof s === 'object';
+  }
+
+  /**
+   * Checks whether the string character at the specified index together with
+   * the next character create a surrogate pair. A surrogate pair according to
+   * the [Unicode Standard](https://unicode.org/standard/standard.html) is a
+   * combination of a Unicode code point from U+D800 to U+DBFF a. k. a. "high
+   * surrogate" with another in range from U+DC00 to U+DFFF a. k. a. "low surrogate".
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.isSurrogatePair("🐑🐑🐑😀💖", 0); // true
+   * Strings.isSurrogatePair("😀💖", 0); // true
+   * Strings.isSurrogatePair("", 0); // false
+   * Strings.isSurrogatePair("abc", 1); // false
+   * ```
+   *
+   * @param str Contains some string.
+   * @param index Contains the index of the character. The index is zero-based
+   * i. e. begins with 0.
+   * @returns whether the string character at the specified index is surrogate.
+   */
+  public static isSurrogatePair(str: string, index: number): boolean {
+    const l = str.length;
+    if (l === 0 || index < 0 || index >= l) {
+      return false;
+    }
+
+    const c = str.charCodeAt(index);
+    const cpp = str.charCodeAt(index + 1);
+    if (Number.isNaN(c) || Number.isNaN(cpp)) {
+      return false;
+    }
+
+    return 0xd800 <= c && c <= 0xdbff && 0xdc00 <= cpp && cpp <= 0xdfff;
   }
 
   /**
@@ -1365,14 +1545,14 @@ export abstract class Strings {
   }
 
   /**
-   * Checks whether the given string ends with the given string sequence.
+   * Checks whether the given string starts with the specified string sequence.
    *
    * @param str Contains some string.
    * @param sequence Contains some string sequence.
    * @param ignoreCase Contains whether to ignore case-sensitivity.
    * @param position Contains the index at which to begin searching
    * in the given string. If omitted, it starts with the string end.
-   * @returns whether the given string ends with the given string sequence.
+   * @returns whether the given string starts with the specified string sequence.
    */
   public static startsWith(str: string, sequence: string, ignoreCase?: boolean, position?: number): boolean {
     if (ignoreCase) {
@@ -1380,6 +1560,42 @@ export abstract class Strings {
     }
 
     return str.startsWith(sequence, position);
+  }
+
+  /**
+   * Checks whether the specified string starts with any of the specified
+   * string sequences.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.startsWithAny(''); // false
+   * Strings.startsWithAny('', ''); // true
+   * Strings.startsWithAny('', 'abc'); // false
+   * Strings.startsWithAny('abc', ''); // false
+   * Strings.startsWithAny('abc', 'a'); // true
+   * Strings.startsWithAny('abc', 'a', 'b'); // true
+   * Strings.startsWithAny('abc', ...['a', 'b', 'c']); // true
+   * Strings.startsWithAny('abc def ghi', 'mno', 'pqr', 'abc'); // true
+   * ```
+   *
+   * @param str Contains some string.
+   * @param sequences Contains some string sequences.
+   * @returns whether the specified string starts with any of the specified
+   * string sequences.
+   */
+  public static startsWithAny(str: string, ...sequences: string[]): boolean {
+    let i = 0, l = sequences.length;
+    if (l === 0) {
+      return false;
+    }
+
+    while (i < l) {
+      if (Strings.indexOf(str, sequences[i++]) === 0) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   /**
@@ -1396,20 +1612,67 @@ export abstract class Strings {
   }
 
   /**
-   * Converts the given string to title case.
+   * Converts the specified string to an array of characters.
    *
-   * Adapted from
-   * [this StackOverflow Question](https://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript).
+   * **Example:**
+   * ```typescript
+   * Strings.toCharArray(''); // []
+   * Strings.toCharArray('abc'); // ['a', 'b', 'c']
+   * Strings.toCharArray('🐑🐑🐑'); // ['🐑', '🐑', '🐑'];
+   * ```
+   *
+   * @param str Contains some string.
+   * @returns an array of the characters of the specified string.
+   */
+  public static toCharArray(str: string): string[] {
+    if (str.length === 0) {
+      return [];
+    }
+
+    return [...str];
+  }
+
+  /**
+   * Converts the specified string to title case id este the first letter
+   * of the words between spaces is capitalized and the rest is converted
+   * to lowercase.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.toTitleCase(""); // ""
+   * Strings.toTitleCase("aBc"); // "Abc"
+   * Strings.toTitleCase("aBC dEf"); // "Abc Def"
+   * Strings.toTitleCase("\nabC"); // "\nAbc"
+   * Strings.toTitleCase("ab\t\f\t\nc"); // "Ab\t\f\t\nC"
+   * ```
+   *
    * @param str Contains some string.
    * @returns the title case string.
    */
   public static toTitleCase(str: string) {
-    return str.replace(
-      /\w\S*/g,
-      function (s) {
-        return s.charAt(0).toUpperCase() + s.substring(1).toLowerCase();
+    if (str.length === 0) {
+      return str;
+    }
+
+    let i = 0, r = Strings.EMPTY;
+    while (i < str.length) {
+      const c = str.charAt(i);
+      if (i === 0) {
+        r += Strings.isSpaceChar(c) ? c : c.toUpperCase();
       }
-    );
+
+      if (i > 0) {
+        if (!Strings.isSpaceChar(c)) {
+          const p = Strings.isSpaceChar(str.charAt(i - 1));
+          r += p ? c.toUpperCase() : c.toLowerCase();
+        } else {
+          r += c;
+        }
+      }
+
+      i++;
+    }
+    return r;
   }
 
   /**
@@ -1438,11 +1701,12 @@ export abstract class Strings {
    * @returns the truncated string.
    */
   public static truncate(str: string, maxChars: number): string {
-    if (maxChars < 0 || !Numbers.isNaturalNumber(maxChars)) {
-      throw new TypeError(`Invalid string max length: ${maxChars}.`);
+    const length = str.length;
+    if (!Numbers.isNatural(maxChars) || maxChars < 0 || maxChars > length) {
+      return str;
     }
 
-    if (str.length > maxChars) {
+    if (length > maxChars) {
       return `${str.substring(0, maxChars - 1)}\u2026`;
     }
 
