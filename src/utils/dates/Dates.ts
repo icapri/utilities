@@ -636,223 +636,46 @@ export abstract class Dates {
    * ISO 8601 date string; otherwise `null`.
    */
   public static parseISO(str?: string): Date | null {
-    // checking whether the argument is of type string is still worth
-    // it because of sth. like "Dates.parseISO(false as unknown as string)"
-    if (!Strings.isString(str) || str.length === 0) {
-      return null;
-    }
+    if (!Strings.isString(str) || str.length === 0) return null;
+    const iso = str.trim(), len = iso.length;
+    if (Strings.isEmpty(iso)) return null;
+    if (len <= 24) {
+      const s1 = iso.charAt(4);
+      const s2 = iso.charAt(7);
+      const s3 = iso.charAt(10);
+      const s4 = iso.charAt(13);
+      const s5 = iso.charAt(16);
+      const s6 = iso.charAt(19);
+      const s7 = iso.charAt(23);
 
-    // DevNote: Refactor this method so that its # of code lines < 100
-    const iso = str;
-    const len = iso.length;
-    // according to the ISO 8601, the shortest ISO string could be 4
-    // characters long for the YYYY
-    if (len < 4) {
-      return null;
-    }
-
-    // YYYY
-    if (len === 4) {
-      // the string should be in range 0000 - 9999
-      const year = +iso;
-      if (!Numbers.isNatural(year)) {
-        return null;
-      }
-
-      if (year >= 0 && year <= 9999) {
-        const date = new Date(year, 0, 1, 0, 0, 0, 0);
-        const offset = Dates.getTimezoneOffset(date);
-        return new Date(date.valueOf() - offset);
-      }
-    }
-
-    // YYYY-MM
-    if (len === 7) {
-      if (iso.charAt(4) !== '-') {
-        return null;
-      }
-
-      const year = +iso.substring(0, 4);
-      const month = +iso.substring(5);
-      if (!Numbers.isNatural(year) || !Numbers.isNatural(month)) {
-        return null;
-      }
-
-      if (year >= 0 && year <= 9999 && month > 0 && month <= 12) {
-        const date = new Date(year, month - 1, 1, 0, 0, 0, 0);
-        const offset = Dates.getTimezoneOffset(date);
-        return new Date(date.valueOf() - offset);
-      }
-    }
-
-    // YYYY-MM-DD
-    if (len === 10) {
-      if (iso.charAt(4) !== '-' || iso.charAt(7) !== '-') {
-        return null;
-      }
-
-      const year = +iso.substring(0, 4);
-      const month = +iso.substring(5, 7);
-      const day = +iso.substring(8);
-      if (!Numbers.isNatural(year) || !Numbers.isNatural(month) || !Numbers.isNatural(day)) {
-        return null;
-      }
-
-      if (year >= 0 && year <= 9999 && month > 0 && month <= 12) {
-        const daysOfMonth = Dates.daysOfMonth(month, year);
-        if (day > 0 && day <= daysOfMonth) {
-          const date = new Date(year, month - 1, day, 0, 0, 0, 0);
-          const offset = Dates.getTimezoneOffset(date);
-          return new Date(date.valueOf() - offset);
-        }
-
-        return null;
-      }
-    }
-
-    // YYYY-MM-DDThh
-    if (len === 13) {
-      if (iso.charAt(4) !== '-' || iso.charAt(7) !== '-' || iso.charAt(10) !== 'T') {
-        return null;
-      }
-
-      const year = +iso.substring(0, 4);
-      const month = +iso.substring(5, 7);
-      const day = +iso.substring(8, 10);
-      const hour = +iso.substring(11);
-      if (!Numbers.isNatural(year)
-        || !Numbers.isNatural(month)
-        || !Numbers.isNatural(day)
-        || !Numbers.isNatural(hour)
+      if (
+        (s1 !== '-' && s1 !== '')
+        || (s2 !== '-' && s2 !== '')
+        || (s3 !== 'T' && s3 !== '')
+        || (s4 !== ':' && s4 !== '')
+        || (s5 !== ':' && s5 !== '')
+        || (s6 !== '.' && s6 !== '')
+        || (s7 !== 'Z' && s7 !== '')
       ) {
         return null;
       }
 
-      if (year >= 0 && year <= 9999 && month > 0 && month <= 12 && hour >= 0 && hour <= 24) {
-        const daysOfMonth = Dates.daysOfMonth(month, year);
-        if (day > 0 && day <= daysOfMonth) {
-          const date = new Date(year, month - 1, day, hour, 0, 0, 0);
-          const offset = Dates.getTimezoneOffset(date);
-          return new Date(date.valueOf() - offset);
-        }
+      const yStr = iso.substring(0, 4);
+      if (Strings.isEmpty(yStr)) return null;
+      const MStr = iso.substring(5, 7);
+      const dStr = iso.substring(8, 10);
+      const hStr = iso.substring(11, 13);
+      const mStr = iso.substring(14, 16);
+      const sStr = iso.substring(17, 19);
+      const msStr = iso.substring(20, 23);
 
-        return null;
-      }
-    }
-
-    // YYYY-MM-DDThh:mm
-    if (len === 16) {
-      if (iso.charAt(4) !== '-'
-        || iso.charAt(7) !== '-'
-        || iso.charAt(10) !== 'T'
-        || iso.charAt(13) !== ':'
-      ) {
-        return null;
-      }
-
-      const year = +iso.substring(0, 4);
-      const month = +iso.substring(5, 7);
-      const day = +iso.substring(8, 10);
-      const hour = +iso.substring(11, 13);
-      const minutes = +iso.substring(14);
-      if (!Numbers.isNatural(year)
-        || !Numbers.isNatural(month)
-        || !Numbers.isNatural(day)
-        || !Numbers.isNatural(hour)
-        || !Numbers.isNatural(minutes)
-      ) {
-        return null;
-      }
-
-      if (year >= 0
-        && year <= 9999
-        && month > 0
-        && month <= 12
-        && hour >= 0
-        && hour <= 24
-        && minutes >= 0
-        && minutes <= 59
-      ) {
-        const daysOfMonth = Dates.daysOfMonth(month, year);
-        if (day > 0 && day <= daysOfMonth) {
-          const date = new Date(year, month - 1, day, hour, minutes, 0, 0);
-          const offset = Dates.getTimezoneOffset(date);
-          return new Date(date.valueOf() - offset);
-        }
-
-        return null;
-      }
-    }
-
-    // YYYY-MM-DDThh:mm:ss
-    if (len === 19) {
-      if (iso.charAt(4) !== '-'
-        || iso.charAt(7) !== '-'
-        || iso.charAt(10) !== 'T'
-        || iso.charAt(13) !== ':'
-        || iso.charAt(16) !== ':'
-      ) {
-        return null;
-      }
-
-      const year = +iso.substring(0, 4);
-      const month = +iso.substring(5, 7);
-      const day = +iso.substring(8, 10);
-      const hour = +iso.substring(11, 13);
-      const minutes = +iso.substring(14, 16);
-      const seconds = +iso.substring(17);
-      if (!Numbers.isNatural(year)
-        || !Numbers.isNatural(month)
-        || !Numbers.isNatural(day)
-        || !Numbers.isNatural(hour)
-        || !Numbers.isNatural(minutes)
-        || !Numbers.isNatural(seconds)
-      ) {
-        return null;
-      }
-
-      if (year >= 0
-        && year <= 9999
-        && month > 0
-        && month <= 12
-        && hour >= 0
-        && hour <= 24
-        && minutes >= 0
-        && minutes <= 59
-        && seconds >= 0
-        && seconds <= 60 // Note: because of the s. c. "leap second"
-      ) {
-        const daysOfMonth = Dates.daysOfMonth(month, year);
-        if (day > 0 && day <= daysOfMonth) {
-          const date = new Date(year, month - 1, day, hour, minutes, seconds, 0);
-          const offset = Dates.getTimezoneOffset(date);
-          return new Date(date.valueOf() - offset);
-        }
-
-        return null;
-      }
-    }
-
-    // YYYY-MM-DDThh:mm:ss.sssZ
-    if (len === 24) {
-      if (iso.charAt(4) !== '-'
-        || iso.charAt(7) !== '-'
-        || iso.charAt(10) !== 'T'
-        || iso.charAt(13) !== ':'
-        || iso.charAt(16) !== ':'
-        || iso.charAt(19) !== '.'
-        || iso.charAt(len - 1) !== 'Z'
-      ) {
-        return null;
-      }
-
-      const year = +iso.substring(0, 4);
-      const month = +iso.substring(5, 7);
-      const day = +iso.substring(8, 10);
-      const hour = +iso.substring(11, 13);
-      const minutes = +iso.substring(14, 16);
-      const seconds = +iso.substring(17, 19);
-      const milliseconds = +iso.substring(20, 23);
+      const year = +yStr;
+      const month = Strings.isEmpty(MStr) ? 1 : +MStr;
+      const day = Strings.isEmpty(dStr) ? 1 : +dStr;
+      const hour = Strings.isEmpty(hStr) ? 0 : +hStr;
+      const minutes = Strings.isEmpty(mStr) ? 0 : +mStr;
+      const seconds = Strings.isEmpty(sStr) ? 0 : +sStr;
+      const milliseconds = Strings.isEmpty(msStr) ? 0 : +msStr;
       if (!Numbers.isNatural(year)
         || !Numbers.isNatural(month)
         || !Numbers.isNatural(day)
@@ -883,11 +706,8 @@ export abstract class Dates {
           const offset = Dates.getTimezoneOffset(date);
           return new Date(date.valueOf() - offset);
         }
-
-        return null;
       }
     }
-
     return null;
   }
 
