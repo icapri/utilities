@@ -1,4 +1,4 @@
-import { Util } from '../Util';
+import { Utils } from '../Utils';
 
 /**
  * Gets the object entries.
@@ -120,6 +120,20 @@ export abstract class Objects {
   }
 
   /**
+   * Gets the class name of the specified argument.
+   *
+   * **Example:**
+   * ```typescript
+   * Utils.getClassOf(9); // "[object Number]"
+   * Utils.getClassOf("abc"); // "[object String]"
+   * Utils.getClassOf(false); // "[object Boolean]"
+   * ```
+   *
+   * @returns the class name of the specified argument.
+   */
+  public static getClassOf = Function.prototype.call.bind(Object.prototype.toString);
+
+  /**
    * Checks whether the given object has a property with the given name.
    *
    * @param o Contains some object.
@@ -171,7 +185,7 @@ export abstract class Objects {
   public static isNotNull<T extends object>(o?: T | null): o is T;
   public static isNotNull<T extends Object>(o?: T | null): o is T;
   public static isNotNull<T extends object | Object>(o?: T | null): o is T {
-    return Util.isNotNil(o);
+    return Utils.isNotNil(o);
   }
 
   /**
@@ -183,7 +197,7 @@ export abstract class Objects {
   public static isNull<T extends object>(o?: T | null | undefined): o is null | undefined;
   public static isNull<T extends Object>(o?: T | null | undefined): o is null | undefined;
   public static isNull<T extends object | Object>(o?: T | null | undefined): o is null | undefined {
-    return Util.isNullOrUndefined(o);
+    return Utils.isNullOrUndefined(o);
   }
 
   /**
@@ -207,7 +221,7 @@ export abstract class Objects {
     let i = 0, length = values.length;
     while (i < length) {
       const value = values[i];
-      if (Util.isNullOrUndefined(value)) {
+      if (Utils.isNullOrUndefined(value)) {
         return false;
       }
 

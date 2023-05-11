@@ -1,6 +1,6 @@
 import { Arrays } from '../arrays/Arrays';
 import { Numbers } from '../numbers/Numbers';
-import { Util } from '../Util';
+import { Utils } from '../Utils';
 
 /**
  * Defines an abstract class with string utilities.
@@ -72,6 +72,35 @@ export abstract class Strings {
   /** @private */
   private constructor() {
     throw new Error('Cannot create an instance of an abstract class.');
+  }
+
+  /**
+   * Abbreviates the specified string to the given number of characters.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.abbreviate("", 2); // ""
+   * Strings.abbreviate("a", 1); // "a"
+   * Strings.abbreviate("abc", 2); // "ab..."
+   * ```
+   *
+   * @param str Contains some string.
+   * @param maxLength Contains the maximal number of characters to show from the
+   * specified string.
+   * @param marker Contains the abbreviation marker. Defaults to ellipsis `"..."`.
+   * @returns the abbreviated string.
+   */
+  public static abbreviate(str: string, maxLength: number, marker: string = '...'): string {
+    const length = str.length;
+    if (length === 0) {
+      return str;
+    }
+
+    if (length <= maxLength || Numbers.isNatural(maxLength) === false) {
+      return str;
+    }
+
+    return str.slice(0, maxLength) + marker;
   }
 
   /**
@@ -305,7 +334,7 @@ export abstract class Strings {
       return false;
     }
 
-    return sequences.every((sequence) => !str.includes(sequence));
+    return sequences.every((sequence) => str.includes(sequence) === false);
   }
 
   /**
@@ -465,7 +494,7 @@ export abstract class Strings {
       return false;
     }
 
-    return sequences.every((sequence) => !str.endsWith(sequence));
+    return sequences.every((sequence) => str.endsWith(sequence) === false);
   }
 
   /**
@@ -566,13 +595,13 @@ export abstract class Strings {
    * @returns whether the specified string contains the specified character.
    */
   public static hasChar(str: string, char: string): boolean {
-    let i = 0, l = str.length;
+    let l = str.length, i = 0, j = l - 1;
     if (l === 0 || char.length !== 1) {
       return false;
     }
 
-    for (; i < l; i++) {
-      if (str.charAt(i) === char) {
+    while (i <= j) {
+      if (str.charAt(i++) === char || str.charAt(j--) === char) {
         return true;
       }
     }
@@ -627,16 +656,14 @@ export abstract class Strings {
       }
     }
 
-    let i = l, r = false;
-    while (i > 0) {
-      const c = str.charAt(--i);
-      if (Strings.isSpaceChar(c)) {
-        r = true;
-        break;
+    let i = 0, j = l - 1;
+    while (i <= j) {
+      if (Strings.isSpaceChar(str.charAt(i++)) || Strings.isSpaceChar(str.charAt(j--))) {
+        return true;
       }
     }
 
-    return r;
+    return false;
   }
 
   /**
@@ -833,13 +860,15 @@ export abstract class Strings {
    * **Example:**
    * ```typescript
    * Strings.isBinary('☻'); // false
+   * Strings.isBinary(''); // true
+   * Strings.isBinary('abc'); // true
    * ```
    *
    * @param str Contains some string.
    * @returns whether each character of the string occupies only one byte.
    */
   public static isBinary(str: string) {
-    return !/[^\u0000-\u00ff]/.test(str);
+    return /[^\u0000-\u00ff]/.test(str) === false;
   }
 
   /**
@@ -939,7 +968,7 @@ export abstract class Strings {
    * @returns whether the given string value is `null`, `undefined` or `""`.
    */
   public static isNilOrEmpty(str?: string | null | undefined): str is null | undefined {
-    if (Util.isNullOrUndefined(str)) {
+    if (Utils.isNullOrUndefined(str)) {
       return true;
     }
 
@@ -953,7 +982,7 @@ export abstract class Strings {
    * @returns whether the given string is `null`, `undefined` or white space.
    */
   public static isNilOrWhitespace(str?: string | null): str is null {
-    if (Util.isNullOrUndefined(str)) {
+    if (Utils.isNullOrUndefined(str)) {
       return true;
     }
 
@@ -967,7 +996,7 @@ export abstract class Strings {
    * @returns whether the given string is not empty.
    */
   public static isNotEmpty(str: string): boolean {
-    return !Strings.isEmpty(str);
+    return Strings.isEmpty(str) === false;
   }
 
   /**
@@ -977,7 +1006,7 @@ export abstract class Strings {
    * @returns whether the given string is `null` or `""`.
    */
   public static isNullOrEmpty(str: string | null): str is null {
-    if (Util.isNull(str)) {
+    if (Utils.isNull(str)) {
       return true;
     }
 
@@ -991,7 +1020,7 @@ export abstract class Strings {
    * @returns whether the given string is `null` or white space.
    */
   public static isNullOrWhitespace(str: string | null): str is null {
-    if (Util.isNull(str)) {
+    if (Utils.isNull(str)) {
       return true;
     }
 
@@ -1005,7 +1034,7 @@ export abstract class Strings {
    * @returns whether the given string represents a stringified number.
    */
   public static isNumeric(str: string) {
-    return !Number.isNaN(str) && !Number.isNaN(parseFloat(str));
+    return Number.isNaN(str) === false && Number.isNaN(parseFloat(str)) === false;
   }
 
   /**
@@ -1137,16 +1166,15 @@ export abstract class Strings {
       }
     }
 
-    let i = l, r = true;
-    while (i > 0) {
-      const c = str.charAt(--i);
-      if (!Strings.isSpaceChar(c)) {
-        r = false;
-        break;
+    let i = 0, j = l - 1;
+    while (i <= j) {
+      if (Strings.isSpaceChar(str.charAt(i++)) === false
+        || Strings.isSpaceChar(str.charAt(j--)) === false) {
+        return false;
       }
     }
 
-    return r;
+    return true;
   }
 
   /**
@@ -1329,29 +1357,33 @@ export abstract class Strings {
    * @returns the longest of the given strings.
    */
   public static longest(...strs: string[]): string {
-    const length = strs.length;
-    if (length === 0) {
+    const l = strs.length;
+    if (l === 0) {
       return Strings.EMPTY;
     }
 
-    if (length === 1) {
+    if (l === 1) {
       return strs[0];
     }
 
-    if (length === 2) {
+    if (l === 2) {
       const str0 = strs[0];
       const str1 = strs[1];
       return str0.length > str1.length ? str0 : str1;
     }
 
-    let res = Strings.EMPTY;
-    for (const str of strs) {
-      if (str.length > res.length) {
-        res = str;
+    let i = 0, j = l - 1, r = Strings.EMPTY;
+    while (i <= j) {
+      const si = strs[i++], sj = strs[j--];
+      if (si.length > r.length) {
+        r = si;
+      }
+      if (sj.length > r.length) {
+        r = sj;
       }
     }
 
-    return res;
+    return r;
   }
 
   /**
@@ -1377,12 +1409,22 @@ export abstract class Strings {
    * @returns the normalized string.
    */
   public static normalize(str: string): string {
-    const s = str.trim();
-    if (Strings.isEmpty(s)) {
+    const l = str.length;
+    if (l === 0) {
       return Strings.EMPTY;
     }
 
-    return s.replace(/\s+/g, ' ');
+    let i = 0, r = Strings.EMPTY;
+    for (; i < l; i++) {
+      const c = str.charAt(i);
+      if (Strings.isSpaceChar(c) && Strings.isSpaceChar(str.charAt(i + 1))) {
+        continue;
+      }
+
+      r += c;
+    }
+
+    return r.trim();
   }
 
   /**
@@ -1508,7 +1550,7 @@ export abstract class Strings {
     let res = Strings.EMPTY, i = 0;
     while (i < len) {
       const c = str.charAt(i++);
-      if (!Strings.isSpaceChar(c)) {
+      if (Strings.isSpaceChar(c) === false) {
         res += c;
       }
     }
@@ -1524,7 +1566,7 @@ export abstract class Strings {
    * @returns the `times`-repeated string.
    */
   public static repeat(str: string, times: number): string {
-    if (Strings.isEmpty(str) || !Numbers.isInteger(times) || times < 0) {
+    if (Strings.isEmpty(str) || Numbers.isInteger(times) === false || times < 0) {
       return Strings.EMPTY;
     }
 
@@ -1656,13 +1698,13 @@ export abstract class Strings {
 
     let i = 0, r = Strings.EMPTY;
     while (i < str.length) {
-      const c = str.charAt(i);
+      const c = str.charAt(i), s = Strings.isSpaceChar(c);
       if (i === 0) {
-        r += Strings.isSpaceChar(c) ? c : c.toUpperCase();
+        r += s ? c : c.toUpperCase();
       }
 
       if (i > 0) {
-        if (!Strings.isSpaceChar(c)) {
+        if (s === false) {
           const p = Strings.isSpaceChar(str.charAt(i - 1));
           r += p ? c.toUpperCase() : c.toLowerCase();
         } else {
@@ -1676,8 +1718,17 @@ export abstract class Strings {
   }
 
   /**
-   * Removes white spaces from the beginning and from the end of the given
-   * string.
+   * Removes the whitespaces both from the beginning and from the
+   * end of the specified string.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.trim(""); // ""
+   * Strings.trim(" "); // ""
+   * Strings.trim(" abc "); // "abc"
+   * Strings.trim("\nabc\t"); // "abc"
+   * Strings.trim(" abc  ab       d \n\t\f"); // "abc  ab       d"
+   * ```
    *
    * @param str Contains some string.
    * @returns the trimmed string.
@@ -1685,29 +1736,30 @@ export abstract class Strings {
    * @see `Strings.strip()`
    */
   public static trim(str: string): string {
-    if (Strings.isEmpty(str)) {
+    const l = str.length;
+    if (l === 0) {
       return str;
     }
 
-    return str.trim();
-  }
-
-  /**
-   * Truncates the given string to the given number of chars. The rest
-   * of the chars is replaced by "...".
-   *
-   * @param str Contains some string.
-   * @param maxChars Contains the max number of chars to show.
-   * @returns the truncated string.
-   */
-  public static truncate(str: string, maxChars: number): string {
-    const length = str.length;
-    if (!Numbers.isNatural(maxChars) || maxChars < 0 || maxChars > length) {
-      return str;
+    if (Strings.isWhitespace(str)) {
+      return Strings.EMPTY;
     }
 
-    if (length > maxChars) {
-      return `${str.substring(0, maxChars - 1)}\u2026`;
+    let i = 0, j = l - 1;
+    while (i <= j) {
+      const ci = str.charAt(i), cj = str.charAt(j);
+      const si = Strings.isSpaceChar(ci), sj = Strings.isSpaceChar(cj);
+      if (si === false && sj === false) {
+        return str.substring(i, j + 1);
+      }
+
+      if (si) {
+        i++;
+      }
+
+      if (sj) {
+        j--;
+      }
     }
 
     return str;

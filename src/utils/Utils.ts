@@ -1,23 +1,11 @@
 /**
  * Defines a base utility class.
  */
-export abstract class Util {
+export abstract class Utils {
   /** @private */
   private constructor() {
     throw new Error('Cannot create an instance of an abstract class.');
   }
-
-  /**
-   * Gets the class name of the specified argument.
-   *
-   * **Example:**
-   * ```typescript
-   * console.log(Util.getClassOf(9)); // "[object Number]"
-   * ```
-   *
-   * @returns the class name of the specified argument.
-   */
-  public static getClassOf = Function.prototype.call.bind(Object.prototype.toString);
 
   /**
    * Checks whether the given value is of boolean type.
@@ -36,7 +24,7 @@ export abstract class Util {
    * @returns whether the given value is defined.
    */
   public static isDefined<T>(value?: T | undefined): value is T {
-    return !Util.isUndefined(value);
+    return !Utils.isUndefined(value);
   }
 
   /**
@@ -70,7 +58,7 @@ export abstract class Util {
    * @returns whether the given value is neither `null` nor `undefined`.
    */
   public static isNotNil<T>(value?: T | null | undefined): value is T {
-    return !Util.isNullOrUndefined(value);
+    return !Utils.isNullOrUndefined(value);
   }
 
   /**
@@ -80,7 +68,7 @@ export abstract class Util {
    * @returns whether the given value is not `null`.
    */
   public static isNotNull<T>(value?: T | null): value is T {
-    return !Util.isNull(value);
+    return !Utils.isNull(value);
   }
 
   /**
@@ -90,7 +78,7 @@ export abstract class Util {
    * @returns whether the given value is not `undefined`.
    */
   public static isNotUndefined<T>(value?: T | undefined): value is T {
-    return !Util.isUndefined(value);
+    return !Utils.isUndefined(value);
   }
 
   /**
@@ -110,7 +98,7 @@ export abstract class Util {
    * @returns whether the given value is `null` or `undefined`.
    */
   public static isNullOrUndefined(value?: any): value is null | undefined {
-    return Util.isNull(value) || Util.isUndefined(value);
+    return Utils.isNull(value) || Utils.isUndefined(value);
   }
 
   /**
@@ -140,7 +128,7 @@ export abstract class Util {
    * @returns whether the given value is not falsy.
    */
   public static isTruthy<T>(value: T | null | undefined | false | 0 | -0 | 0n | ''): value is T {
-    return !Util.isFalsy(value);
+    return !Utils.isFalsy(value);
   }
 
   /**

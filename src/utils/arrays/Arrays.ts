@@ -1,5 +1,5 @@
 import { Objects } from '../objects/Objects';
-import { Util } from '../Util';
+import { Utils } from '../Utils';
 
 /**
  * Defines an abstract class with array utilities.
@@ -111,7 +111,17 @@ export abstract class Arrays {
   public static has<T>(array: T[], item: T): boolean;
   public static has<T>(array: readonly T[], item: T): boolean;
   public static has<T>(array: T[] | readonly T[], item: T): boolean {
-    return array.includes(item);
+    const l = array.length;
+    if (l !== 0) {
+      let i = 0, j = l - 1;
+      while (i <= j) {
+        if (array[i++] === item || array[j--] === item) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
   /**
@@ -188,32 +198,31 @@ export abstract class Arrays {
     return !array.length;
   }
 
-  public static isHomogeneous<T>(array: T[]): boolean;
-  public static isHomogeneous<T>(array: readonly T[]): boolean;
-  public static isHomogeneous<T>(array: T[] | readonly T[]): boolean {
-    // the method does not apply for array with at most 1 item
-    const length = array.length;
-    if (length < 2) {
-      return true;
-    }
-
-    // for primitive types, we check by using `typeof`
-    if (array.every((item) => Util.isPrimitive(item))) {
-      return new Set(array.map((item) => typeof item)).size <= 1;
-    }
-
-    const _1stType = Util.getClassOf(array[0]);
-    if (array.every((item) => Objects.isObject(item))) {
-      let i = 1, x = true;
-      while (i < length) {
-        if (_1stType !== Util.getClassOf(array[i])) {
-          x = false;
-          break;
+  /**
+   * Checks whether the specified array is identical i. e. whether
+   * all the array items are equal to one another.
+   *
+   * **Example:**
+   * ```typescript
+   * Arrays.isIdentical([]); // true
+   * Arrays.isIdentical(["a"]); // true
+   * Arrays.isIdentical(["a", "a"]); // true
+   * Arrays.isIdentical(["a", "b"]); // false
+   * Arrays.isIdentical([1, false]); // false
+   * ```
+   *
+   * @param array Contains some array.
+   * @returns whether the specified array is identical.
+   */
+  public static isIdentical<T>(array: T[]): boolean {
+    const l = array.length;
+    if (l > 1) {
+      let i = 0;
+      while (i < l - 1) {
+        if (array[i] !== array[++i]) {
+          return false;
         }
-        i++;
       }
-
-      return x;
     }
 
     return true;

@@ -210,15 +210,6 @@ export abstract class Dates {
   }
 
   /**
-   * Gets the date after tomorrow at midnight i. e. at start of the day.
-   */
-  public static get afterTomorrow(): Date {
-    const afterTomorrow = Dates.now;
-    afterTomorrow.setDate(afterTomorrow.getDate() + 2);
-    return Dates.dateOnly(afterTomorrow);
-  }
-
-  /**
    * Gets the start of the day i. e. the midnight date.
    *
    * **Example:**
@@ -247,7 +238,7 @@ export abstract class Dates {
    * @returns a cloned copy of the given date object. 
    */
   public static clone(date: Date): Date {
-    return Dates.tryParse(date);
+    return new Date(date.getTime());
   }
 
   /**
@@ -281,8 +272,8 @@ export abstract class Dates {
    */
   public static dateOnly(date: string | number | Date): Date {
     const dateObj = Dates.tryParse(date);
-    const timeFromMidnight = dateObj.getTime() % Dates.MS_IN_DAY;
-    return new Date(dateObj.getTime() - timeFromMidnight);
+    const msFromDayStart = dateObj.getTime() % Dates.MS_IN_DAY;
+    return new Date(dateObj.getTime() - msFromDayStart);
   }
 
   /**
@@ -333,7 +324,7 @@ export abstract class Dates {
    * objects during the comparison.
    * @returns whether the two date objects are equal.
    */
-  public static equal(
+  public static equals(
     a: string | number | Date,
     b: string | number | Date,
     ignoreTime: boolean = false
@@ -347,48 +338,6 @@ export abstract class Dates {
     }
 
     return aObj.getTime() === bObj.getTime();
-  }
-
-  /**
-   * Parses the given value as a date object.
-   *
-   * @param value Contains some string, number or Date object. If this argument
-   * is not defined, the current date is returned.
-   * @returns a date object in case the specified value can be parsed as a
-   * date object; otherwise `null`.
-   */
-  public static from(value?: string | number | Date): Date | null {
-    if (Dates.isDate(value) && Dates.isValid(value)) {
-      return value;
-    }
-
-    value ??= new Date();
-    let date: Date;
-    if (typeof value === 'string' && value.match(/(-\d\d|(\+|-)\d{2}:\d{2}|Z)$/gm)) {
-      date = new Date(value);
-    } else {
-      if (!(value instanceof Date)) {
-        value = new Date(value);
-      }
-
-      date = new Date(
-        Date.UTC(
-          value.getFullYear(),
-          value.getMonth(),
-          value.getDate(),
-          value.getHours(),
-          value.getMinutes(),
-          value.getSeconds(),
-          value.getMilliseconds()
-        )
-      );
-    }
-
-    if (Dates.isValid(date)) {
-      return date;
-    }
-
-    return null;
   }
 
   /**
@@ -418,7 +367,7 @@ export abstract class Dates {
    * @param other Contains some other date object.
    * @returns the difference in hours between the two specified dates.
    */
-  public static hoursDifference(date: Date, other: Date): number {
+  public static hoursDifference(date: string | number | Date, other: string | number | Date): number {
     const dateObj = Dates.tryParse(date);
     const otherObj = Dates.tryParse(other);
     return Numbers.abs(dateObj.getTime() - otherObj.getTime()) / Dates.MS_IN_HOUR;
@@ -495,9 +444,13 @@ export abstract class Dates {
 
     const isBeforeEqual = incl[0] === '[', isAfterEqual = incl[1] === ']';
     return (
-      isBeforeEqual ? (Dates.equal(from, date) || Dates.isBefore(from, date)) : Dates.isBefore(from, date)
+      isBeforeEqual
+        ? (Dates.equals(from, date) || Dates.isBefore(from, date))
+        : Dates.isBefore(from, date)
     ) && (
-        isAfterEqual ? (Dates.equal(to, date) || Dates.isAfter(to, date)) : Dates.isAfter(to, date)
+        isAfterEqual
+          ? (Dates.equals(to, date) || Dates.isAfter(to, date))
+          : Dates.isAfter(to, date)
       );
   }
 
@@ -532,13 +485,67 @@ export abstract class Dates {
    */
   public static isFuture(date: string | number | Date, ignoreTime: boolean = false): boolean {
     const now = Dates.now;
-    const dateObj = Dates.tryParse(date);
     if (ignoreTime) {
-      const x = Dates.dateOnly(dateObj);
-      return Dates.isAfter(x, now);
+      return Dates.isAfter(Dates.dateOnly(date), now);
     }
 
-    return Dates.isAfter(dateObj, now);
+    return Dates.isAfter(date, now);
+  }
+
+  /**
+   * Checks whether the specified string is a valid ISO 8601 date string
+   * which has the format `YYYY-MM-DDTHH:mm:ss.sssZ`.
+   *
+   * **Example:**
+   * ```typescript
+   * Dates.isISOString('2023-11-11T23:15:22.999Z'); // true
+   * Dates.isISOString('2023-13-11T23:15:22.999Z'); // false
+   * ```
+   *
+   * @param str Contains some string.
+   * @returns whether the specified string is a valid ISO 8601 date string.
+   */
+  public static isISOString(str?: string): str is string {
+    if (typeof str !== 'string' || str.length !== 24) return false;
+    const iso = str;
+    if ((iso.charAt(4) === '-')
+      && (iso.charAt(7) === '-')
+      && (iso.charAt(10) === 'T')
+      && (iso.charAt(13) === ':')
+      && (iso.charAt(16) === ':')
+      && (iso.charAt(19) === '.')
+      && (iso.charAt(23) === 'Z')) {
+      const year = +iso.substring(0, 4);
+      const month = +iso.substring(5, 7);
+      const day = +iso.substring(8, 10);
+      const hour = +iso.substring(11, 13);
+      const minutes = +iso.substring(14, 16);
+      const seconds = +iso.substring(17, 19);
+      const milliseconds = +iso.substring(20, 23);
+      if (Numbers.isNatural(year)
+        && Numbers.isNatural(month)
+        && Numbers.isNatural(day)
+        && Numbers.isNatural(hour)
+        && Numbers.isNatural(minutes)
+        && Numbers.isNatural(seconds)
+        && Numbers.isNatural(milliseconds)
+      ) {
+        return year >= 0
+          && year <= 9999
+          && month > 0
+          && month <= 12
+          && hour >= 0
+          && hour <= 23
+          && minutes >= 0
+          && minutes <= 59
+          && seconds >= 0
+          && seconds < 60
+          && milliseconds >= 0
+          && milliseconds <= 999
+          && day > 0 && day <= Dates.daysOfMonth(month, year);
+      }
+    }
+    return false;
   }
 
   /**
@@ -696,7 +703,7 @@ export abstract class Dates {
         && minutes >= 0
         && minutes <= 59
         && seconds >= 0
-        && seconds <= 60 // Note: because of the s. c. "leap second"
+        && seconds < 60
         && milliseconds >= 0
         && milliseconds <= 999
       ) {
@@ -746,13 +753,6 @@ export abstract class Dates {
   }
 
   /**
-   * Gets the date today at midnight i. e. at start of the day.
-   */
-  public static get today(): Date {
-    return Dates.dateOnly(Dates.now);
-  }
-
-  /**
    * Converts a Universal Coordinated Time (UTC) date object to a local
    * date object.
    *
@@ -778,20 +778,6 @@ export abstract class Dates {
   }
 
   /**
-   * Gets the date tomorrow at the same time of day.
-   */
-  public static get tomorrow(): Date {
-    return Dates.addDays(Dates.now, 1);
-  }
-
-  /**
-   * Gets the date tomorrow at midnight i. e. at start of the day.
-   */
-  public static get tomorrowAtMidnight(): Date {
-    return Dates.addDays(Dates.today, 1);
-  }
-
-  /**
    * Gets the Coordinated Universal Time (UTC) right now.
    */
   public static get utcNow(): Date {
@@ -813,17 +799,34 @@ export abstract class Dates {
   }
 
   /**
-   * Gets the date yesterday at the same time of day.
+   * Parses the given value as a date object.
+   *
+   * @param value Contains some string, number or Date object. If this argument
+   * is not defined, the current date is returned.
+   * @returns a date object in case the specified value can be parsed as a
+   * date object; otherwise `null`.
+   *
+   * @private
    */
-  public static get yesterday(): Date {
-    return Dates.removeDays(Dates.now, 1);
-  }
+  private static from(value?: string | number | Date): Date | null {
+    if (Dates.isDate(value) && Dates.isValid(value)) {
+      return value;
+    }
 
-  /**
-   * Gets the date yesterday at midnight i. e. at start of day.
-   */
-  public static get yesterdayAtMidnight(): Date {
-    return Dates.removeDays(Dates.today, 1);
+    value ??= new Date();
+    // if the value is an ISO 8601 date string, parse it
+    if (Strings.isString(value)) {
+      return Dates.parseISO(value);
+    } else {
+      if (Dates.isDate(value) === false) {
+        value = new Date(value);
+        if (Dates.isValid(value)) {
+          return value;
+        }
+      }
+    }
+
+    return null;
   }
 
   /**
@@ -844,7 +847,7 @@ export abstract class Dates {
   private static tryParse(value: string | number | Date): Date {
     const date = Dates.from(value);
     if (date === null) {
-      throw new TypeError(`Failed to parse date: "${value}".`);
+      throw new TypeError(`Cannot parse date: "${String(value)}"`);
     }
 
     return date;

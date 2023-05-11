@@ -1,6 +1,16 @@
 import { Strings } from './Strings'
 
 describe('Strings', () => {
+  test('Strings.abbreviate()', () => {
+    expect(Strings.abbreviate('', 2)).toEqual('')
+    expect(Strings.abbreviate('', 2.5)).toEqual('')
+    expect(Strings.abbreviate('', -2)).toEqual('')
+    expect(Strings.abbreviate('a', 1)).toEqual('a')
+    expect(Strings.abbreviate('abc', 2)).toEqual('ab...')
+    expect(Strings.abbreviate('Lorem ipsum dolor', 8)).toEqual('Lorem ip...')
+    expect(Strings.abbreviate('Lorem ipsum dolor', 18)).toEqual('Lorem ipsum dolor')
+  })
+
   test('Strings.appendIfMissing()', () => {
     expect(Strings.appendIfMissing('', '')).toEqual('')
     expect(Strings.appendIfMissing('Lorem ', 'ipsum')).toEqual('Lorem ipsum')
@@ -427,6 +437,10 @@ describe('Strings', () => {
   test('Strings.normalize()', () => {
     expect(Strings.normalize('')).toEqual(Strings.EMPTY)
     expect(Strings.normalize(' ')).toEqual(Strings.EMPTY)
+    expect(Strings.normalize('   abc  de   f  ')).toEqual('abc de f')
+    expect(Strings.normalize('   abc  de   f')).toEqual('abc de f')
+    expect(Strings.normalize(' abc de f ')).toEqual('abc de f')
+    expect(Strings.normalize('abc de f')).toEqual('abc de f')
     expect(Strings.normalize('Abcddemmaxdemala   \n\r\t\f')).toEqual('Abcddemmaxdemala')
   })
 
@@ -531,5 +545,17 @@ describe('Strings', () => {
     expect(Strings.toTitleCase('\t\nlOREM  iPsum\tdOlOR\nsIT')).toEqual('\t\nLorem  Ipsum\tDolor\nSit')
     expect(Strings.toTitleCase('\nabC')).toEqual('\nAbc')
     expect(Strings.toTitleCase("ab\t\f\t\nc")).toEqual('Ab\t\f\t\nC')
+  })
+
+  test('Strings.trim()', () => {
+    expect(Strings.trim('')).toEqual('')
+    expect(Strings.trim(' ')).toEqual('')
+    expect(Strings.trim('  ')).toEqual('')
+    expect(Strings.trim('\t\t\r\n\f')).toEqual('')
+    expect(Strings.trim('\tabc\n\n\t')).toEqual('abc')
+    expect(Strings.trim('  abc  de  ')).toEqual('abc  de')
+    expect(Strings.trim('  abc de ')).toEqual('abc de')
+    expect(Strings.trim(' abc  de  ')).toEqual('abc  de')
+    expect(Strings.trim(' abc  de ')).toEqual('abc  de')
   })
 })

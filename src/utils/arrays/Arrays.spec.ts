@@ -37,8 +37,10 @@ describe('Arrays', () => {
   })
 
   test('Arrays.has()', () => {
-    const array = ['a', 1, false, Symbol.iterator]
-    expect(Arrays.has(array, Symbol.iterator))
+    expect(Arrays.has([], 'a')).toEqual(false)
+    expect(Arrays.has([''], '')).toEqual(true)
+    expect(Arrays.has(['a', 1, false, Symbol.iterator], Symbol.iterator)).toEqual(true)
+    expect(Arrays.has(['🐑', '🐑', '🐑', '😀', '💖'], '🐑')).toEqual(true)
   })
 
   test('Arrays.insertAt()', () => {
@@ -61,6 +63,13 @@ describe('Arrays', () => {
   test('Arrays.isEmpty()', () => {
     expect(Arrays.isEmpty([])).toEqual(true)
     expect(Arrays.isEmpty([undefined])).toEqual(false)
+  })
+
+  test('Arrays.isIdentical()', () => {
+    expect(Arrays.isIdentical([])).toEqual(true)
+    expect(Arrays.isIdentical([undefined])).toEqual(true)
+    expect(Arrays.isIdentical([undefined, null])).toEqual(false)
+    expect(Arrays.isIdentical(['a', 'a', 'a'])).toEqual(true)
   })
 
   test('Arrays.isNotEmpty()', () => {

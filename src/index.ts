@@ -1,7 +1,7 @@
 /**
  * Utilities - The Public API
  */
-export { Util } from './utils/Util';
+export { Utils } from './utils/Utils';
 export { Arrays } from './utils/arrays/Arrays';
 export { Dates } from './utils/dates/Dates';
 export { Maps } from './utils/maps/Maps';
