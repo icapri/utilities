@@ -282,13 +282,6 @@ export abstract class Dates {
    * _Note:_ The time of the day object is not taken into account from this
    * method.
    *
-   * **Example:**
-   * ```typescript
-   * const now = Dates.now; // "2023-05-06T14:31:13.661Z"
-   * const afterTomorrow = Dates.afterTomorrow; // "2023-05-08T14:31:13.662Z"
-   * const daysDiff = Dates.daysDifference(now, afterTomorrow); // 3
-   * ```
-   *
    * @param date Contains some date object.
    * @param other Contains some other date object.
    * @returns the days difference between the two dates.
