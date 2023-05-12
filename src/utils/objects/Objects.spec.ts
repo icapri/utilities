@@ -127,13 +127,6 @@ describe('Objects', () => {
     expect(Objects.pick({ a: null, b: true }, 'a')).toEqual({ a: null })
   })
 
-  test('Objects.serialize()', () => {
-    const json = `{\n  "a": true\n}`
-    expect(Objects.serialize({ a: !0 })).toEqual(json)
-    const json1 = `{\n  "a": null,\n  "b": true\n}`
-    expect(Objects.serialize({ a: null, b: true, c: undefined })).toEqual(json1)
-  })
-
   test('Objects.toIterable()', () => {
     const o = {
       a: 'abc',

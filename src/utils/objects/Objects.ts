@@ -269,31 +269,6 @@ export abstract class Objects {
   }
 
   /**
-   * Converts the given object to a JSON string. This method also handles
-   * circular object references.
-   *
-   * **Example:**
-   * ```typescript
-   * const obj = {self: {}};
-   * obj.self = obj;
-   *
-   * JSON.stringify(obj); // throws "TypeError: cyclic object value"
-   *
-   * console.log(Objects.toJSON(obj)); // "{}"
-   * ```
-   *
-   * @param o Contains some object.
-   * @param indent Contains the text indent to be used in the JSON string.
-   * Defaults to `2` white spaces.
-   * @returns a JSON string.
-   *
-   * @see `Objects.toJSON()`
-   */
-  public static serialize<T extends object>(o: T, indent: number | string = 2): string {
-    return Objects.toJSON(o, indent);
-  }
-
-  /**
    * Makes the specified object iterable.
    *
    * @param obj Contains some object.
