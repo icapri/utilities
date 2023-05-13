@@ -114,7 +114,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v1.3.2
+Latest stable: v1.3.3
 
 ## License
 
