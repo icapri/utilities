@@ -3,13 +3,12 @@
   <img src="/docs/logo.png" alt="Utilitates Logo" width="120px" height="115px"/>
   <h2 align="center">Utilitates Framework</h1>
 </p>
-<p align="center"><i>A Framework intended for conversion, formatting, parsing, validation, and more.</i></p>
+<p align="center"><i>A framework intended for conversion, formatting, parsing, validation, and more.</i></p>
 
 ## Description
 
 This library contains utilities for built-in JavaScript classes such as
-`Array`, `Date`, `Map`, `Number`, `Object`, `Set` and `String`. As a
-short naming convention, these utility classes are simply called `Arrays`,
+`Array`, `Date`, `Map`, `Number`, `Object`, `Set` and `String`. To keep it simple, these utility classes are simply called `Arrays`,
 `Dates`, `Maps`, `Numbers`, `Objects`, `Sets` and `Strings` and are only
 composed of static members (utility methods).
 
@@ -38,9 +37,12 @@ import {
 } from 'utilitates'
 
 // Arrays examples:
-Arrays.isNotEmpty(["a", "b", "c"])
-Arrays.isEmpty([])
-Arrays.has(["a", "b", "c"], "a")
+Arrays.addFirst(["b", "c"], "a") // ["a", "b", "c"]
+Arrays.first(["a", "b", "c"]) // "a"
+Arrays.isNotEmpty(["a", "b", "c"]) // true
+Arrays.isEmpty([]) // true
+Arrays.has(["a", "b", "c"], "a") // true
+Arrays.last(["a", "b", "c"]) // "c"
 
 // Dates examples:
 Dates.isAfter(Dates.now, "2023-05-11T23:20:12")
@@ -89,6 +91,15 @@ Strings.toTitleCase("jOhN doE")
 Strings.toCharArray("🐑🐑🐑")
 Strings.repeat("abc", 5)
 Strings.remove("adefbc", "def")
+
+// Utils examples:
+Utils.isBoolean(false)
+Utils.isFunction(() => {})
+Utils.isIterable(new Set())
+Utils.isNullOrUndefined(undefined)
+Utils.isDefined(false)
+Utils.isPrimitive("abc")
+Utils.isUndefined(null)
 ```
 
 ## Support
@@ -101,7 +112,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v1.3.0
+Latest stable: v1.3.1
 
 ## License
 
