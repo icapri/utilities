@@ -10,8 +10,8 @@ export abstract class Sets {
   /**
    * Checks whether the given set is empty.
    *
-   * @param value Contains some set.
-   * @returns whether the given set is empty.
+   * @param {Set} value Contains some set.
+   * @return {Boolean} whether the given set is empty.
    */
   public static isEmpty<T>(value: Set<T>): boolean {
     return value.size === 0;
@@ -20,8 +20,8 @@ export abstract class Sets {
   /**
    * Checks whether the given set is not emtpy.
    *
-   * @param value Contains some set.
-   * @returns whether the given set is not emtpy.
+   * @param {Set} value Contains some set.
+   * @return {Boolean} whether the given set is not emtpy.
    */
   public static isNotEmpty<T>(value: Set<T>): boolean {
     return value.size !== 0;
@@ -30,8 +30,8 @@ export abstract class Sets {
   /**
    * Checks whether the given value is a set.
    *
-   * @param value Contains some value.
-   * @returns whether the given value is a set.
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the given value is a set.
    */
   public static isSet(value?: any): value is Set<any> {
     return value instanceof Set;
@@ -40,12 +40,14 @@ export abstract class Sets {
   /**
    * Converts a set to a map.
    *
-   * @param value Contains some set.
-   * @returns a map whose keys are the indexes of each set value
+   * @param {Set} value Contains some set.
+   * @return {Map} a map whose keys are the indexes of each set value
    * and the respective values are the set items.
    */
   public static toMap<T>(value: Set<T>): Map<number, T> {
-    let i = 0, map = new Map<number, T>();
+    let i = 0;
+    const map = new Map<number, T>();
+
     value.forEach((item) => {
       map.set(i, item);
       i++;

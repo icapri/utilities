@@ -1,6 +1,6 @@
-import { Arrays } from '../arrays/Arrays';
-import { Numbers } from '../numbers/Numbers';
-import { Utils } from '../Utils';
+import {Arrays} from '../arrays/Arrays';
+import {Numbers} from '../numbers/Numbers';
+import {Utils} from '../Utils';
 
 /**
  * Defines an abstract class with string utilities.
@@ -42,7 +42,8 @@ export abstract class Strings {
   public static readonly HT: string = '\t' as const;
 
   /**
-   * Contains the "new line" a. k. a. linefeed escape character "`\n`". Unicode: `000a`.
+   * Contains the "new line" a. k. a. linefeed escape character "`\n`".
+   * Unicode: `000a`.
    */
   public static readonly LF: string = '\n' as const;
 
@@ -84,13 +85,15 @@ export abstract class Strings {
    * Strings.abbreviate("abc", 2); // "ab..."
    * ```
    *
-   * @param str Contains some string.
-   * @param maxLength Contains the maximal number of characters to show from the
-   * specified string.
-   * @param marker Contains the abbreviation marker. Defaults to ellipsis `"..."`.
-   * @returns the abbreviated string.
+   * @param {String} str Contains some string.
+   * @param {Number} maxLength Contains the maximal number of characters to
+   * show from the specified string.
+   * @param {String} marker Contains the abbreviation marker. Defaults to
+   * ellipsis `"..."`.
+   * @return {String} the abbreviated string.
    */
-  public static abbreviate(str: string, maxLength: number, marker: string = '...'): string {
+  public static abbreviate(
+      str: string, maxLength: number, marker: string = '...'): string {
     const length = str.length;
     if (length === 0) {
       return str;
@@ -104,21 +107,23 @@ export abstract class Strings {
   }
 
   /**
-   * Appends the given suffix to the given string in case the given string doesn't end
-   * with the given suffix.
+   * Appends the given suffix to the given string in case the given string
+   * doesn't end with the given suffix.
    *
-   * @param str Contains some string.
-   * @param suffix Contains the string suffix to be appended to the string in case it is
-   * missing at the end of it.
-   * @param ignoreCase Contains whether to ignore string case sensitivity. Default: `false`
-   * @returns the extended string.
+   * @param {String} str Contains some string.
+   * @param {String} suffix Contains the string suffix to be appended to the
+   * string in case it is missing at the end of it.
+   * @param {Boolean} ignoreCase Contains whether to ignore string case
+   * sensitivity. Default: `false`
+   * @return {String} the extended string.
    */
   public static appendIfMissing(
-    str: string,
-    suffix: string,
-    ignoreCase: boolean = false
-  ) {
-    if (Strings.isNilOrEmpty(suffix) || Strings.endsWith(str, suffix, ignoreCase)) {
+      str: string,
+      suffix: string,
+      ignoreCase: boolean = false,
+  ): string {
+    if (Strings.isNilOrEmpty(suffix) ||
+      Strings.endsWith(str, suffix, ignoreCase)) {
       return str;
     }
 
@@ -128,9 +133,10 @@ export abstract class Strings {
   /**
    * Gets the character at the specified position in the given string.
    *
-   * @param str Contains some string.
-   * @param index Contains the index of the character to be returned.
-   * @returns the character at the specified position in the given string.
+   * @param {String} str Contains some string.
+   * @param {Number} index Contains the index of the character to be returned.
+   * @return {String} the character at the specified position in the given
+   * string.
    */
   public static at(str: string, index: number): string {
     const l = str.length;
@@ -150,12 +156,12 @@ export abstract class Strings {
    * Strings.capitalize('jOHN'); // JOHN
    * ```
    *
-   * @param str Contains some string.
-   * @returns the capitalized string.
+   * @param {String} str Contains some string.
+   * @return {String} the capitalized string.
    *
    * @see `Strings.upperFirst()`
    */
-  public static capitalize(str: string) {
+  public static capitalize(str: string): string {
     if (Strings.isEmpty(str)) {
       return str;
     }
@@ -167,8 +173,8 @@ export abstract class Strings {
    * Capitalizes the first letter of the specified string and then converts
    * the rest of the string to lower case.
    *
-   * @param str Contains some string.
-   * @returns the specified string where the first letter is capitalized
+   * @param {String} str Contains some string.
+   * @return {String} the specified string where the first letter is capitalized
    * and the rest of the letters are converted to lower case.
    */
   public static capitalizeFirstLetter(str: string): string {
@@ -188,8 +194,8 @@ export abstract class Strings {
    * const str = Strings.chomp('Lorem ipsum\r\n'); // "Lorem ipsum"
    * ```
    *
-   * @param str Contains some string.
-   * @returns the chomped string.
+   * @param {String} str Contains some string.
+   * @return {String} the chomped string.
    */
   public static chomp(str: string): string {
     const length = str.length;
@@ -227,8 +233,8 @@ export abstract class Strings {
    * Strings.chop('Germany'); // "German"
    * ```
    *
-   * @param str Contains some string.
-   * @returns the string without its last character.
+   * @param {String} str Contains some string.
+   * @return {String} the string without its last character.
    */
   public static chop(str: string): string {
     const l = str.length;
@@ -236,7 +242,9 @@ export abstract class Strings {
       return Strings.EMPTY;
     }
 
-    const end = l - 1, r = str.substring(0, end), c = str.charAt(end);
+    const end = l - 1;
+    const r = str.substring(0, end);
+    const c = str.charAt(end);
     if (c === Strings.LF) {
       if (r.charAt(end - 1) === Strings.CR) {
         return r.substring(0, end - 1);
@@ -249,9 +257,9 @@ export abstract class Strings {
   /**
    * Compares two strings. Useful for array sorting.
    *
-   * @param a Contains some string.
-   * @param b Contains some other string.
-   * @returns
+   * @param {String} a Contains some string.
+   * @param {String} b Contains some other string.
+   * @return {Number}
    * * `-1` if `a` is smaller than `b`.
    * * `0`  if `a` equals `b`.
    * * `1`  if `a` is greater than `b`.
@@ -264,9 +272,9 @@ export abstract class Strings {
    * Compares two strings by ignoring case sensitivity. Useful for
    * array sorting.
    *
-   * @param a Contains some string.
-   * @param b Contains some other string.
-   * @returns
+   * @param {String} a Contains some string.
+   * @param {String} b Contains some other string.
+   * @return {Number}
    * * `-1` if `a` is smaller than `b` (case-insensitive).
    * * `0`  if `a` equals `b` (case-insensitive).
    * * `1`  if `a` is greater than `b` (case-insensitive).
@@ -278,12 +286,13 @@ export abstract class Strings {
   /**
    * Contains whether the given string contains the given sequence.
    *
-   * @param str Contains some string.
-   * @param sequence Contains some string sequence.
-   * @param ignoreCase Contains whether to ignore case sensitivity.
-   * @returns whether the given string contains the given sequence.
+   * @param {String} str Contains some string.
+   * @param {String} sequence Contains some string sequence.
+   * @param {Boolean} ignoreCase Contains whether to ignore case sensitivity.
+   * @return {Boolean} whether the given string contains the given sequence.
    */
-  public static contains(str: string, sequence: string, ignoreCase?: boolean): boolean {
+  public static contains(
+      str: string, sequence: string, ignoreCase?: boolean): boolean {
     if (ignoreCase) {
       return str.toLowerCase().includes(sequence.toLowerCase());
     }
@@ -294,10 +303,10 @@ export abstract class Strings {
    * Checks whether the given string contains either of the given string
    * sequences.
    *
-   * @param str Contains some string.
-   * @param sequences Contains some string sequences.
-   * @returns whether the given string contains either of the given string
-   * sequences.
+   * @param {String} str Contains some string.
+   * @param {Array} sequences Contains some string sequences.
+   * @return {Boolean} whether the given string contains either of the
+   * given string sequences.
    */
   public static containsAny(str: string, ...sequences: string[]): boolean {
     if (str.length === 0 || sequences.length === 0) {
@@ -311,10 +320,10 @@ export abstract class Strings {
    * Checks whether the given string contains the given sequence by ignoring
    * case sensitivity.
    *
-   * @param str Contains some string.
-   * @param sequence Contains some string sequence.
-   * @returns whether the given string contains the given sequence by ignoring
-   * case sensitivity.
+   * @param {String} str Contains some string.
+   * @param {String} sequence Contains some string sequence.
+   * @return {Boolean} whether the given string contains the given sequence
+   * by ignoring case sensitivity.
    */
   public static containsIgnoreCase(str: string, sequence: string): boolean {
     return Strings.contains(str, sequence, true);
@@ -324,10 +333,10 @@ export abstract class Strings {
    * Checks whether the given string contains none of the given string
    * sequences.
    *
-   * @param str Contains some string.
-   * @param sequences Contains some string sequences.
-   * @returns whether the given string contains none of the given string
-   * sequences.
+   * @param {String} str Contains some string.
+   * @param {Array} sequences Contains some string sequences.
+   * @return {Boolean} whether the given string contains none of the given
+   * string sequences.
    */
   public static containsNone(str: string, ...sequences: string[]): boolean {
     if (str.length === 0 || sequences.length === 0) {
@@ -349,12 +358,16 @@ export abstract class Strings {
    * Strings.countMatches('ho ho ho', 'ho'); // 3
    * ```
    *
-   * @param str Contains some string.
-   * @param sequence Contains some string sequence.
-   * @returns the number of sequence the given string matches.
+   * @param {String} str Contains some string.
+   * @param {String} sequence Contains some string sequence.
+   * @return {Number} the number of sequence the given string matches.
    */
   public static countMatches(str: string, sequence: string): number {
-    let r = 0, l = str.length, sl = sequence.length, i = 0;
+    let r = 0;
+    const l = str.length;
+    const sl = sequence.length;
+    let i = 0;
+
     if (l === 0 || sl === 0 || sl > l) {
       return r;
     }
@@ -395,9 +408,9 @@ export abstract class Strings {
    * Strings.defaultIfEmpty('', '--'); // "--"
    * ```
    *
-   * @param str Contains some string.
-   * @param defaultStr Contains some default string.
-   * @returns the default string if the given string is empty.
+   * @param {String} str Contains some string.
+   * @param {String} defaultStr Contains some default string.
+   * @return {String} the default string if the given string is empty.
    */
   public static defaultIfEmpty(str: string, defaultStr: string): string {
     if (Strings.isEmpty(str)) {
@@ -411,33 +424,34 @@ export abstract class Strings {
    * Gets the sequence of the second string which is not contained in the
    * first string.
    *
-   * @param s1 Contains some string.
-   * @param s2 Contains some other string.
-   * @returns the sequence of the second string which is not contained in
-   * the first string.
+   * @param {String} str1 Contains some string.
+   * @param {String} str2 Contains some other string.
+   * @return {String} the sequence of the second string which is not
+   * contained in the first string.
    */
-  public static difference(s1: string, s2: string): string {
-    const diffIndex = Strings.indexOfDifference(s1, s2);
+  public static difference(str1: string, str2: string): string {
+    const diffIndex = Strings.indexOfDifference(str1, str2);
     if (diffIndex === Strings.NOT_FOUND) {
       return Strings.EMPTY;
     }
 
-    if (s1.length > s2.length) {
-      return s1.substring(diffIndex);
+    if (str1.length > str2.length) {
+      return str1.substring(diffIndex);
     } else {
-      return s2.substring(diffIndex);
+      return str2.substring(diffIndex);
     }
   }
 
   /**
    * Checks whether a string ends with a given sequence.
    *
-   * @param str Contains some string.
-   * @param sequence Contains some string sequence.
-   * @param ignoreCase Contains whether to ignore case sensitivity.
-   * @returns whether the given string ends with the given sequence.
+   * @param {String} str Contains some string.
+   * @param {String} sequence Contains some string sequence.
+   * @param {Boolean} ignoreCase Contains whether to ignore case sensitivity.
+   * @return {Boolean} whether the given string ends with the given sequence.
    */
-  public static endsWith(str: string, sequence: string, ignoreCase?: boolean): boolean {
+  public static endsWith(
+      str: string, sequence: string, ignoreCase?: boolean): boolean {
     if (Strings.isEmpty(str)) {
       return false;
     }
@@ -452,9 +466,9 @@ export abstract class Strings {
    * Checks whether the given string ends with either of the given
    * string sequences.
    *
-   * @param str Contains some string.
-   * @param sequences Contains some string sequences.
-   * @returns whether the given string ends with either of the given
+   * @param {String} str Contains some string.
+   * @param {Array} sequences Contains some string sequences.
+   * @return {Boolean} whether the given string ends with either of the given
    * string sequences.
    */
   public static endsWithAny(str: string, ...sequences: string[]): boolean {
@@ -466,11 +480,13 @@ export abstract class Strings {
   }
 
   /**
-   * Checks whether the given string ends with the given sequence (case-insensitive).
+   * Checks whether the given string ends with the given sequence
+   * (case-insensitive).
    *
-   * @param str Contains some string.
-   * @param sequence Contains some string sequence.
-   * @returns whether the given string ends with the given sequence (case-insensitive).
+   * @param {String} str Contains some string.
+   * @param {String} sequence Contains some string sequence.
+   * @return {Boolean} whether the given string ends with the given
+   * sequence (case-insensitive).
    */
   public static endsWithIgnoreCase(str: string, sequence: string): boolean {
     if (Strings.isEmpty(str)) {
@@ -484,10 +500,10 @@ export abstract class Strings {
    * Checks whether the given string ends with neither of the given
    * string sequences.
    *
-   * @param str Contains some string.
-   * @param sequences Contains some string sequences.
-   * @returns whether the given string ends with neither of the given
-   * string sequences.
+   * @param {String} str Contains some string.
+   * @param {Array} sequences Contains some string sequences.
+   * @return {Boolean} whether the given string ends with neither of
+   * the given string sequences.
    */
   public static endsWithNone(str: string, ...sequences: string[]): boolean {
     if (Strings.isEmpty(str) || Arrays.isEmpty(sequences)) {
@@ -500,12 +516,26 @@ export abstract class Strings {
   /**
    * Checks whether the given strings equal.
    *
-   * @param a Contains some string.
-   * @param b Contains some other string.
-   * @returns whether the given strings equal.
+   * @param {String} a Contains some string.
+   * @param {String} b Contains some other string.
+   * @return {Boolean} whether the given strings equal.
    */
   public static equals(a: string, b: string): boolean;
+  /**
+   * Checks whether the given strings equal.
+   *
+   * @param {String} a Contains some string.
+   * @param {String} b Contains some other string.
+   * @return {Boolean} whether the given strings equal.
+   */
   public static equals(a: String, b: String): boolean;
+  /**
+   * Checks whether the given strings equal.
+   *
+   * @param {String} a Contains some string.
+   * @param {String} b Contains some other string.
+   * @return {Boolean} whether the given strings equal.
+   */
   public static equals<T extends string | String>(a: T, b: T): boolean {
     if (Strings.isString(a) && Strings.isString(b)) {
       return a === b;
@@ -517,23 +547,24 @@ export abstract class Strings {
   /**
    * Checks whether the given strings equal (case-insensitive).
    *
-   * @param s1 Contains some string.
-   * @param s2 Contains some other string.
-   * @returns whether the given strings equal
+   * @param {String} str1 Contains some string.
+   * @param {String} str2 Contains some other string.
+   * @return {Boolean} whether the given strings equal
    */
-  public static equalsIgnoreCase(s1: string, s2: string): boolean {
-    if (s1 === s2) {
+  public static equalsIgnoreCase(str1: string, str2: string): boolean {
+    if (str1 === str2) {
       return true;
     }
 
-    const l1 = s1.length;
-    if (l1 !== s2.length) {
+    const l1 = str1.length;
+    if (l1 !== str2.length) {
       return false;
     }
 
-    let i = 0, equal = true;
+    let i = 0;
+    let equal = true;
     for (; i < l1; i++) {
-      if (s1.charAt(i).toLowerCase() !== s2.charAt(i).toLowerCase()) {
+      if (str1.charAt(i).toLowerCase() !== str2.charAt(i).toLowerCase()) {
         equal = false;
         break;
       }
@@ -545,24 +576,26 @@ export abstract class Strings {
   /**
    * Checks whether the given string equals any of the given sequences.
    *
-   * @param str Contains some string.
-   * @param sequences Contains some string sequences.
-   * @returns whether the the given string equals any of the given sequences.
+   * @param {String} str Contains some string.
+   * @param {Array} sequences Contains some string sequences.
+   * @return {Boolean} whether the the given string equals any of the
+   * given sequences.
    */
   public static equalsAny(str: string, ...sequences: string[]): boolean {
     return sequences.some((sequence) => sequence === str);
   }
 
   /**
-   * Checks whether the given string equals either of the given string sequences
-   * by ignoring case sensitivity.
+   * Checks whether the given string equals either of the given string
+   * sequences by ignoring case sensitivity.
    *
-   * @param str Contains some string.
-   * @param sequences Contains some string sequences.
-   * @returns whether the given string equals either of the given string sequences
-   * by ignoring case sensitivity.
+   * @param {String} str Contains some string.
+   * @param {Array} sequences Contains some string sequences.
+   * @return {Boolean} whether the given string equals either of the given
+   * string sequences by ignoring case sensitivity.
    */
-  public static equalsAnyIgnoreCase(str: string, ...sequences: string[]): boolean {
+  public static equalsAnyIgnoreCase(
+      str: string, ...sequences: string[]): boolean {
     const lowerStr = str.toLowerCase();
     return sequences.some((sequence) => sequence.toLowerCase() === lowerStr);
   }
@@ -570,8 +603,8 @@ export abstract class Strings {
   /**
    * Gets the string bytes.
    *
-   * @param str Contains some string.
-   * @returns the string bytes.
+   * @param {String} str Contains some string.
+   * @return {Number} the string bytes.
    */
   public static getBytes(str: string): number {
     const textEncoder = new TextEncoder();
@@ -590,12 +623,16 @@ export abstract class Strings {
    * Strings.hasChar('abc', 'b'); // true
    * ```
    *
-   * @param str Contains some string.
-   * @param char Contains some character.
-   * @returns whether the specified string contains the specified character.
+   * @param {String} str Contains some string.
+   * @param {String} char Contains some character.
+   * @return {Boolean} whether the specified string contains the specified
+   * character.
    */
   public static hasChar(str: string, char: string): boolean {
-    let l = str.length, i = 0, j = l - 1;
+    const l = str.length;
+    let i = 0;
+    let j = l - 1;
+
     if (l === 0 || char.length !== 1) {
       return false;
     }
@@ -612,11 +649,11 @@ export abstract class Strings {
   /**
    * Gets the hash code from the given string.
    *
-   * @param str Contains some string.
-   * @returns the hash code.
+   * @param {String} str Contains some string.
+   * @return {Number} the hash code.
    */
   public static hashCode(str: string): number {
-    let hash = 0, i, charCode, length = str.length;
+    let hash = 0; let i; let charCode; const length = str.length;
     for (i = 0; i < length; i++) {
       charCode = str.charCodeAt(i);
       hash = (hash << 5) - hash + charCode;
@@ -640,8 +677,8 @@ export abstract class Strings {
    * Strings.hasWhitespace(''); // false
    * ```
    *
-   * @param str Contains some string.
-   * @returns whether the given string has whitespaces.
+   * @param {String} str Contains some string.
+   * @return {Boolean} whether the given string has whitespaces.
    */
   public static hasWhitespace(str: string): boolean {
     if (Strings.isEmpty(str)) {
@@ -656,9 +693,12 @@ export abstract class Strings {
       }
     }
 
-    let i = 0, j = l - 1;
+    let i = 0;
+    let j = l - 1;
+
     while (i <= j) {
-      if (Strings.isSpaceChar(str.charAt(i++)) || Strings.isSpaceChar(str.charAt(j--))) {
+      if (Strings.isSpaceChar(str.charAt(i++)) ||
+        Strings.isSpaceChar(str.charAt(j--))) {
         return true;
       }
     }
@@ -671,14 +711,14 @@ export abstract class Strings {
    * the given sequence is not contained in the given string, -1 is
    * returned.
    *
-   * @param str Contains some string.
-   * @param sequence Contains some string sequence.
-   * @returns the index of the given sequence in the given string. If
+   * @param {String} str Contains some string.
+   * @param {String} sequence Contains some string sequence.
+   * @return {Number} the index of the given sequence in the given string. If
    * the given sequence is not contained in the given string, -1 is
    * returned.
    */
   public static indexOf(str: string, sequence: string): number {
-    const len = str.length, sqLen = sequence.length;
+    const len = str.length; const sqLen = sequence.length;
     // if both the string and the sequence are empty, return 0;
     if (len === 0 && sqLen === 0) {
       return 0;
@@ -694,7 +734,8 @@ export abstract class Strings {
       return Strings.NOT_FOUND;
     }
 
-    let i = 0, res = Strings.NOT_FOUND;
+    let i = 0;
+    let res = Strings.NOT_FOUND;
 
     // this is the case where the length of the specified string is >=
     // the length of the sequence
@@ -723,20 +764,21 @@ export abstract class Strings {
   }
 
   /**
-   * Gets the first index of any of the given sequences in the given string.
+   * Gets the first index of any of the given sequences in the specified string.
    *
-   * @param str Contains some string.
-   * @param sequences Contains some string sequences.
-   * @returns the first index of any of the given sequences in the given string.
+   * @param {String} str Contains some string.
+   * @param {Array} sequences Contains some string sequences.
+   * @return {Number} the first index of any of the given sequences in the
+   * specified string.
    */
   public static indexOfAny(str: string, ...sequences: string[]): number {
     if (str.length === 0 || sequences.length === 0) {
       return Strings.NOT_FOUND;
     }
 
-    let j = 0, r = -1;
+    let j = 0; let r = -1;
     while (j < sequences.length) {
-      const s = sequences[j++], sIndex = Strings.indexOf(str, s);
+      const s = sequences[j++]; const sIndex = Strings.indexOf(str, s);
       if (sIndex >= 0) {
         r = sIndex;
         break;
@@ -747,15 +789,20 @@ export abstract class Strings {
   }
 
   /**
-   * Gets the first index at which the characters of both strings begin to differ.
+   * Gets the first index at which the characters of both strings begin
+   * to differ.
    *
-   * @param str1 Contains some string.
-   * @param str2 Contains some other string.
-   * @returns the index at which the characters of both strings begin to differ.
+   * @param {String} str1 Contains some string.
+   * @param {String} str2 Contains some other string.
+   * @return {Number} the index at which the characters of both strings
+   * begin to differ.
    */
   public static indexOfDifference(str1: string, str2: string): number {
     if (str1 !== str2) {
-      let i, l1 = str1.length, l2 = str2.length;
+      let i;
+      const l1 = str1.length;
+      const l2 = str2.length;
+
       for (i = 0; i < l1 && i < l2; ++i) {
         if (str1.charAt(i) !== str2.charAt(i)) {
           break;
@@ -771,17 +818,19 @@ export abstract class Strings {
   }
 
   /**
-   * Gets the index of the given sequence in the given string (case-insensitive).
+   * Gets the index of the given sequence in the given string
+   * (case-insensitive).
    *
-   * @param str Contains some string.
-   * @param sequence Contains some string sequence.
-   * @returns the index of the given sequence in the given string (case-insensitive).
+   * @param {String} str Contains some string.
+   * @param {String} sequence Contains some string sequence.
+   * @return {Number} the index of the given sequence in the given
+   * string (case-insensitive).
    */
   public static indexOfIgnoreCase(str: string, sequence: string): number {
-    const len = str.length,
-      sqLen = sequence.length,
-      sqLower = sequence.toLowerCase(),
-      sq1st = sequence.charAt(0).toLowerCase();
+    const len = str.length;
+    const sqLen = sequence.length;
+    const sqLower = sequence.toLowerCase();
+    const sq1st = sequence.charAt(0).toLowerCase();
 
     // if both the string and the sequence are empty, return 0;
     if (len === 0 && sqLen === 0) {
@@ -798,7 +847,8 @@ export abstract class Strings {
       return Strings.NOT_FOUND;
     }
 
-    let i = 0, res = Strings.NOT_FOUND;
+    let i = 0;
+    let res = Strings.NOT_FOUND;
 
     // this is the case where the length of the specified string is >=
     // the length of the sequence
@@ -812,8 +862,7 @@ export abstract class Strings {
         if (sqLen <= strRem) {
           // now substring the specified string to the length of the sequence
           // to check whether they are equal
-          const s = str.substring(i, i + sqLen);
-          if (s.toLowerCase() === sqLower) {
+          if (str.substring(i, i + sqLen).toLowerCase() === sqLower) {
             res = i;
             break;
           }
@@ -844,8 +893,9 @@ export abstract class Strings {
    * Strings.isAllBlank('\f\t\r\n\na'); // false
    * ```
    *
-   * @param str Contains some string.
-   * @returns whether the specified string is all blank i. e. white space.
+   * @param {String} str Contains some string.
+   * @return {Boolean} whether the specified string is all blank i. e.
+   * white space.
    *
    * @see `Strings.isWhitespace()`
    */
@@ -864,18 +914,19 @@ export abstract class Strings {
    * Strings.isBinary('abc'); // true
    * ```
    *
-   * @param str Contains some string.
-   * @returns whether each character of the string occupies only one byte.
+   * @param {String} str Contains some string.
+   * @return {Boolean} whether each character of the string occupies only
+   * one byte.
    */
-  public static isBinary(str: string) {
+  public static isBinary(str: string): boolean {
     return /[^\u0000-\u00ff]/.test(str) === false;
   }
 
   /**
    * Checks whether the given string is empty/blank.
    *
-   * @param str Contains some string.
-   * @returns whether the given string is empty/blank.
+   * @param {String} str Contains some string.
+   * @return {Boolean} whether the given string is empty/blank.
    */
   public static isBlank(str: string): boolean {
     return Strings.isEmpty(str);
@@ -884,8 +935,8 @@ export abstract class Strings {
   /**
    * Checks whether the given string is empty/blank.
    *
-   * @param str Contains some string.
-   * @returns whether the given string is empty/blank.
+   * @param {String} str Contains some string.
+   * @return {Boolean} whether the given string is empty/blank.
    */
   public static isEmpty(str: string): boolean {
     return str.length === 0;
@@ -896,10 +947,10 @@ export abstract class Strings {
    * surrogate. A high surrogate character is a 16-bit code character
    * between `U+D800` and `U+DBFF`.
    *
-   * @param str Contains some string.
-   * @param index Contains the index of the character to be checked
+   * @param {String} str Contains some string.
+   * @param {Number} index Contains the index of the character to be checked
    * whether it is low surrogate.
-   * @returns whether the string character at the specified index is
+   * @return {Boolean} whether the string character at the specified index is
    * low surrogate.
    */
   public static isHighSurrogate(str: string, index: number): boolean {
@@ -918,13 +969,15 @@ export abstract class Strings {
   /**
    * Checks whether the given string is lower case.
    *
-   * @param s Contains some string.
-   * @returns whether the given string is lower case.
+   * @param {String} str Contains some string.
+   * @return {Boolean} whether the given string is lower case.
    */
-  public static isLowerCase(s: string): boolean {
-    let i, result = true;
-    for (i = 0; i < s.length; i++) {
-      const c = s.charAt(i);
+  public static isLowerCase(str: string): boolean {
+    let i = 0;
+    let result = true;
+
+    for (; i < str.length; i++) {
+      const c = str.charAt(i);
       if (Strings.isNumeric(c)) {
         continue;
       }
@@ -942,10 +995,10 @@ export abstract class Strings {
    * low surrogate. A low surrogate character is a 16-bit code character
    * between `U+D800` and `U+DBFF`.
    *
-   * @param str Contains some string.
-   * @param index Contains the index of the character to be checked
+   * @param {String} str Contains some string.
+   * @param {Number} index Contains the index of the character to be checked
    * whether it is low surrogate.
-   * @returns whether the string character at the specified index is
+   * @return {Boolean} whether the string character at the specified index is
    * low surrogate.
    */
   public static isLowSurrogate(str: string, index: number): boolean {
@@ -964,10 +1017,12 @@ export abstract class Strings {
   /**
    * Checks  whether the given string value is `null`, `undefined` or `""`.
    *
-   * @param str Contains some string.
-   * @returns whether the given string value is `null`, `undefined` or `""`.
+   * @param {String} str Contains some string.
+   * @return {Boolean} whether the given string value is `null`, `undefined`
+   * or `""`.
    */
-  public static isNilOrEmpty(str?: string | null | undefined): str is null | undefined {
+  public static isNilOrEmpty(
+      str?: string | null | undefined): str is null | undefined {
     if (Utils.isNullOrUndefined(str)) {
       return true;
     }
@@ -978,8 +1033,9 @@ export abstract class Strings {
   /**
    * Checks whether the given string is `null`, `undefined` or white space.
    *
-   * @param str Contains some string.
-   * @returns whether the given string is `null`, `undefined` or white space.
+   * @param {String} str Contains some string.
+   * @return {Boolean} whether the given string is `null`, `undefined` or
+   * white space.
    */
   public static isNilOrWhitespace(str?: string | null): str is null {
     if (Utils.isNullOrUndefined(str)) {
@@ -992,8 +1048,8 @@ export abstract class Strings {
   /**
    * Checks whether the given string is not empty.
    *
-   * @param str Contains some string.
-   * @returns whether the given string is not empty.
+   * @param {String} str Contains some string.
+   * @return {Boolean} whether the given string is not empty.
    */
   public static isNotEmpty(str: string): boolean {
     return Strings.isEmpty(str) === false;
@@ -1002,75 +1058,68 @@ export abstract class Strings {
   /**
    * Checks whether the given string is `null` or `""`.
    *
-   * @param str Contains some string.
-   * @returns whether the given string is `null` or `""`.
+   * @param {String} str Contains some string.
+   * @return {Boolean} whether the given string is `null` or `""`.
    */
   public static isNullOrEmpty(str: string | null): str is null {
-    if (Utils.isNull(str)) {
-      return true;
-    }
-
-    return Strings.isEmpty(str);
+    return Utils.isNull(str) || Strings.isEmpty(str);
   }
 
   /**
    * Checks whether the given string is `null` or white space.
    *
-   * @param str Contains some string.
-   * @returns whether the given string is `null` or white space.
+   * @param {String} str Contains some string.
+   * @return {Boolean} whether the given string is `null` or white space.
    */
   public static isNullOrWhitespace(str: string | null): str is null {
-    if (Utils.isNull(str)) {
-      return true;
-    }
-
-    return Strings.isWhitespace(str);
+    return Utils.isNull(str) || Strings.isWhitespace(str);
   }
 
   /**
    * Checks whether the given string represents a stringified number.
    *
-   * @param str Contains some string.
-   * @returns whether the given string represents a stringified number.
+   * @param {String} str Contains some string.
+   * @return {Boolean} whether the given string represents a stringified number.
    */
-  public static isNumeric(str: string) {
-    return Number.isNaN(str) === false && Number.isNaN(parseFloat(str)) === false;
+  public static isNumeric(str: string): boolean {
+    return Number.isNaN(str) === false &&
+      Number.isNaN(parseFloat(str)) === false;
   }
 
   /**
    * Checks whether the specified character is a space i. e. `" "`,
    * `"\t"`, `"\r"`, `"\n"`, `"\f"`.
    *
-   * @param char Contains some character.
-   * @returns whether the specified character is a space.
+   * @param {String} char Contains some character.
+   * @return {Boolean} whether the specified character is a space.
    */
   public static isSpaceChar(char: string): boolean {
-    return char === Strings.SPACE
-      || char === Strings.HT
-      || char === Strings.CR
-      || char === Strings.LF
-      || char === Strings.FF;
+    return char === Strings.SPACE ||
+      char === Strings.HT ||
+      char === Strings.CR ||
+      char === Strings.LF ||
+      char === Strings.FF;
   }
 
   /**
    * Checks whether the given value is a string.
    *
-   * @param s Contains some value.
-   * @returns whether the given value is a string.
+   * @param {String} str Contains some value.
+   * @return {Boolean} whether the given value is a string.
    */
-  public static isString(s?: any): s is string {
-    return typeof s === 'string';
+  public static isString(str?: any): str is string {
+    return typeof str === 'string';
   }
 
   /**
    * Checks whether the given value is a string object i. e. `String`.
    *
-   * @param s Contains some value.
-   * @returns whether the given value is a string object.
+   * @param {String} str Contains some value.
+   * @return {Boolean} whether the given value is a string object.
    */
-  public static isStringObject(s?: any): s is String {
-    const proto = Object.prototype.toString.call(s);
-    return proto === '[object String]' && typeof s === 'object';
+  public static isStringObject(str?: any): str is String {
+    const proto = Object.prototype.toString.call(str);
+    return proto === '[object String]' && typeof str === 'object';
   }
 
   /**
@@ -1078,7 +1127,8 @@ export abstract class Strings {
    * the next character create a surrogate pair. A surrogate pair according to
    * the [Unicode Standard](https://unicode.org/standard/standard.html) is a
    * combination of a Unicode code point from U+D800 to U+DBFF a. k. a. "high
-   * surrogate" with another in range from U+DC00 to U+DFFF a. k. a. "low surrogate".
+   * surrogate" with another in range from U+DC00 to U+DFFF a. k. a. "low
+   * surrogate".
    *
    * **Example:**
    * ```typescript
@@ -1088,10 +1138,11 @@ export abstract class Strings {
    * Strings.isSurrogatePair("abc", 1); // false
    * ```
    *
-   * @param str Contains some string.
-   * @param index Contains the index of the character. The index is zero-based
-   * i. e. begins with 0.
-   * @returns whether the string character at the specified index is surrogate.
+   * @param {String} str Contains some string.
+   * @param {Number} index Contains the index of the character. The index
+   * is zero-based i. e. begins with 0.
+   * @return {Boolean} whether the string character at the specified index
+   * is surrogate.
    */
   public static isSurrogatePair(str: string, index: number): boolean {
     const l = str.length;
@@ -1111,12 +1162,14 @@ export abstract class Strings {
   /**
    * Checks whether the given string is upper case.
    *
-   * @param str Contains some string.
-   * @returns whether the given string is upper case.
+   * @param {String} str Contains some string.
+   * @return {Boolean} whether the given string is upper case.
    */
   public static isUpperCase(str: string): boolean {
-    let i, result = true;
-    for (i = 0; i < str.length; i++) {
+    let i = 0;
+    let result = true;
+
+    for (; i < str.length; i++) {
       const c = str.charAt(i);
       if (Strings.isNumeric(c)) {
         continue;
@@ -1148,8 +1201,9 @@ export abstract class Strings {
    * Strings.isWhitespace('\f\t\r\n\na'); // false
    * ```
    *
-   * @param str Contains some string.
-   * @returns whether the specified string is all blank i. e. white space.
+   * @param {String} str Contains some string.
+   * @return {Boolean} whether the specified string is all blank i. e.
+   * white space.
    *
    * @see `Strings.isAllBlank()`
    */
@@ -1166,10 +1220,12 @@ export abstract class Strings {
       }
     }
 
-    let i = 0, j = l - 1;
+    let i = 0;
+    let j = l - 1;
+
     while (i <= j) {
-      if (Strings.isSpaceChar(str.charAt(i++)) === false
-        || Strings.isSpaceChar(str.charAt(j--)) === false) {
+      if (Strings.isSpaceChar(str.charAt(i++)) === false ||
+        Strings.isSpaceChar(str.charAt(j--)) === false) {
         return false;
       }
     }
@@ -1185,9 +1241,10 @@ export abstract class Strings {
    * Strings.join('John', ' ', 'Doe'); // "John Doe"
    * ```
    *
-   * @param str Contains some string.
-   * @param otherStrs Contains some other strings.
-   * @returns a string composed of a concatenation of all the given strings.
+   * @param {String} str Contains some string.
+   * @param {Array} otherStrs Contains some other strings.
+   * @return {String} a string composed of a concatenation of all the given
+   * strings.
    */
   public static join(str: string, ...otherStrs: string[]): string {
     const arrLen = otherStrs.length;
@@ -1199,7 +1256,9 @@ export abstract class Strings {
       return str + otherStrs[0];
     }
 
-    let i = 0, res = str;
+    let i = 0;
+    let res = str;
+
     while (i < arrLen) {
       // using the performance API this way of concatenating strings seems
       // to be the most efficient
@@ -1218,13 +1277,15 @@ export abstract class Strings {
    * Strings.lastIndexOf('Abcddemmaxdemala', 'dem'); // 10
    * ```
    *
-   * @param str Contains some string.
-   * @param sequence Contains some string sequence.
-   * @returns the last index at which the given string sequence is located in the
-   * given string.
+   * @param {String} str Contains some string.
+   * @param {String} sequence Contains some string sequence.
+   * @return {Number} the last index at which the given string sequence is
+   * located in the given string.
    */
   public static lastIndexOf(str: string, sequence: string): number {
-    const len = str.length, sqLen = sequence.length;
+    const len = str.length;
+    const sqLen = sequence.length;
+
     // if both the string and the sequence are empty, return 0;
     if (len === 0 && sqLen === 0) {
       return 0;
@@ -1240,7 +1301,8 @@ export abstract class Strings {
       return Strings.NOT_FOUND;
     }
 
-    let i = len, res = Strings.NOT_FOUND;
+    let i = len;
+    let res = Strings.NOT_FOUND;
 
     // this is the case where the length of the specified string is >=
     // the length of the sequence
@@ -1272,16 +1334,16 @@ export abstract class Strings {
    * Gets the last index at which the given string sequence is located in the
    * given string (case-insensitive).
    *
-   * @param str Contains some string.
-   * @param sequence Contains some string sequence.
-   * @returns the last index at which the given string sequence is located in the
-   * given string (case-insensitive).
+   * @param {String} str Contains some string.
+   * @param {String} sequence Contains some string sequence.
+   * @return {Number} the last index at which the given string sequence is
+   * located in the given string (case-insensitive).
    */
   public static lastIndexOfIgnoreCase(str: string, sequence: string): number {
-    const len = str.length,
-      sqLen = sequence.length,
-      sqLower = sequence.toLowerCase(),
-      cSeq = sequence.charAt(0).toLowerCase();
+    const len = str.length;
+    const sqLen = sequence.length;
+    const sqLower = sequence.toLowerCase();
+    const cSeq = sequence.charAt(0).toLowerCase();
 
     // if both the string and the sequence are empty, return 0;
     if (len === 0 && sqLen === 0) {
@@ -1298,7 +1360,8 @@ export abstract class Strings {
       return Strings.NOT_FOUND;
     }
 
-    let i = len, res = Strings.NOT_FOUND;
+    let i = len;
+    let res = Strings.NOT_FOUND;
 
     // this is the case where the length of the specified string is >=
     // the length of the sequence
@@ -1333,10 +1396,10 @@ export abstract class Strings {
    * Strings.left('Alphabet', 5); // "Alpha"
    * ```
    *
-   * @param str Contains some string.
-   * @param length Contains the number of characters to pick from the
+   * @param {String} str Contains some string.
+   * @param {Number} length Contains the number of characters to pick from the
    * beginning of the specified string.
-   * @returns the first `length` characters of the string.
+   * @return {String} the first `length` characters of the string.
    */
   public static left(str: string, length: number): string {
     if (length < 0) {
@@ -1353,8 +1416,8 @@ export abstract class Strings {
   /**
    * Gets the longest of the given strings.
    *
-   * @param strs Contains some strings.
-   * @returns the longest of the given strings.
+   * @param {String} strs Contains some strings.
+   * @return {String} the longest of the given strings.
    */
   public static longest(...strs: string[]): string {
     const l = strs.length;
@@ -1372,9 +1435,12 @@ export abstract class Strings {
       return str0.length > str1.length ? str0 : str1;
     }
 
-    let i = 0, j = l - 1, r = Strings.EMPTY;
+    let i = 0;
+    let j = l - 1;
+    let r = Strings.EMPTY;
+
     while (i <= j) {
-      const si = strs[i++], sj = strs[j--];
+      const si = strs[i++]; const sj = strs[j--];
       if (si.length > r.length) {
         r = si;
       }
@@ -1389,24 +1455,25 @@ export abstract class Strings {
   /**
    * Converts the given string to upper case.
    *
-   * @param str Contains some string.
-   * @returns the string converted to upper case.
+   * @param {String} str Contains some string.
+   * @return {String} the string converted to upper case.
    */
   public static lowerCase(str: string): string {
     return str.toLowerCase();
   }
 
   /**
-   * Normalizes the string white spaces i. e. if there are more than one consecutive
-   * white space, only one of them remains.
+   * Normalizes the string white spaces i. e. if there are more than one
+   * consecutive white space, only one of them remains.
+   *
    * **Example:**
    * ```typescript
-   * const str1 = '  Lorem  ipsum dolor sit ';
-   * const str2 = Strings.normalize(str1); // "Lorem ipsum dolor sit"
+   * Strings.normalize("  "); // ""
+   * Strings.normalize("  Lorem  ipsum dolor sit "); // "Lorem ipsum dolor sit"
    * ```
    *
-   * @param str Contains some string.
-   * @returns the normalized string.
+   * @param {String} str Contains some string.
+   * @return {String} the normalized string.
    */
   public static normalize(str: string): string {
     const l = str.length;
@@ -1414,7 +1481,7 @@ export abstract class Strings {
       return Strings.EMPTY;
     }
 
-    let i = 0, r = Strings.EMPTY;
+    let i = 0; let r = Strings.EMPTY;
     for (; i < l; i++) {
       const c = str.charAt(i);
       if (Strings.isSpaceChar(c) && Strings.isSpaceChar(str.charAt(i + 1))) {
@@ -1430,9 +1497,9 @@ export abstract class Strings {
   /**
    * Appends the given prefix to the beginning of the given string.
    *
-   * @param str Contains some string.
-   * @param prefix Contains some string prefix.
-   * @returns the string prepended by the given prefix.
+   * @param {String} str Contains some string.
+   * @param {String} prefix Contains some string prefix.
+   * @return {String} the string prepended by the given prefix.
    */
   public static prepend(str: string, prefix: string): string {
     return prefix.concat(str);
@@ -1442,13 +1509,15 @@ export abstract class Strings {
    * Appends the given string sequence to the beginning of the string in
    * case the string does not begin with it.
    *
-   * @param str Contains some string.
-   * @param prefix Contains some string prefix.
-   * @param ignoreCase Contains whether to ignore case sensitivity.
-   * @returns the extended string.
+   * @param {String} str Contains some string.
+   * @param {String} prefix Contains some string prefix.
+   * @param {Boolean} ignoreCase Contains whether to ignore case sensitivity.
+   * @return {String} the extended string.
    */
-  public static prependIfMissing(str: string, prefix: string, ignoreCase?: boolean) {
-    if (Strings.isEmpty(prefix) || Strings.startsWith(str, prefix, ignoreCase)) {
+  public static prependIfMissing(
+      str: string, prefix: string, ignoreCase?: boolean): string {
+    if (Strings.isEmpty(prefix) ||
+      Strings.startsWith(str, prefix, ignoreCase)) {
       return str;
     }
 
@@ -1459,20 +1528,22 @@ export abstract class Strings {
    * Appends the given string sequence to the beginning of the string in
    * case the string does not begin with it (case-insensitive).
    *
-   * @param str Contains some string.
-   * @param prefix Contains some string prefix.
-   * @returns the extended string.
+   * @param {String} str Contains some string.
+   * @param {String} prefix Contains some string prefix.
+   * @return {String} the extended string.
    */
-  public static prependIfMissingIgnoreCase(str: string, prefix: string): string {
+  public static prependIfMissingIgnoreCase(
+      str: string, prefix: string): string {
     return Strings.prependIfMissing(str, prefix, true);
   }
 
   /**
    * Removes all the string sequences which match the given sequence.
    *
-   * @param str Contains some string.
-   * @param sequence Contains some sequence to be removed from the given string.
-   * @returns the string without the given sequence.
+   * @param {String} str Contains some string.
+   * @param {String} sequence Contains some sequence to be removed from
+   * the given string.
+   * @return {String} the string without the given sequence.
    */
   public static remove(str: string, sequence: string): string {
     if (Strings.isEmpty(str) || Strings.isEmpty(sequence)) {
@@ -1491,13 +1562,13 @@ export abstract class Strings {
    * Removes the given sequence from the given string if the string ends with
    * it; otherwise simply returns the given string.
    *
-   * @param str Contains some string.
-   * @param sequence Contains some string sequence.
-   * @returns the string without the given sequence in case it ends with it;
-   * otherwise the given string is returned.
+   * @param {String} str Contains some string.
+   * @param {String} sequence Contains some string sequence.
+   * @return {String} the string without the given sequence in case it ends
+   * with it; otherwise the given string is returned.
    */
   public static removeEnd(str: string, sequence: string): string {
-    const strLen = str.length, sqLen = sequence.length;
+    const strLen = str.length; const sqLen = sequence.length;
     if (strLen === 0 || sqLen === 0) {
       return str;
     }
@@ -1513,13 +1584,13 @@ export abstract class Strings {
    * Removes the given sequence from the given string if the string ends with
    * it; otherwise simply returns the given string (case-insensitive).
    *
-   * @param str Contains some string.
-   * @param sequence Contains some string sequence.
-   * @returns the string without the given sequence in case it ends with it;
-   * otherwise the given string is returned (case-insensitive).
+   * @param {String} str Contains some string.
+   * @param {String} sequence Contains some string sequence.
+   * @return {String} the string without the given sequence in case it ends
+   * with it; otherwise the given string is returned (case-insensitive).
    */
   public static removeEndIgnoreCase(str: string, sequence: string): string {
-    const strLen = str.length, sqLen = sequence.length;
+    const strLen = str.length; const sqLen = sequence.length;
     if (strLen === 0 || sqLen === 0) {
       return str;
     }
@@ -1534,10 +1605,10 @@ export abstract class Strings {
   /**
    * Removes white spaces from the given string.
    *
-   * @param str Contains some string.
-   * @returns the string without white space.
+   * @param {String} str Contains some string.
+   * @return {String} the string without white space.
    */
-  public static removeWhitespace(str: string) {
+  public static removeWhitespace(str: string): string {
     const len = str.length;
     if (len === 0) {
       return str;
@@ -1547,7 +1618,9 @@ export abstract class Strings {
       return Strings.EMPTY;
     }
 
-    let res = Strings.EMPTY, i = 0;
+    let res = Strings.EMPTY;
+    let i = 0;
+
     while (i < len) {
       const c = str.charAt(i++);
       if (Strings.isSpaceChar(c) === false) {
@@ -1561,12 +1634,14 @@ export abstract class Strings {
   /**
    * Repeats the given string the given number of times.
    *
-   * @param str Contains some string.
-   * @param times Contains the number of times to repeat the given string.
-   * @returns the `times`-repeated string.
+   * @param {String} str Contains some string.
+   * @param {Number} times Contains the number of times to repeat the
+   * given string.
+   * @return {String} the `times`-repeated string.
    */
   public static repeat(str: string, times: number): string {
-    if (Strings.isEmpty(str) || Numbers.isInteger(times) === false || times < 0) {
+    if (Strings.isEmpty(str) ||
+      Numbers.isInteger(times) === false || times < 0) {
       return Strings.EMPTY;
     }
 
@@ -1578,7 +1653,9 @@ export abstract class Strings {
       return str + str;
     }
 
-    let res = str, i = 0;
+    let res = str;
+    let i = 0;
+
     while (++i < times) {
       res += str;
     }
@@ -1589,14 +1666,20 @@ export abstract class Strings {
   /**
    * Checks whether the given string starts with the specified string sequence.
    *
-   * @param str Contains some string.
-   * @param sequence Contains some string sequence.
-   * @param ignoreCase Contains whether to ignore case-sensitivity.
-   * @param position Contains the index at which to begin searching
+   * @param {String} str Contains some string.
+   * @param {String} sequence Contains some string sequence.
+   * @param {Boolean} ignoreCase Contains whether to ignore case-sensitivity.
+   * @param {Number} position Contains the index at which to begin searching
    * in the given string. If omitted, it starts with the string end.
-   * @returns whether the given string starts with the specified string sequence.
+   * @return {Boolean} whether the given string starts with the specified string
+   * sequence.
    */
-  public static startsWith(str: string, sequence: string, ignoreCase?: boolean, position?: number): boolean {
+  public static startsWith(
+      str: string,
+      sequence: string,
+      ignoreCase?: boolean,
+      position?: number,
+  ): boolean {
     if (ignoreCase) {
       return str.toLowerCase().startsWith(sequence.toLowerCase(), position);
     }
@@ -1620,13 +1703,13 @@ export abstract class Strings {
    * Strings.startsWithAny('abc def ghi', 'mno', 'pqr', 'abc'); // true
    * ```
    *
-   * @param str Contains some string.
-   * @param sequences Contains some string sequences.
-   * @returns whether the specified string starts with any of the specified
-   * string sequences.
+   * @param {String} str Contains some string.
+   * @param {Array} sequences Contains some string sequences.
+   * @return {Boolean} whether the specified string starts with any of the
+   * specified string sequences.
    */
   public static startsWithAny(str: string, ...sequences: string[]): boolean {
-    let i = 0, l = sequences.length;
+    let i = 0; const l = sequences.length;
     if (l === 0) {
       return false;
     }
@@ -1644,8 +1727,8 @@ export abstract class Strings {
    * Removes white spaces from the beginning and from the end of the given
    * string.
    *
-   * @param str Contains some string.
-   * @returns the trimmed string.
+   * @param {String} str Contains some string.
+   * @return {String} the trimmed string.
    *
    * @see `Strings.trim()`
    */
@@ -1663,8 +1746,8 @@ export abstract class Strings {
    * Strings.toCharArray('🐑🐑🐑'); // ['🐑', '🐑', '🐑'];
    * ```
    *
-   * @param str Contains some string.
-   * @returns an array of the characters of the specified string.
+   * @param {String} str Contains some string.
+   * @return {Array} an array of the characters of the specified string.
    */
   public static toCharArray(str: string): string[] {
     if (str.length === 0) {
@@ -1688,17 +1771,20 @@ export abstract class Strings {
    * Strings.toTitleCase("ab\t\f\t\nc"); // "Ab\t\f\t\nC"
    * ```
    *
-   * @param str Contains some string.
-   * @returns the title case string.
+   * @param {String} str Contains some string.
+   * @return {String} the title case string.
    */
-  public static toTitleCase(str: string) {
+  public static toTitleCase(str: string): string {
     if (str.length === 0) {
       return str;
     }
 
-    let i = 0, r = Strings.EMPTY;
+    let i = 0;
+    let r = Strings.EMPTY;
+
     while (i < str.length) {
-      const c = str.charAt(i), s = Strings.isSpaceChar(c);
+      const c = str.charAt(i);
+      const s = Strings.isSpaceChar(c);
       if (i === 0) {
         r += s ? c : c.toUpperCase();
       }
@@ -1730,8 +1816,8 @@ export abstract class Strings {
    * Strings.trim(" abc  ab       d \n\t\f"); // "abc  ab       d"
    * ```
    *
-   * @param str Contains some string.
-   * @returns the trimmed string.
+   * @param {String} str Contains some string.
+   * @return {String} the trimmed string.
    *
    * @see `Strings.strip()`
    */
@@ -1745,10 +1831,14 @@ export abstract class Strings {
       return Strings.EMPTY;
     }
 
-    let i = 0, j = l - 1;
+    let i = 0;
+    let j = l - 1;
+
     while (i <= j) {
-      const ci = str.charAt(i), cj = str.charAt(j);
-      const si = Strings.isSpaceChar(ci), sj = Strings.isSpaceChar(cj);
+      const ci = str.charAt(i);
+      const cj = str.charAt(j);
+      const si = Strings.isSpaceChar(ci);
+      const sj = Strings.isSpaceChar(cj);
       if (si === false && sj === false) {
         return str.substring(i, j + 1);
       }
@@ -1768,8 +1858,8 @@ export abstract class Strings {
   /**
    * Converts the given string to upper case.
    *
-   * @param str Contains some string.
-   * @returns the string converted to upper case.
+   * @param {String} str Contains some string.
+   * @return {String} the string converted to upper case.
    */
   public static upperCase(str: string): string {
     return str.toUpperCase();
@@ -1784,8 +1874,8 @@ export abstract class Strings {
    * Strings.upperFirst('jOHN'); // JOHN
    * ```
    *
-   * @param str Contains some string.
-   * @returns the capitalized string.
+   * @param {String} str Contains some string.
+   * @return {String} the capitalized string.
    *
    * @see `Strings.capitalize()`
    */

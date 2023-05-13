@@ -1,4 +1,9 @@
-# :rocket: utilitates
+<p align="center">
+  <br>
+  <img src="/docs/logo.png" alt="Utilitates Logo" width="120px" height="115px"/>
+  <h2 align="center">Utilitates Framework</h1>
+</p>
+<p align="center"><i>A Framework intended for conversion, formatting, parsing, validation, and more.</i></p>
 
 ## Description
 
@@ -96,7 +101,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v1.2.9
+Latest stable: v1.3.0
 
 ## License
 
