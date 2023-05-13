@@ -34,15 +34,15 @@ import {
   Sets,
   Strings,
   Utils
-} from 'utilitates'
+} from 'utilitates';
 
 // Arrays examples:
-Arrays.addFirst(["b", "c"], "a") // ["a", "b", "c"]
-Arrays.first(["a", "b", "c"]) // "a"
-Arrays.isNotEmpty(["a", "b", "c"]) // true
-Arrays.isEmpty([]) // true
-Arrays.has(["a", "b", "c"], "a") // true
-Arrays.last(["a", "b", "c"]) // "c"
+Arrays.addFirst(["b", "c"], "a"); // ["a", "b", "c"]
+Arrays.first(["a", "b", "c"]); // "a"
+Arrays.isNotEmpty(["a", "b", "c"]); // true
+Arrays.isEmpty([]); // true
+Arrays.has(["a", "b", "c"], "a"); // true
+Arrays.last(["a", "b", "c"]); // "c"
 
 // Dates examples:
 Dates.isAfter(Dates.now, "2023-05-11T23:20:12")
@@ -74,32 +74,34 @@ Objects.pick({ a: null, b: true }, "a")
 Objects.toIterable({ a: 'abc', b: 444, c: true })
 
 // Sets examples:
-Sets.isNotEmpty(new Set())
-Sets.isSet(undefined)
-const set = new Set()
-set.add("abc")
-Sets.toMap(set)
+Sets.isNotEmpty(new Set()); // false
+Sets.isSet(undefined); // false
+const set = new Set();
+set.add("abc");
+Sets.toMap(set);
 
 // Strings examples:
-Strings.isNullOrEmpty("")
-Strings.normalize("  Lorem  ipsum dolor sit ")
-Strings.isSpaceChar("\t")
-Strings.isNumeric("12.34")
-Strings.hasWhitespace("Lorem\t")
-Strings.countMatches("ho ho ho", "ho")
-Strings.toTitleCase("jOhN doE")
-Strings.toCharArray("🐑🐑🐑")
-Strings.repeat("abc", 5)
-Strings.remove("adefbc", "def")
+Strings.isNullOrEmpty(""); // true
+Strings.normalize("  Lorem  ipsum dolor sit "); // "Lorem ipsum dolor sit"
+Strings.isSpaceChar("\t"); // true
+Strings.isNumeric("12.34"); // true
+Strings.hasWhitespace("Lorem\t"); // true
+Strings.countMatches("ho ho ho", "ho"); // 3
+Strings.toTitleCase("jOhN doE"); // John Doe
+Strings.toCharArray("🐑🐑🐑"); // ["🐑", "🐑", "🐑"]
+Strings.repeat("abc", 5); // "abcabcabcabcabc"
+Strings.remove("adefbc", "def"); // "abc"
+Strings.toCamelCase("\nAbc  def"); // "abcDef"
+Strings.toKebabCase("\nAbc  def"); // "abc-def"
 
 // Utils examples:
-Utils.isBoolean(false)
-Utils.isFunction(() => {})
-Utils.isIterable(new Set())
-Utils.isNullOrUndefined(undefined)
-Utils.isDefined(false)
-Utils.isPrimitive("abc")
-Utils.isUndefined(null)
+Utils.isBoolean(false); // true
+Utils.isFunction(() => {}); // true
+Utils.isIterable(new Set()); // true
+Utils.isNullOrUndefined(undefined); // true
+Utils.isDefined(false); // true
+Utils.isPrimitive("abc"); // true
+Utils.isUndefined(null); // false
 ```
 
 ## Support
@@ -112,7 +114,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v1.3.1
+Latest stable: v1.3.2
 
 ## License
 

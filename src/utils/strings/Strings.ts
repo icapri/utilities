@@ -1737,6 +1737,49 @@ export abstract class Strings {
   }
 
   /**
+   * Converts the specified string to camel-case.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.toCamelCase(""); // ""
+   * Strings.toCamelCase("\n\t\n"); // ""
+   * Strings.toCamelCase("foo bar baz"); // "fooBarBaz"
+   * ```
+   *
+   * @param {String} str Contains some string.
+   * @return {String} the specified string converted to camel-case.
+   */
+  public static toCamelCase(str: string): string {
+    const length = str.length;
+    if (length === 0 || Strings.isWhitespace(str)) {
+      return Strings.EMPTY;
+    }
+
+    let index = 0; // the index of the char
+    let camelCase = Strings.EMPTY;
+
+    while (index < length) {
+      const char = str.charAt(index);
+      const charLower = char.toLowerCase();
+      if (Strings.isSpaceChar(char)) {
+        index++;
+        continue;
+      }
+
+      const isPrevSpace = Strings.isSpaceChar(str.charAt(index - 1));
+      if (isPrevSpace) {
+        const empty = camelCase.length === 0;
+        camelCase += empty ? charLower : char.toUpperCase();
+      } else {
+        camelCase += index === 0 ? charLower : char;
+      }
+      index++;
+    }
+
+    return Strings.trim(camelCase);
+  }
+
+  /**
    * Converts the specified string to an array of characters.
    *
    * **Example:**
@@ -1755,6 +1798,88 @@ export abstract class Strings {
     }
 
     return [...str];
+  }
+
+  /**
+   * Converts the specified string to kebab-case.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.toKebabCase(""); // ""
+   * Strings.toKebabCase("ABC"); // "abc"
+   * Strings.toKebabCase("aBC\nDeF"); // "abc-def"
+   * ```
+   *
+   * @param {String} str Contains some string.
+   * @return {String} the specified string converted to kebab-case.
+   */
+  public static toKebabCase(str: string): string {
+    const length = str.length;
+    if (length === 0 || Strings.isWhitespace(str)) {
+      return Strings.EMPTY;
+    }
+
+    let index = 0; // the index of the char
+    let kebabCase = Strings.EMPTY;
+
+    while (index < length) {
+      const char = str.charAt(index);
+      const charLower = char.toLowerCase();
+      if (Strings.isSpaceChar(char)) {
+        index++;
+        continue;
+      }
+
+      const isPrevSpace = Strings.isSpaceChar(str.charAt(index - 1));
+      const empty = kebabCase.length === 0;
+      if (isPrevSpace && empty === false) {
+        kebabCase += '-'.concat(charLower);
+      } else {
+        kebabCase += charLower;
+      }
+
+      index++;
+    }
+
+    return Strings.trim(kebabCase);
+  }
+
+  /**
+   * Converts the specified string to pascal-case.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.toPascalCase(""); // ""
+   * Strings.toPascalCase("  "); // ""
+   * Strings.toPascalCase("abc def"); // "AbcDef"
+   * ```
+   *
+   * @param {String} str Contains some string.
+   * @return {String} the specified string converted to pascal-case.
+   */
+  public static toPascalCase(str: string): string {
+    const length = str.length;
+    if (length === 0 || Strings.isWhitespace(str)) {
+      return Strings.EMPTY;
+    }
+
+    let index = 0;
+    let pascalCase = Strings.EMPTY;
+
+    while (index < length) {
+      const char = str.charAt(index);
+      const isSpace = Strings.isSpaceChar(char);
+      if (isSpace) {
+        index++;
+        continue;
+      }
+      const isPrevSpace = Strings.isSpaceChar(str.charAt(index - 1));
+      const empty = pascalCase.length === 0;
+      pascalCase += isPrevSpace || empty ? char.toUpperCase() : char;
+      index++;
+    }
+
+    return Strings.trim(pascalCase);
   }
 
   /**
