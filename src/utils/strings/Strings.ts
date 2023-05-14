@@ -1634,24 +1634,46 @@ export abstract class Strings {
   }
 
   /**
-   * Removes all the string sequences which match the given sequence.
+   * Removes all the sequences in the specified string which match the
+   * given substring.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.remove("", ""); // "--"
+   * Strings.remove("  ", " "); // "--"
+   * Strings.remove("black", "l"); // "back"
+   * Strings.remove("Ole-Ole-Ole", "Ole"); // "--"
+   * ```
    *
    * @param {String} str Contains some string.
-   * @param {String} sequence Contains some sequence to be removed from
+   * @param {String} subStr Contains some substring to be removed from
    * the given string.
    * @return {String} the string without the given sequence.
    */
-  public static remove(str: string, sequence: string): string {
-    if (Strings.isEmpty(str) || Strings.isEmpty(sequence)) {
+  public static remove(str: string, subStr: string): string {
+    const l = str.length;
+    const sl = subStr.length;
+    if (l === 0 || sl === 0 ||
+        Strings.indexOf(str, subStr) === Strings.NOT_FOUND) {
       return str;
     }
 
-    if (str.indexOf(sequence) === Strings.NOT_FOUND) {
-      return str;
+    let r = Strings.EMPTY;
+    if (sl <= l) {
+      let i = 0;
+      while (i < l) {
+        const ci = str.charAt(i);
+        const c0 = subStr.charAt(0);
+        if (ci === c0 && sl <= l - i && str.substring(i, i + sl) === subStr) {
+          i += sl - 1;
+        } else {
+          r += ci;
+        }
+        i++;
+      }
     }
 
-    const regex = new RegExp(sequence, 'gm');
-    return str.replace(regex, '');
+    return r;
   }
 
   /**
@@ -1664,13 +1686,13 @@ export abstract class Strings {
    * with it; otherwise the given string is returned.
    */
   public static removeEnd(str: string, sequence: string): string {
-    const strLen = str.length; const sqLen = sequence.length;
-    if (strLen === 0 || sqLen === 0) {
+    const l = str.length; const sl = sequence.length;
+    if (l === 0 || sl === 0) {
       return str;
     }
 
     if (str.endsWith(sequence)) {
-      return str.substring(0, strLen - sqLen);
+      return str.substring(0, l - sl);
     }
 
     return str;

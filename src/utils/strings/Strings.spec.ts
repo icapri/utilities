@@ -522,7 +522,12 @@ describe('Strings', () => {
     expect(Strings.remove('abcdefg', 'abc')).toEqual('defg');
     expect(Strings.remove('John Jack Doe', 'Jack ')).toEqual('John Doe');
     expect(Strings.remove('', 'abc')).toEqual('');
+    expect(Strings.remove('', '')).toEqual('');
+    expect(Strings.remove('  ', ' ')).toEqual('');
     expect(Strings.remove('abc', '')).toEqual('abc');
+    expect(Strings.remove('abc', '')).toEqual('abc');
+    expect(Strings.remove('abc', 'a')).toEqual('bc');
+    expect(Strings.remove('Heroes oe oe oe', 'oe')).toEqual('Hers   ');
   });
 
   test('Strings.removeEnd()', () => {
