@@ -84,24 +84,42 @@ describe('Strings', () => {
     expect(Strings.contains('Carbonate', 'car', true)).toEqual(true);
     expect(Strings.contains('collaboration', 'rat')).toEqual(true);
     expect(Strings.contains('\n', '\n')).toEqual(true);
+    expect(Strings.contains('  ', '')).toEqual(true);
+    expect(Strings.contains('  ', '', true)).toEqual(true);
+    expect(Strings.contains('abc\ndef', '\nd')).toEqual(true);
+    expect(Strings.contains('abc def', 'EF', true)).toEqual(true);
   });
 
   test('Strings.containsAny()', () => {
+    expect(Strings.containsAny('', 'oe', '')).toEqual(true);
+    expect(Strings.containsAny('  ', 'oe', '')).toEqual(true);
+    expect(Strings.containsAny('\t\t\t', 'oe', '\t')).toEqual(true);
     expect(Strings.containsAny('John Doe', 'oh', 'oe', 'ohn')).toEqual(true);
     expect(Strings.containsAny('Lorem ipsum', 'am', 'ram', 'isp')).toEqual(
         false);
   });
 
   test('Strings.containsIgnoreCase()', () => {
+    expect(Strings.containsIgnoreCase('', '')).toEqual(true);
+    expect(Strings.containsIgnoreCase('\n\n\n', '')).toEqual(true);
+    expect(Strings.containsIgnoreCase('  ', '')).toEqual(true);
+    expect(Strings.containsIgnoreCase(' ', '')).toEqual(true);
+    expect(Strings.containsIgnoreCase('abcDeF', 'CDE')).toEqual(true);
     expect(Strings.containsIgnoreCase('a', 'A')).toEqual(true);
     expect(Strings.containsIgnoreCase('Carbonate', 'car')).toEqual(true);
     expect(Strings.containsIgnoreCase('collaboration', 'rat')).toEqual(true);
     expect(Strings.containsIgnoreCase('\n', '\n')).toEqual(true);
+    expect(Strings.containsIgnoreCase('abc def', 'EF')).toEqual(true);
   });
 
   test('Strings.containsNone()', () => {
-    expect(Strings.containsNone('John Doe')).toEqual(false);
-    expect(Strings.containsNone('', 'abc')).toEqual(false);
+    expect(Strings.containsNone('')).toEqual(true);
+    expect(Strings.containsNone('  ')).toEqual(true);
+    expect(Strings.containsNone('', '', '')).toEqual(false);
+    expect(Strings.containsNone('John Doe')).toEqual(true);
+    expect(Strings.containsNone('', 'abc')).toEqual(true);
+    expect(Strings.containsNone(
+        'Tic toc toe', 'tac', 'tuc', 'tec')).toEqual(true);
     expect(Strings.containsNone('John Doe', 'oh', 'oe', 'ohn')).toEqual(false);
     expect(Strings.containsNone('Lorem ipsum', 'am', 'ram', 'isp')).toEqual(
         true);
@@ -296,9 +314,16 @@ describe('Strings', () => {
 
   test('Strings.isLowerCase()', () => {
     expect(Strings.isLowerCase('')).toEqual(true);
+    expect(Strings.isLowerCase(' ')).toEqual(true);
+    expect(Strings.isLowerCase('\n\t%%%?')).toEqual(true);
+    expect(Strings.isLowerCase('a')).toEqual(true);
+    expect(Strings.isLowerCase('aA')).toEqual(false);
+    expect(Strings.isLowerCase('nnn')).toEqual(true);
     expect(Strings.isLowerCase('nnnn')).toEqual(true);
     expect(Strings.isLowerCase('Sdd')).toEqual(false);
     expect(Strings.isLowerCase('123')).toEqual(true);
+    expect(Strings.isLowerCase('123 abc de\nfg')).toEqual(true);
+    expect(Strings.isLowerCase('123 abc de\nfG')).toEqual(false);
   });
 
   test('Strings.isNilOrEmpty()', () => {
@@ -386,8 +411,15 @@ describe('Strings', () => {
 
   test('Strings.isUpperCase()', () => {
     expect(Strings.isUpperCase('')).toEqual(true);
+    expect(Strings.isUpperCase('\n\t%%%?')).toEqual(true);
+    expect(Strings.isUpperCase('A')).toEqual(true);
+    expect(Strings.isUpperCase('As')).toEqual(false);
+    expect(Strings.isUpperCase('AB')).toEqual(true);
+    expect(Strings.isUpperCase('123')).toEqual(true);
     expect(Strings.isUpperCase('ABCD')).toEqual(true);
     expect(Strings.isUpperCase('ABCs')).toEqual(false);
+    expect(Strings.isUpperCase('123 ABC DE\nFG')).toEqual(true);
+    expect(Strings.isUpperCase('123 ABC DE\nFg')).toEqual(false);
   });
 
   test('Strings.isWhitespace()', () => {

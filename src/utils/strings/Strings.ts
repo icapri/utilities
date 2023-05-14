@@ -173,6 +173,13 @@ export abstract class Strings {
    * Capitalizes the first letter of the specified string and then converts
    * the rest of the string to lower case.
    *
+   * **Example:
+   * ```typescript
+   * Strings.capitalizeFirstLetter(""); // ""
+   * Strings.capitalizeFirstLetter("abc"); // "Abc"
+   * Strings.capitalizeFirstLetter("aBc"); // "Abc"
+   * ```
+   *
    * @param {String} str Contains some string.
    * @return {String} the specified string where the first letter is capitalized
    * and the rest of the letters are converted to lower case.
@@ -244,8 +251,7 @@ export abstract class Strings {
 
     const end = l - 1;
     const r = str.substring(0, end);
-    const c = str.charAt(end);
-    if (c === Strings.LF) {
+    if (str.charAt(end) === Strings.LF) {
       if (r.charAt(end - 1) === Strings.CR) {
         return r.substring(0, end - 1);
       }
@@ -284,23 +290,77 @@ export abstract class Strings {
   }
 
   /**
-   * Contains whether the given string contains the given sequence.
+   * Contains whether the specified string contains the given sequence.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.contains("", ""); // true
+   * Strings.contains(" ", ""); // true
+   * Strings.contains("abc", "bc"); // true
+   * Strings.contains("abc", "BC"); // false
+   * Strings.contains("aBc", "bC", true); // true
+   * ```
    *
    * @param {String} str Contains some string.
    * @param {String} sequence Contains some string sequence.
    * @param {Boolean} ignoreCase Contains whether to ignore case sensitivity.
+   * Defaults to `false`.
    * @return {Boolean} whether the given string contains the given sequence.
    */
   public static contains(
-      str: string, sequence: string, ignoreCase?: boolean): boolean {
-    if (ignoreCase) {
-      return str.toLowerCase().includes(sequence.toLowerCase());
+      str: string,
+      sequence: string,
+      ignoreCase?: boolean,
+  ): boolean {
+    ignoreCase ??= false;
+    const l = str.length;
+    const n = sequence.length;
+    if (n === 0) {
+      return true;
     }
-    return str.includes(sequence);
+
+    if (n <= l) {
+      let i = 0; let j = l - 1;
+      while (i <= j) {
+        let ci; let cj; let cs;
+        if (ignoreCase) {
+          ci = str.charAt(i).toLowerCase();
+          cj = str.charAt(j).toLowerCase();
+          cs = sequence.charAt(0).toLowerCase();
+        } else {
+          ci = str.charAt(i);
+          cj = str.charAt(j);
+          cs = sequence.charAt(0);
+        }
+
+        if (ci === cs) {
+          if (n <= l - i) {
+            const ic = str.substring(i, i + n);
+            const a = ignoreCase ? ic.toLowerCase() : ic;
+            const b = ignoreCase ? sequence.toLowerCase() : sequence;
+            if (a === b) {
+              return true;
+            }
+          }
+        } else if (cj === cs) {
+          if (n <= l - j + 1) {
+            const ic = str.substring(j, j + n);
+            const a = ignoreCase ? ic.toLowerCase() : ic;
+            const b = ignoreCase ? sequence.toLowerCase() : sequence;
+            if (a === b) {
+              return true;
+            }
+          }
+        }
+        i++; j--;
+      }
+    }
+
+    return false;
   }
 
   /**
-   * Checks whether the given string contains either of the given string
+   * Checks whether the specified string contains either of the given string
    * sequences.
    *
    * @param {String} str Contains some string.
@@ -309,15 +369,20 @@ export abstract class Strings {
    * given string sequences.
    */
   public static containsAny(str: string, ...sequences: string[]): boolean {
-    if (str.length === 0 || sequences.length === 0) {
-      return false;
+    if (sequences.length > 0) {
+      let i = 0;
+      while (i < sequences.length) {
+        if (Strings.contains(str, sequences[i++])) {
+          return true;
+        }
+      }
     }
 
-    return sequences.some((sequence) => str.includes(sequence));
+    return false;
   }
 
   /**
-   * Checks whether the given string contains the given sequence by ignoring
+   * Checks whether the specified string contains the given sequence by ignoring
    * case sensitivity.
    *
    * @param {String} str Contains some string.
@@ -330,20 +395,33 @@ export abstract class Strings {
   }
 
   /**
-   * Checks whether the given string contains none of the given string
+   * Checks whether the specified string contains none of the given string
    * sequences.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.containsNone("abc"); // true
+   * Strings.containsNone("", "de", "bc"); // true
+   * Strings.containsNone("abc", "de", "bc"); // false
+   * Strings.containsNone("abc", "de", "fg"); // true
+   * ```
    *
    * @param {String} str Contains some string.
    * @param {Array} sequences Contains some string sequences.
-   * @return {Boolean} whether the given string contains none of the given
+   * @return {Boolean} whether the specified string contains none of the given
    * string sequences.
    */
   public static containsNone(str: string, ...sequences: string[]): boolean {
-    if (str.length === 0 || sequences.length === 0) {
-      return false;
+    if (sequences.length > 0) {
+      let i = 0;
+      while (i < sequences.length) {
+        if (Strings.contains(str, sequences[i++])) {
+          return false;
+        }
+      }
     }
 
-    return sequences.every((sequence) => str.includes(sequence) === false);
+    return true;
   }
 
   /**
@@ -967,27 +1045,36 @@ export abstract class Strings {
   }
 
   /**
-   * Checks whether the given string is lower case.
+   * Checks whether all the characters of the specified string are
+   * lowercase.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.isLowerCase(""); // true
+   * Strings.isLowerCase("123"); // true
+   * Strings.isLowerCase("abc"); // true
+   * Strings.isLowerCase("Abc"); // false
+   * ```
    *
    * @param {String} str Contains some string.
-   * @return {Boolean} whether the given string is lower case.
+   * @return {Boolean} whether all the characters of the specified
+   * string are lowercase.
    */
   public static isLowerCase(str: string): boolean {
     let i = 0;
-    let result = true;
-
-    for (; i < str.length; i++) {
-      const c = str.charAt(i);
-      if (Strings.isNumeric(c)) {
-        continue;
+    let j = str.length - 1;
+    while (i <= j) {
+      const ci = str.charAt(i++);
+      if (ci !== ci.toLowerCase()) {
+        return false;
       }
-
-      if (c !== c.toLowerCase()) {
-        result = false;
+      const cj = str.charAt(j--);
+      if (cj !== cj.toLowerCase()) {
+        return false;
       }
     }
 
-    return result;
+    return true;
   }
 
   /**
@@ -1160,27 +1247,36 @@ export abstract class Strings {
   }
 
   /**
-   * Checks whether the given string is upper case.
+   * Checks whether all the characters of the specified string are
+   * upper case.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.isUpperCase(""); // true
+   * Strings.isUpperCase("123"); // true
+   * Strings.isUpperCase("ABC"); // true
+   * Strings.isUpperCase("Abc"); // false
+   * ```
    *
    * @param {String} str Contains some string.
-   * @return {Boolean} whether the given string is upper case.
+   * @return {Boolean} whether all the characters of the specified
+   * string are upper case.
    */
   public static isUpperCase(str: string): boolean {
     let i = 0;
-    let result = true;
-
-    for (; i < str.length; i++) {
-      const c = str.charAt(i);
-      if (Strings.isNumeric(c)) {
-        continue;
+    let j = str.length - 1;
+    while (i <= j) {
+      const ci = str.charAt(i++);
+      if (ci !== ci.toUpperCase()) {
+        return false;
       }
-
-      if (c !== c.toUpperCase()) {
-        result = false;
+      const cj = str.charAt(j--);
+      if (cj !== cj.toUpperCase()) {
+        return false;
       }
     }
 
-    return result;
+    return true;
   }
 
   /**
