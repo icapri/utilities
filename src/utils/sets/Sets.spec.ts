@@ -27,6 +27,22 @@ describe('Sets', () => {
     expect(Sets.isSet(set)).toEqual(true);
   });
 
+  test('Sets.isWeakSet()', () => {
+    expect(Sets.isWeakSet()).toEqual(false);
+    expect(Sets.isWeakSet({})).toEqual(false);
+    expect(Sets.isWeakSet(undefined)).toEqual(false);
+    expect(Sets.isWeakSet([])).toEqual(false);
+    expect(Sets.isWeakSet(null)).toEqual(false);
+    const set = new Set();
+    expect(Sets.isWeakSet(set)).toEqual(false);
+    set.add('abc');
+    expect(Sets.isWeakSet(set)).toEqual(false);
+    const weakSet = new WeakSet();
+    expect(Sets.isWeakSet(weakSet)).toEqual(true);
+    weakSet.add({someGarbage: 'abc'});
+    expect(Sets.isWeakSet(weakSet)).toEqual(true);
+  });
+
   test('Sets.toMap()', () => {
     const set = new Set();
     const map = new Map();

@@ -140,6 +140,18 @@ describe('Utils', () => {
     expect(Utils.isRegExp(new RegExp('abc', 'g'))).toEqual(true);
   });
 
+  test('Utils.isSymbol()', () => {
+    expect(Utils.isSymbol()).toEqual(false);
+    expect(Utils.isSymbol(null)).toEqual(false);
+    expect(Utils.isSymbol(undefined)).toEqual(false);
+    expect(Utils.isSymbol(Symbol.iterator)).toEqual(true);
+    expect(Utils.isSymbol(/a/gm)).toEqual(false);
+    expect(Utils.isSymbol(new RegExp('abc', 'g'))).toEqual(false);
+    expect(Utils.isSymbol(Symbol())).toEqual(true);
+    expect(Utils.isSymbol(Symbol('abc'))).toEqual(true);
+    expect(Utils.isSymbol(Symbol('foobar'))).toEqual(true);
+  });
+
   test('Utils.isTruthy()', () => {
     expect(Utils.isTruthy()).toEqual(false);
     expect(Utils.isTruthy(undefined)).toEqual(false);

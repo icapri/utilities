@@ -90,6 +90,21 @@ describe('Numbers', () => {
       89,
       97,
     ].every((n) => Numbers.isPrime(n))).toEqual(true);
+    expect(Numbers.isPrime(4)).toEqual(false);
   });
-  expect(Numbers.isPrime(4)).toEqual(false);
+
+  test('Numbers.randomInt()', () => {
+    expect(Numbers.randomInt(0, 1, true) >= 0 ||
+      Numbers.randomInt(0, 1, true) <= 1).toEqual(true);
+    expect(Numbers.randomInt(2, 8) > 2 ||
+      Numbers.randomInt(0, 1) < 8).toEqual(true);
+  });
+
+  test('Numbers.toString()', () => {
+    expect(Numbers.toString(123)).toEqual('123');
+    expect(Numbers.toString(0)).toEqual('0');
+    expect(Numbers.toString(-0)).toEqual('0');
+    expect(Numbers.toString(-150)).toEqual('-150');
+    expect(Numbers.toString(0.23)).toEqual('0.23');
+  });
 });

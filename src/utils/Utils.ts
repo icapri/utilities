@@ -146,6 +146,16 @@ export abstract class Utils {
   }
 
   /**
+   * Checks whether the specified value is a symbol.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is a symbol.
+   */
+  public static isSymbol(value?: any): value is symbol {
+    return typeof value === 'symbol';
+  }
+
+  /**
    * Checks whether the given value is not falsy i. e. not: `null`, `undefined`,
    * `false`, `NaN`, `0`, `-0`, `0n` or `''`.
    *

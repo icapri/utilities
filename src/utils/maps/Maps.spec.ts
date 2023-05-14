@@ -25,6 +25,20 @@ describe('Maps', () => {
     expect(Maps.isNotEmpty(map)).toBeTruthy();
   });
 
+  test('Maps.isWeakMap()', () => {
+    expect(Maps.isWeakMap()).toBeFalsy();
+    expect(Maps.isWeakMap(null)).toBeFalsy();
+    expect(Maps.isWeakMap(undefined)).toBeFalsy();
+    const map = new Map();
+    expect(Maps.isWeakMap(map)).toBeFalsy();
+    map.set('a', 'a');
+    expect(Maps.isWeakMap(map)).toEqual(false);
+    const weakMap = new WeakMap();
+    expect(Maps.isWeakMap(weakMap)).toEqual(true);
+    weakMap.set({}, []);
+    expect(Maps.isWeakMap(weakMap)).toEqual(true);
+  });
+
   test('Maps.toObject()', () => {
     const map = new Map();
     expect(Maps.toObject(map)).toEqual({});

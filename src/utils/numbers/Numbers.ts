@@ -88,12 +88,51 @@ export abstract class Numbers {
   /**
    * Checks whether the specified number is a prime number.
    *
-   * @param {Number} n Contains some number.
+   * @param {Number} num Contains some number.
    * @return {Boolean} whether the specified number is a prime number.
    */
-  public static isPrime(n: number): boolean {
-    let i = 2; const s = Math.sqrt(n);
-    for (; i <= s; i++) if (n % i === 0) return false;
-    return n > 1;
+  public static isPrime(num: number): boolean {
+    let i = 2; const s = Math.sqrt(num);
+    for (; i <= s; i++) if (num % i === 0) return false;
+    return num > 1;
+  }
+
+  /**
+   * Get a random integer in the specified range.
+   *
+   * @param {Number} min Contains the minimum for the random integer.
+   * @param {Number} max Contains the maximum for the random integer.
+   * @param {Boolean} incl Contains whether to include `min` and `max`.
+   * Defaults to `false`;
+   * @return {Number} a random integer in the specified range.
+   */
+  public static randomInt(
+      min: number,
+      max: number,
+      incl?: boolean,
+  ): number {
+    if (min >= max) {
+      throw new Error('Invalid arguments min and max.');
+    }
+    incl ??= false;
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - (incl ? min + 1 : min)) + min);
+  }
+
+  /**
+   * Converts the specified number to string.
+   *
+   * **Example:**
+   * ```typescript
+   * Numbers.toString(123); // "123"
+   * Numbers.toString(12.3); // "12.3"
+   * ```
+   *
+   * @param {Number} num Contains some number.
+   * @return {String} a string.
+   */
+  public static toString(num: number): string {
+    return '' + num;
   }
 }

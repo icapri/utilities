@@ -608,7 +608,7 @@ export abstract class Dates {
    * @return {Number} the difference in months between the two specified dates.
    */
   public static monthsDifference(
-      date: string | number | Date, other: string | number | Date) {
+      date: string | number | Date, other: string | number | Date): number {
     const dateObj = Dates.tryParse(date);
     const otherObj = Dates.tryParse(other);
     let months;

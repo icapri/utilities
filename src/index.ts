@@ -1,5 +1,5 @@
 /**
- * Utilities - The Public API
+ * utilitates - The Public API
  */
 export {Utils} from './utils/Utils';
 export {Arrays} from './utils/arrays/Arrays';

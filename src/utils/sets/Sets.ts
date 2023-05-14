@@ -1,3 +1,5 @@
+import {Objects} from '../objects/Objects';
+
 /**
  * Defines an abstract class with set utilities.
  */
@@ -35,6 +37,16 @@ export abstract class Sets {
    */
   public static isSet(value?: any): value is Set<any> {
     return value instanceof Set;
+  }
+
+  /**
+   * Checks whether the given value is of type `WeakSet`.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the given value is of type `WeakSet`.
+   */
+  public static isWeakSet(value?: any): value is WeakSet<any> {
+    return Objects.getType(value) === '[object WeakSet]';
   }
 
   /**

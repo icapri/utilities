@@ -76,6 +76,16 @@ describe('Arrays', () => {
     expect(Arrays.isArrayBuffer(buffer)).toEqual(true);
   });
 
+  test('Arrays.isBinary()', () => {
+    expect(Arrays.isBinary([])).toEqual(true);
+    expect(Arrays.isBinary([4, 3])).toEqual(false);
+    expect(Arrays.isBinary([0])).toEqual(true);
+    expect(Arrays.isBinary([0, 0])).toEqual(true);
+    expect(Arrays.isBinary([0, 0, 1])).toEqual(true);
+    expect(Arrays.isBinary([0, 0, 1, 0])).toEqual(true);
+    expect(Arrays.isBinary([-1, -0])).toEqual(false);
+  });
+
   test('Arrays.isEmpty()', () => {
     expect(Arrays.isEmpty([])).toEqual(true);
     expect(Arrays.isEmpty([undefined])).toEqual(false);

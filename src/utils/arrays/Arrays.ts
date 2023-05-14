@@ -379,6 +379,47 @@ export abstract class Arrays {
   }
 
   /**
+   * Checks whether the specified array of numbers is a binary array i. e.
+   * whether its values are only `0` and `1`.
+   *
+   * @param {Array} array Contains an array of numbers.
+   * @return {Boolean} whether the specified array of numbers is a binary
+   * array i. e. whether its values are only `0` and `1`.
+   */
+  public static isBinary(array: number[]): boolean;
+  /**
+   * Checks whether the specified array of numbers is a binary array i. e.
+   * whether its values are only `0` and `1`.
+   *
+   * @param {Array} array Contains an array of numbers.
+   * @return {Boolean} whether the specified array of numbers is a binary
+   * array i. e. whether its values are only `0` and `1`.
+   */
+  public static isBinary(array: readonly number[]): boolean;
+  /**
+   * Checks whether the specified array of numbers is a binary array i. e.
+   * whether its values are only `0` and `1`.
+   *
+   * @param {Array} array Contains an array of numbers.
+   * @return {Boolean} whether the specified array of numbers is a binary
+   * array i. e. whether its values are only `0` and `1`.
+   */
+  public static isBinary(array: number[] | readonly number[]): boolean {
+    if (Arrays.isNotEmpty(array)) {
+      let i = 0;
+      let j = array.length - 1;
+      while (i <= j) {
+        const ai = array[i++];
+        const aj = array[j--];
+        if ((ai !== 0 && ai !== 1) || (aj !== 0 && aj !== 1)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  /**
    * Checks whether the given array is empty.
    *
    * @param {Array} array Contains some array.

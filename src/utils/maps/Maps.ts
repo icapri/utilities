@@ -1,3 +1,5 @@
+import {Objects} from '../objects/Objects';
+
 /**
  * Defines an abstract class with map utilities.
  */
@@ -35,6 +37,16 @@ export abstract class Maps {
    */
   public static isNotEmpty<TKey, TValue>(map: Map<TKey, TValue>): boolean {
     return map.size !== 0;
+  }
+
+  /**
+   * Checks whether the specified value is of type `WeakMap`.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is of type `WeakMap`.
+   */
+  public static isWeakMap(value?: any): value is WeakMap<any, any> {
+    return Objects.getType(value) === '[object WeakMap]';
   }
 
   /**
