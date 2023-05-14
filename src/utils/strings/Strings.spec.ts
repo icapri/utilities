@@ -34,14 +34,6 @@ describe('Strings', () => {
     expect(Strings.at('\t\f\n', 2)).toEqual('\n');
   });
 
-  test('Strings.capitalize()', () => {
-    const str = '';
-    expect(Strings.capitalize(str)).toEqual('');
-    expect(Strings.capitalize('lorem ')).toEqual('Lorem ');
-    expect(Strings.capitalize('lorem ipsum')).toEqual('Lorem ipsum');
-    expect(Strings.capitalize('cAT')).toEqual('CAT');
-  });
-
   test('Strings.chomp()', () => {
     expect(Strings.chomp('')).toEqual('');
     expect(Strings.chomp('\n')).toEqual('');
@@ -674,5 +666,17 @@ describe('Strings', () => {
     expect(Strings.trim('  abc de ')).toEqual('abc de');
     expect(Strings.trim(' abc  de  ')).toEqual('abc  de');
     expect(Strings.trim(' abc  de ')).toEqual('abc  de');
+  });
+
+  test('Strings.upperFirst()', () => {
+    expect(Strings.upperFirst('')).toEqual('');
+    expect(Strings.upperFirst('  ')).toEqual('  ');
+    expect(Strings.upperFirst('lorem ')).toEqual('Lorem ');
+    expect(Strings.upperFirst('jOHN DOE')).toEqual('JOHN DOE');
+    expect(Strings.upperFirst('jOHN DOE', true)).toEqual('John doe');
+    expect(Strings.upperFirst('lorem ipsum')).toEqual('Lorem ipsum');
+    expect(Strings.upperFirst('cAT')).toEqual('CAT');
+    expect(Strings.upperFirst('cAT', true)).toEqual('Cat');
+    expect(Strings.upperFirst(' cAT', true)).toEqual(' cat');
   });
 });

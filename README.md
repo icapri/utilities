@@ -93,6 +93,7 @@ Strings.repeat("abc", 5); // "abcabcabcabcabc"
 Strings.remove("adefbc", "def"); // "abc"
 Strings.toCamelCase("\nAbc  def"); // "abcDef"
 Strings.toKebabCase("\nAbc  def"); // "abc-def"
+Strings.upperFirst("john Doe"); // "John Doe"
 
 // Utils examples:
 Utils.isBoolean(false); // true
@@ -114,7 +115,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v1.3.6
+Latest stable: v1.3.7
 
 ## License
 

@@ -148,51 +148,6 @@ export abstract class Strings {
   }
 
   /**
-   * Capitalizes the given string.
-   *
-   * **Example:**
-   * ```typescript
-   * Strings.capitalize('john'); // John
-   * Strings.capitalize('jOHN'); // JOHN
-   * ```
-   *
-   * @param {String} str Contains some string.
-   * @return {String} the capitalized string.
-   *
-   * @see `Strings.upperFirst()`
-   */
-  public static capitalize(str: string): string {
-    if (Strings.isEmpty(str)) {
-      return str;
-    }
-
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
-
-  /**
-   * Capitalizes the first letter of the specified string and then converts
-   * the rest of the string to lower case.
-   *
-   * **Example:
-   * ```typescript
-   * Strings.capitalizeFirstLetter(""); // ""
-   * Strings.capitalizeFirstLetter("abc"); // "Abc"
-   * Strings.capitalizeFirstLetter("aBc"); // "Abc"
-   * ```
-   *
-   * @param {String} str Contains some string.
-   * @return {String} the specified string where the first letter is capitalized
-   * and the rest of the letters are converted to lower case.
-   */
-  public static capitalizeFirstLetter(str: string): string {
-    if (str.length === 0) {
-      return str;
-    }
-
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-  }
-
-  /**
    * Chomps the specified string i. e. removes a newline from the end
    * of the specified string if there is such one.
    *
@@ -2113,16 +2068,23 @@ export abstract class Strings {
    *
    * **Example:**
    * ```typescript
-   * Strings.upperFirst('john'); // John
-   * Strings.upperFirst('jOHN'); // JOHN
+   * Strings.capitalize('john'); // John
+   * Strings.capitalize('jOHN'); // JOHN
+   * Strings.capitalize('jOHN', true); // John
    * ```
    *
    * @param {String} str Contains some string.
+   * @param {Boolean} lowerRest Contains whether to convert the characters
+   * from the second to the last character to lowercase.
    * @return {String} the capitalized string.
-   *
-   * @see `Strings.capitalize()`
    */
-  public static upperFirst(str: string): string {
-    return Strings.capitalize(str);
+  public static upperFirst(str: string, lowerRest?: boolean): string {
+    if (Strings.isWhitespace(str)) {
+      return str;
+    }
+
+    lowerRest ??= false;
+    const rest = lowerRest ? str.slice(1).toLowerCase() : str.slice(1);
+    return str.charAt(0).toUpperCase() + rest;
   }
 }
