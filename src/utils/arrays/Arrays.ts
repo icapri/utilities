@@ -1,7 +1,16 @@
+import {Numbers} from '../numbers/Numbers';
+import {Objects} from '../objects/Objects';
+import {Utils} from '../Utils';
+
 /**
  * Defines an abstract class with array utilities.
  */
 export abstract class Arrays {
+  /**
+   * Contains an empty array.
+   */
+  public static readonly EMPTY: readonly [] = [] as const;
+
   /** @private */
   private constructor() {
     throw new Error('Cannot create an instance of an abstract class.');
@@ -349,7 +358,24 @@ export abstract class Arrays {
    * @return {Boolean} whether the given value is an array.
    */
   public static isArray(value?: any | any[]): value is any[] {
-    return Object.prototype.toString.call(value) === '[object Array]';
+    return Objects.getType(value) === '[object Array]';
+  }
+
+  /**
+   * Check whether the specified value is of type `ArrayBuffer`.
+   *
+   * **Example:**
+   * ```typescript
+   * Arrays.isArrayBuffer([]); // false
+   * Arrays.isArrayBuffer(new ArrayBuffer(5)); // true
+   * ```
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is of type `ArrayBuffer`.
+   */
+  public static isArrayBuffer(value?: any): boolean {
+    return Utils.isNotNil(value) &&
+      Objects.getType(value) === '[object ArrayBuffer]';
   }
 
   /**
@@ -431,15 +457,38 @@ export abstract class Arrays {
   }
 
   /**
-   * Checks whether the given value is a readonly array.
+   * Checks whether the specified value is a typed array.
+   *
+   * **Example:**
+   * ```typescript
+   * Arrays.isTypedArray(new Int8Array()); // true
+   * Arrays.isTypedArray(new Int16Array()); // true
+   * Arrays.isTypedArray(new Int32Array()); // true
+   * Arrays.isTypedArray(new Float32Array()); // true
+   * Arrays.isTypedArray(new Float64Array()); // true
+   * Arrays.isTypedArray(new Uint8Array()); // true
+   * Arrays.isTypedArray(new Uint8ClampedArray()); // true
+   * Arrays.isTypedArray(new Uint16Array()); // true
+   * Arrays.isTypedArray(new Uint32Array()); // true
+   * ```
    *
    * @param {*} value Contains some value.
-   * @return {Boolean} whether the given value is a readonly array.
+   * @return {Boolean} whether the specified value is a typed array
+   * i. e. of type `Uint8Array`, `Uint8ClampedArray`, `Int8Array`,
+   * `Uint16Array`, `Uint16Array`
    */
-  public static isReadonlyArray(
-      value?: any | readonly any[],
-  ): value is readonly any[] {
-    return Arrays.isArray(value);
+  public static isTypedArray(value?: any): boolean {
+    return Utils.isNotNil(value) && Numbers.isNumber(value.length) && [
+      '[object Int8Array]',
+      '[object Int16Array]',
+      '[object Int32Array]',
+      '[object Float32Array]',
+      '[object Float64Array]',
+      '[object Uint8Array]',
+      '[object Uint8ClampedArray]',
+      '[object Uint16Array]',
+      '[object Uint32Array]',
+    ].includes(Objects.getType(value));
   }
 
   /**

@@ -59,13 +59,6 @@ describe('Objects', () => {
     expect(Objects.equals(x, y)).toEqual(true);
   });
 
-  test('Objects.getClassOf()', () => {
-    expect(Objects.getClassOf({})).toEqual('[object Object]');
-    expect(Objects.getClassOf({a: true})).toEqual('[object Object]');
-    expect(Objects.getClassOf(undefined)).toEqual('[object Undefined]');
-    expect(Objects.getClassOf(null)).toEqual('[object Null]');
-  });
-
   test('Objects.hasProperty()', () => {
     const o = {
       a: true,

@@ -1,3 +1,5 @@
+import {Objects} from './objects/Objects';
+
 /**
  * Defines a base utility class.
  */
@@ -130,6 +132,17 @@ export abstract class Utils {
     | symbol
     | undefined {
     return value !== Object(value);
+  }
+
+  /**
+   * Checks whether the specified value is a regular expression.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is a regular expression.
+   */
+  public static isRegExp(value?: any): value is RegExp {
+    return value instanceof RegExp ||
+      Objects.getType(value) === '[object RegExp]';
   }
 
   /**

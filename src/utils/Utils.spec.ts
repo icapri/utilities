@@ -134,6 +134,12 @@ describe('Utils', () => {
     expect(Utils.isPrimitive({})).toEqual(false);
   });
 
+  test('Utils.isRegExp()', () => {
+    expect(Utils.isRegExp()).toEqual(false);
+    expect(Utils.isRegExp(/a/gm)).toEqual(true);
+    expect(Utils.isRegExp(new RegExp('abc', 'g'))).toEqual(true);
+  });
+
   test('Utils.isTruthy()', () => {
     expect(Utils.isTruthy()).toEqual(false);
     expect(Utils.isTruthy(undefined)).toEqual(false);

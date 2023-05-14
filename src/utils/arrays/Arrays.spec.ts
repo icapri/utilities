@@ -66,6 +66,16 @@ describe('Arrays', () => {
     expect(Arrays.isArray([1, 2])).toBeTruthy();
   });
 
+  test('Arrays.isArrayBuffer()', () => {
+    expect(Arrays.isArrayBuffer([])).toEqual(false);
+    expect(Arrays.isArrayBuffer(false)).toEqual(false);
+    expect(Arrays.isArrayBuffer([1, 2])).toEqual(false);
+    expect(Arrays.isArrayBuffer()).toEqual(false);
+    expect(Arrays.isArrayBuffer(null)).toEqual(false);
+    const buffer = new ArrayBuffer(5);
+    expect(Arrays.isArrayBuffer(buffer)).toEqual(true);
+  });
+
   test('Arrays.isEmpty()', () => {
     expect(Arrays.isEmpty([])).toEqual(true);
     expect(Arrays.isEmpty([undefined])).toEqual(false);
@@ -83,11 +93,20 @@ describe('Arrays', () => {
     expect(Arrays.isNotEmpty([null])).toEqual(true);
   });
 
-  test('Arrays.isReadonlyArray()', () => {
-    expect(Arrays.isReadonlyArray([])).toEqual(true);
-    expect(Arrays.isReadonlyArray(false)).toEqual(false);
-    const readonlyArray: readonly string[] = ['a', 'b', 'c'];
-    expect(Arrays.isReadonlyArray(readonlyArray)).toEqual(true);
+  test('Arrays.isTypedArray()', () => {
+    expect(Arrays.isTypedArray([])).toEqual(false);
+    expect(Arrays.isTypedArray([null])).toEqual(false);
+    const t1 = new Int8Array();
+    const t2 = new Int16Array();
+    const t3 = new Int32Array();
+    const t4 = new Float32Array();
+    const t5 = new Float64Array();
+    const t6 = new Uint8Array();
+    const t7 = new Uint8ClampedArray();
+    const t8 = new Uint16Array();
+    const t9 = new Uint32Array();
+    expect([t1, t2, t3, t4, t5, t6, t7, t8, t9].every((a) =>
+      Arrays.isTypedArray(a))).toEqual(true);
   });
 
   test('Arrays.last()', () => {

@@ -7,7 +7,7 @@
 
 ## Description
 
-This library contains utilities for built-in JavaScript classes such as
+This library contains utilities for built-in JavaScript types such as
 `Array`, `Date`, `Map`, `Number`, `Object`, `Set` and `String`. To keep it simple, these utility classes are simply called `Arrays`,
 `Dates`, `Maps`, `Numbers`, `Objects`, `Sets` and `Strings` and are only
 composed of static members (utility methods).
@@ -115,7 +115,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v1.3.7
+Latest stable: v1.3.8
 
 ## License
 

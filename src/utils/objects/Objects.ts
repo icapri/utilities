@@ -125,20 +125,21 @@ export abstract class Objects {
   }
 
   /**
-   * Gets the class name of the specified argument.
+   * Gets the object type of JavaScript built-in types such as `String`,
+   * `RegExp`, `Number`, `Date`, etc.
    *
    * **Example:**
    * ```typescript
-   * Utils.getClassOf(9); // "[object Number]"
-   * Utils.getClassOf("abc"); // "[object String]"
-   * Utils.getClassOf(false); // "[object Boolean]"
+   * Objects.getType("abc"); // "[object String]"
+   * Objects.getType(new Date()); // "[object Date]"
    * ```
    *
-   * @returns the class name of the specified argument.
+   * @param {Object} obj Contains some object.
+   * @return {String} the object type.
    */
-  public static getClassOf = Function.prototype.call.bind(
-      Object.prototype.toString,
-  );
+  public static getType<T extends object>(obj?: T): string {
+    return Object.prototype.toString.call(obj);
+  }
 
   /**
    * Checks whether the given object has a property with the given name.
