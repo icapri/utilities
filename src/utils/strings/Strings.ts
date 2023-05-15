@@ -113,6 +113,13 @@ export abstract class Strings {
    * Appends the specified suffix to the given string if the given string
    * doesn't end with it.
    *
+   * **Example:**
+   * ```typescript
+   * Strings.appendIfMissing("", ""); // ""
+   * Strings.appendIfMissing("abc", "def"); // "abcdef"
+   * Strings.appendIfMissing("abcdef", "DeF", true); // "abcdef"
+   * ```
+   *
    * @param {String} str Contains some string.
    * @param {String} suffix Contains the string suffix to be appended to the
    * string if it is missing at the end of it.
@@ -334,15 +341,15 @@ export abstract class Strings {
    * substrings.
    *
    * @param {String} str Contains some string.
-   * @param {Array} subStrs Contains some substrings.
+   * @param {Array} substrings Contains some substrings.
    * @return {Boolean} whether the given string contains either of the
    * given substrings.
    */
-  public static containsAny(str: string, ...subStrs: string[]): boolean {
-    if (subStrs.length > 0) {
+  public static containsAny(str: string, ...substrings: string[]): boolean {
+    if (substrings.length > 0) {
       let i = 0;
-      while (i < subStrs.length) {
-        if (Strings.contains(str, subStrs[i++])) {
+      while (i < substrings.length) {
+        if (Strings.contains(str, substrings[i++])) {
           return true;
         }
       }
@@ -415,14 +422,14 @@ export abstract class Strings {
    * ```
    *
    * @param {String} str Contains some string.
-   * @param {String} subStr Contains some substring.
+   * @param {String} substring Contains some substring.
    * @return {Number} the number of times the specified substring appears
    * in the specified string.
    */
-  public static countMatches(str: string, subStr: string): number {
+  public static countMatches(str: string, substring: string): number {
     let r = 0;
     const l = str.length;
-    const sl = subStr.length;
+    const sl = substring.length;
     let i = 0;
 
     if (l === 0 || sl === 0 || sl > l) {
@@ -430,22 +437,14 @@ export abstract class Strings {
     }
 
     if (l === sl) {
-      return str === subStr ? 1 : 0;
+      return str === substring ? 1 : 0;
     }
 
     while (i < l) {
-      const c = str.charAt(i);
-      const cs = subStr.charAt(0);
-      if (c === cs) {
-        const rem = l - i;
-        if (sl <= rem) {
-          const s = str.substring(i, i + sl);
-          if (s === subStr) {
-            r++;
-          }
-        }
+      if (str.charAt(i) === substring.charAt(0) && sl <= l - i &&
+        str.substring(i, i + sl) === substring) {
+        r++;
       }
-
       i++;
     }
 
@@ -769,11 +768,11 @@ export abstract class Strings {
    *
    * **Example:**
    * ```typescript
-   * Strings.hasChar('abc', ''); // false
-   * Strings.hasChar('', ''); // false
-   * Strings.hasChar('', 'a'); // false
-   * Strings.hasChar('', 'ab'); // false
-   * Strings.hasChar('abc', 'b'); // true
+   * Strings.hasChar("abc", ""); // false
+   * Strings.hasChar("", ""); // false
+   * Strings.hasChar("", "a"); // false
+   * Strings.hasChar("", "ab"); // false
+   * Strings.hasChar("abc", "b"); // true
    * ```
    *
    * @param {String} str Contains some string.
@@ -819,13 +818,13 @@ export abstract class Strings {
    *
    * **Example:**
    * ```typescript
-   * Strings.hasWhitespace('Lorem'); // false
-   * Strings.hasWhitespace('Lor em'); // true
-   * Strings.hasWhitespace('Lorem\n'); // true
-   * Strings.hasWhitespace('Lorem\r'); // true
-   * Strings.hasWhitespace('Lorem\t'); // true
-   * Strings.hasWhitespace('Lorem\f'); // true
-   * Strings.hasWhitespace(''); // false
+   * Strings.hasWhitespace("Lorem"); // false
+   * Strings.hasWhitespace("Lor em"); // true
+   * Strings.hasWhitespace("Lorem\n"); // true
+   * Strings.hasWhitespace("Lorem\r"); // true
+   * Strings.hasWhitespace("Lorem\t"); // true
+   * Strings.hasWhitespace("Lorem\f"); // true
+   * Strings.hasWhitespace(""); // false
    * ```
    *
    * @param {String} str Contains some string.
@@ -848,10 +847,11 @@ export abstract class Strings {
     let j = l - 1;
 
     while (i <= j) {
-      if (Strings.isSpaceChar(str.charAt(i++)) ||
-        Strings.isSpaceChar(str.charAt(j--))) {
+      if (Strings.isSpaceChar(str.charAt(i)) ||
+        Strings.isSpaceChar(str.charAt(j))) {
         return true;
       }
+      i++; j--;
     }
 
     return false;
@@ -1154,77 +1154,141 @@ export abstract class Strings {
   /**
    * Checks  whether the given string value is `null`, `undefined` or `""`.
    *
+   * **Example:**
+   * ```typescript
+   * Strings.isNilOrEmpty(); // true
+   * Strings.isNilOrEmpty(""); // true
+   * Strings.isNilOrEmpty(" "); // false
+   * Strings.isNilOrEmpty(null); // true
+   * Strings.isNilOrEmpty(undefined); // true
+   * Strings.isNilOrEmpty("abc"); // false
+   * ```
+   *
    * @param {String} str Contains some string.
    * @return {Boolean} whether the given string value is `null`, `undefined`
    * or `""`.
    */
   public static isNilOrEmpty(
-      str?: string | null | undefined): str is null | undefined {
-    if (Utils.isNullOrUndefined(str)) {
-      return true;
-    }
-
-    return Strings.isEmpty(str);
+      str?: string | null | undefined,
+  ): str is null | undefined {
+    return Utils.isNullOrUndefined(str) || Strings.isEmpty(str);
   }
 
   /**
    * Checks whether the given string is `null`, `undefined` or white space.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.isNilOrWhitespace(); // true
+   * Strings.isNilOrWhitespace(""); // true
+   * Strings.isNilOrWhitespace(" "); // true
+   * Strings.isNilOrWhitespace("\t\r\n\f"); // true
+   * Strings.isNilOrWhitespace(null); // true
+   * Strings.isNilOrWhitespace(undefined); // true
+   * Strings.isNilOrWhitespace("abc"); // false
+   * ```
    *
    * @param {String} str Contains some string.
    * @return {Boolean} whether the given string is `null`, `undefined` or
    * white space.
    */
   public static isNilOrWhitespace(str?: string | null): str is null {
-    if (Utils.isNullOrUndefined(str)) {
-      return true;
-    }
-
-    return Strings.isWhitespace(str);
+    return Utils.isNullOrUndefined(str) || Strings.isWhitespace(str);
   }
 
   /**
-   * Checks whether the given string is not empty.
+   * Checks whether the specified string is not empty.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.isNotEmpty(""); // false
+   * Strings.isNotEmpty(" "); // true
+   * Strings.isNotEmpty("abc"); // true
+   * ```
    *
    * @param {String} str Contains some string.
-   * @return {Boolean} whether the given string is not empty.
+   * @return {Boolean} whether the specified string is not empty.
    */
   public static isNotEmpty(str: string): boolean {
     return !Strings.isEmpty(str);
   }
 
   /**
-   * Checks whether the given string is `null` or `""`.
+   * Checks whether the specified string is equal to `null` or `""`.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.isNullOrEmpty(""); // true
+   * Strings.isNullOrEmpty(null); // true
+   * Strings.isNullOrEmpty(" "); // false
+   * Strings.isNullOrEmpty("abc"); // false
+   * ```
    *
    * @param {String} str Contains some string.
-   * @return {Boolean} whether the given string is `null` or `""`.
+   * @return {Boolean} whether the specified string is equal to `null` or `""`.
    */
   public static isNullOrEmpty(str: string | null): str is null {
     return Utils.isNull(str) || Strings.isEmpty(str);
   }
 
   /**
-   * Checks whether the given string is `null` or white space.
+   * Checks whether the specified string is equal to `null` or white space.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.isNullOrWhitespace(""); // true
+   * Strings.isNullOrWhitespace(" "); // true
+   * Strings.isNullOrWhitespace("\t\r\n\f"); // true
+   * Strings.isNullOrWhitespace(null); // true
+   * Strings.isNullOrWhitespace("abc"); // false
+   * ```
    *
    * @param {String} str Contains some string.
-   * @return {Boolean} whether the given string is `null` or white space.
+   * @return {Boolean} whether the specified string is equal to `null` or
+   * white space.
    */
   public static isNullOrWhitespace(str: string | null): str is null {
     return Utils.isNull(str) || Strings.isWhitespace(str);
   }
 
   /**
-   * Checks whether the given string represents a stringified number.
+   * Checks whether the specified string represents a stringified number.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.isNumerical(""); // false
+   * Strings.isNumerical(" "); // false
+   * Strings.isNumerical("1e3"); // true
+   * Strings.isNumerical("-0"); // true
+   * Strings.isNumerical("123"); // true
+   * Strings.isNumerical("0x12121"); // true
+   * Strings.isNumerical("0b10011101"); // true
+   * Strings.isNumerical("abc"); // false
+   * ```
    *
    * @param {String} str Contains some string.
-   * @return {Boolean} whether the given string represents a stringified number.
+   * @return {Boolean} whether the specified string represents a stringified
+   * number.
    */
-  public static isNumeric(str: string): boolean {
+  public static isNumerical(str: string): boolean {
     return !Number.isNaN(str) && !Number.isNaN(parseFloat(str));
   }
 
   /**
    * Checks whether the specified character is a space i. e. `" "`,
    * `"\t"`, `"\r"`, `"\n"`, `"\f"`.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.isSpaceChar(""); // false
+   * Strings.isSpaceChar(" "); // true
+   * Strings.isSpaceChar("\t"); // true
+   * Strings.isSpaceChar("\r"); // true
+   * Strings.isSpaceChar("\f"); // true
+   * Strings.isSpaceChar("\n"); // true
+   * Strings.isSpaceChar("\n\n"); // false
+   * Strings.isSpaceChar("a"); // false
+   * ```
    *
    * @param {String} char Contains some character.
    * @return {Boolean} whether the specified character is a space.
@@ -1237,8 +1301,27 @@ export abstract class Strings {
       char === Strings.FF;
   }
 
+  /*
+  expect(Strings.isString('')).toEqual(true);
+    expect(Strings.isString(' ')).toEqual(true);
+    expect(Strings.isString(null)).toEqual(false);
+    expect(Strings.isString('undefined')).toEqual(true);
+    expect(Strings.isString()).toEqual(false);
+  */
+
   /**
    * Checks whether the specified value is a string.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.isString(); // false
+   * Strings.isString(""); // true
+   * Strings.isString(" "); // true
+   * Strings.isString(null); // false
+   * Strings.isString(undefined); // false
+   * Strings.isString({}); // false
+   * Strings.isString("abc"); // true
+   * ```
    *
    * @param {String} str Contains some value.
    * @return {Boolean} whether the specified value is a string.
@@ -1249,6 +1332,18 @@ export abstract class Strings {
 
   /**
    * Checks whether the specified value is a string object i. e. `String`.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.isStringObject(); // false
+   * Strings.isStringObject(""); // false
+   * Strings.isStringObject(" "); // false
+   * Strings.isStringObject(null); // false
+   * Strings.isStringObject(undefined); // false
+   * Strings.isStringObject({}); // false
+   * Strings.isStringObject("abc"); // false
+   * Strings.isStringObject(new String("abc")); // true
+   * ```
    *
    * @param {String} str Contains some value.
    * @return {Boolean} whether the specified value is a string object.
@@ -1333,17 +1428,17 @@ export abstract class Strings {
    *
    * **Example:**
    * ```typescript
-   * Strings.isWhitespace(''); // true
-   * Strings.isWhitespace(' '); // true
-   * Strings.isWhitespace('\n'); // true
-   * Strings.isWhitespace('\t'); // true
-   * Strings.isWhitespace('\r'); // true
-   * Strings.isWhitespace('\f'); // true
-   * Strings.isWhitespace('\f\n'); // true
-   * Strings.isWhitespace('\f\r'); // true
-   * Strings.isWhitespace('\t\r\f'); // true
-   * Strings.isWhitespace('\f\t\r\n\n'); // true
-   * Strings.isWhitespace('\f\t\r\n\na'); // false
+   * Strings.isWhitespace(""); // true
+   * Strings.isWhitespace(" "); // true
+   * Strings.isWhitespace("\n"); // true
+   * Strings.isWhitespace("\t"); // true
+   * Strings.isWhitespace("\r"); // true
+   * Strings.isWhitespace("\f"); // true
+   * Strings.isWhitespace("\f\n"); // true
+   * Strings.isWhitespace("\f\r"); // true
+   * Strings.isWhitespace("\t\r\f"); // true
+   * Strings.isWhitespace("\f\t\r\n\n"); // true
+   * Strings.isWhitespace("\f\t\r\n\na"); // false
    * ```
    *
    * @param {String} str Contains some string.
@@ -1383,7 +1478,9 @@ export abstract class Strings {
    *
    * **Example:**
    * ```typescript
-   * Strings.join('John', ' ', 'Doe'); // "John Doe"
+   * Strings.join("abc"); // "abc"
+   * Strings.join("abc", ""); // "abc"
+   * Strings.join("John", " ", "Doe"); // "John Doe"
    * ```
    *
    * @param {String} str Contains some string.
@@ -1401,12 +1498,8 @@ export abstract class Strings {
       return str + otherStrs[0];
     }
 
-    let i = 0;
-    let res = str;
-
+    let i = 0; let res = str;
     while (i < arrLen) {
-      // using the performance API this way of concatenating strings seems
-      // to be the most efficient
       res += otherStrs[i++];
     }
 
@@ -1499,6 +1592,13 @@ export abstract class Strings {
   /**
    * Gets the longest of the specified strings.
    *
+   * **Example:**
+   * ```typescript
+   * Strings.longest(); // ""
+   * Strings.longest(""); // ""
+   * Strings.longest("abc", "ab"); // "abc"
+   * ```
+   *
    * @param {String} strings Contains some strings.
    * @return {String} the longest of the specified strings.
    */
@@ -1523,7 +1623,8 @@ export abstract class Strings {
     let r = Strings.EMPTY;
 
     while (i <= j) {
-      const si = strings[i++]; const sj = strings[j--];
+      const si = strings[i++];
+      const sj = strings[j--];
       if (si.length > r.length) {
         r = si;
       }
@@ -1536,7 +1637,14 @@ export abstract class Strings {
   }
 
   /**
-   * Converts the given string to upper case.
+   * Converts the specified string to upper case.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.toLowerCase(""); // ""
+   * Strings.toLowerCase("abc"); // "abc"
+   * Strings.toLowerCase("AbC"); // "abc"
+   * ```
    *
    * @param {String} str Contains some string.
    * @return {String} the string converted to upper case.
@@ -1552,6 +1660,7 @@ export abstract class Strings {
    * **Example:**
    * ```typescript
    * Strings.normalize("  "); // ""
+   * Strings.normalize("  Bye    -  bye   ! "); // "Bye - bye !"
    * Strings.normalize("  Lorem  ipsum dolor sit "); // "Lorem ipsum dolor sit"
    * ```
    *
@@ -1578,24 +1687,40 @@ export abstract class Strings {
   }
 
   /**
-   * Appends the given prefix to the beginning of the given string.
+   * Appends the specified prefix to the beginning of the given string.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.prepend("a", ""); // "a"
+   * Strings.prepend("", "abc"); // "abc"
+   * Strings.prepend("a", "bc"); // "bca"
+   * ```
    *
    * @param {String} str Contains some string.
    * @param {String} prefix Contains some string prefix.
-   * @return {String} the string prepended by the given prefix.
+   * @return {String} a string.
    */
   public static prepend(str: string, prefix: string): string {
     return prefix.concat(str);
   }
 
   /**
-   * Appends the given string sequence to the beginning of the string in
-   * case the string does not begin with it.
+   * Appends the specified prefix to the beginning of the given string in
+   * case it does not begin with it.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.prependIfMissing("", "abc"); // "abc"
+   * Strings.prependIfMissing("a", "bc"); // "bca"
+   * Strings.prependIfMissing("a", ""); // "a"
+   * Strings.prependIfMissing("abcde", "ab"); // "abcde"
+   * Strings.prependIfMissing("ABcde", "ab", true); // "ABcde"
+   * ```
    *
    * @param {String} str Contains some string.
    * @param {String} prefix Contains some string prefix.
    * @param {Boolean} ignoreCase Contains whether to ignore case sensitivity.
-   * @return {String} the extended string.
+   * @return {String} a string.
    */
   public static prependIfMissing(
       str: string, prefix: string, ignoreCase?: boolean): string {
@@ -1608,8 +1733,17 @@ export abstract class Strings {
   }
 
   /**
-   * Appends the given string sequence to the beginning of the string in
-   * case the string does not begin with it (case-insensitive).
+   * Appends the specified prefix to the beginning of the string in case
+   * the string does not begin with it by ignoring case-sensitivity.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.prependIfMissingIgnoreCase("", "abc"); // "abc"
+   * Strings.prependIfMissingIgnoreCase("a", "bc"); // "bca"
+   * Strings.prependIfMissingIgnoreCase("a", ""); // "a"
+   * Strings.prependIfMissingIgnoreCase("abcde", "ab"); // "abcde"
+   * Strings.prependIfMissingIgnoreCase("ABcde", "ab"); // "ABcde"
+   * ```
    *
    * @param {String} str Contains some string.
    * @param {String} prefix Contains some string prefix.
@@ -1621,8 +1755,8 @@ export abstract class Strings {
   }
 
   /**
-   * Removes all the sequences in the specified string which match the
-   * given substring.
+   * Removes all the string parts in the specified string which match the
+   * specified substring.
    *
    * **Example:**
    * ```typescript
@@ -1633,15 +1767,15 @@ export abstract class Strings {
    * ```
    *
    * @param {String} str Contains some string.
-   * @param {String} subStr Contains some substring to be removed from
+   * @param {String} substring Contains some substring to be removed from
    * the given string.
-   * @return {String} the string without the given sequence.
+   * @return {String} the string without the specified substring occurrences.
    */
-  public static remove(str: string, subStr: string): string {
+  public static remove(str: string, substring: string): string {
     const l = str.length;
-    const sl = subStr.length;
+    const sl = substring.length;
     if (l === 0 || sl === 0 ||
-        Strings.indexOf(str, subStr) === Strings.NOT_FOUND) {
+        Strings.indexOf(str, substring) === Strings.NOT_FOUND) {
       return str;
     }
 
@@ -1650,8 +1784,9 @@ export abstract class Strings {
       let i = 0;
       while (i < l) {
         const ci = str.charAt(i);
-        const c0 = subStr.charAt(0);
-        if (ci === c0 && sl <= l - i && str.substring(i, i + sl) === subStr) {
+        const c0 = substring.charAt(0);
+        if (ci === c0 && sl <= l - i &&
+            str.substring(i, i + sl) === substring) {
           i += sl - 1;
         } else {
           r += ci;
@@ -1664,21 +1799,27 @@ export abstract class Strings {
   }
 
   /**
-   * Removes the given sequence from the given string if the string ends with
-   * it; otherwise simply returns the given string.
+   * Removes the specified substring from the given string if the string
+   * ends with it; otherwise simply returns the given string.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.removeEnd("", "abc"); // ""
+   * Strings.removeEnd("abc", ""); // "abc"
+   * Strings.removeEnd("abcdefgh", "fgh"); // "abcde"
+   * ```
    *
    * @param {String} str Contains some string.
-   * @param {String} sequence Contains some string sequence.
-   * @return {String} the string without the given sequence in case it ends
-   * with it; otherwise the given string is returned.
+   * @param {String} substring Contains some substring.
+   * @return {String} a string.
    */
-  public static removeEnd(str: string, sequence: string): string {
-    const l = str.length; const sl = sequence.length;
+  public static removeEnd(str: string, substring: string): string {
+    const l = str.length; const sl = substring.length;
     if (l === 0 || sl === 0) {
       return str;
     }
 
-    if (str.endsWith(sequence)) {
+    if (str.endsWith(substring)) {
       return str.substring(0, l - sl);
     }
 
@@ -1686,21 +1827,29 @@ export abstract class Strings {
   }
 
   /**
-   * Removes the given sequence from the given string if the string ends with
-   * it; otherwise simply returns the given string (case-insensitive).
+   * Removes the specified substring from the given string if the string ends
+   * with it by ignoring case-sensitivity; otherwise simply returns the given
+   * string.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.removeEndIgnoreCase("", "abc"); // ""
+   * Strings.removeEndIgnoreCase("abc", ""); // "abc"
+   * Strings.removeEndIgnoreCase("abcdefgh", "fgh"); // "abcde"
+   * Strings.removeEndIgnoreCase("abcdefgh", "FGh"); // "abcde"
+   * ```
    *
    * @param {String} str Contains some string.
-   * @param {String} sequence Contains some string sequence.
-   * @return {String} the string without the given sequence in case it ends
-   * with it; otherwise the given string is returned (case-insensitive).
+   * @param {String} substring Contains some substring.
+   * @return {String} a string.
    */
-  public static removeEndIgnoreCase(str: string, sequence: string): string {
-    const strLen = str.length; const sqLen = sequence.length;
+  public static removeEndIgnoreCase(str: string, substring: string): string {
+    const strLen = str.length; const sqLen = substring.length;
     if (strLen === 0 || sqLen === 0) {
       return str;
     }
 
-    if (Strings.endsWithIgnoreCase(str, sequence)) {
+    if (Strings.endsWithIgnoreCase(str, substring)) {
       return str.substring(0, strLen - sqLen);
     }
 
@@ -1708,10 +1857,19 @@ export abstract class Strings {
   }
 
   /**
-   * Removes white spaces from the given string.
+   * Removes all the white spaces from the specified string.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.removeWhitespace(""); // ""
+   * Strings.removeWhitespace(" "); // ""
+   * Strings.removeWhitespace("a b c\n"); // "abc"
+   * Strings.removeWhitespace("\n\r\t\f "); // ""
+   * Strings.removeWhitespace("abc @def.ghi"); // "abc@def.ghi"
+   * ```
    *
    * @param {String} str Contains some string.
-   * @return {String} the string without white space.
+   * @return {String} the string without white spaces.
    */
   public static removeWhitespace(str: string): string {
     const len = str.length;
@@ -1737,12 +1895,20 @@ export abstract class Strings {
   }
 
   /**
-   * Repeats the given string the given number of times.
+   * Repeats the specified string the given number of times.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.repeat("", 10); // ""
+   * Strings.repeat(" ", 1); // " "
+   * Strings.repeat("abc", 2); // "abcabc"
+   * Strings.repeat("*", 10); // "**********"
+   * ```
    *
    * @param {String} str Contains some string.
    * @param {Number} times Contains the number of times to repeat the
-   * given string.
-   * @return {String} the `times`-repeated string.
+   * specified string.
+   * @return {String} the string repeated the specified number of times.
    */
   public static repeat(str: string, times: number): string {
     if (Strings.isEmpty(str) || !Numbers.isInteger(times) || times < 0) {
@@ -1768,15 +1934,25 @@ export abstract class Strings {
   }
 
   /**
-   * Checks whether the given string starts with the specified string sequence.
+   * Checks whether the specified string starts with the specified substring.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.startsWith("", "") // true
+   * Strings.startsWith("abc", "ab") // true
+   * Strings.startsWith("abc", "A", true) // true
+   * Strings.startsWith("abc", "b") // false
+   * Strings.startsWith("abc", "C", true) // false
+   * ```
    *
    * @param {String} str Contains some string.
-   * @param {String} sequence Contains some string sequence.
+   * @param {String} sequence Contains some substring.
    * @param {Boolean} ignoreCase Contains whether to ignore case-sensitivity.
+   * Defaults to `false`.
    * @param {Number} position Contains the index at which to begin searching
-   * in the given string. If omitted, it starts with the string end.
-   * @return {Boolean} whether the given string starts with the specified string
-   * sequence.
+   * in the specified string. If omitted, it starts with the string end.
+   * @return {Boolean} whether the specified string starts with the specified
+   * substring.
    */
   public static startsWith(
       str: string,
@@ -1784,6 +1960,7 @@ export abstract class Strings {
       ignoreCase?: boolean,
       position?: number,
   ): boolean {
+    ignoreCase ??= false;
     if (ignoreCase) {
       return str.toLowerCase().startsWith(sequence.toLowerCase(), position);
     }
@@ -1828,8 +2005,16 @@ export abstract class Strings {
   }
 
   /**
-   * Removes white spaces from the beginning and from the end of the given
-   * string.
+   * Removes the white spaces from the beginning and from the end of the
+   * specified string.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.strip(""); // ""
+   * Strings.strip(" "); // ""
+   * Strings.strip("  abc "); // "abc"
+   * Strings.strip("\nabc def\t\r\f"); // "abc def"
+   * ```
    *
    * @param {String} str Contains some string.
    * @return {String} the trimmed string.
@@ -1897,11 +2082,7 @@ export abstract class Strings {
    * @return {Array} an array of the characters of the specified string.
    */
   public static toCharArray(str: string): string[] {
-    if (str.length === 0) {
-      return [];
-    }
-
-    return [...str];
+    return Strings.isEmpty(str) ? [] : [...str];
   }
 
   /**
@@ -2064,10 +2245,8 @@ export abstract class Strings {
     let j = l - 1;
 
     while (i <= j) {
-      const ci = str.charAt(i);
-      const cj = str.charAt(j);
-      const si = Strings.isSpaceChar(ci);
-      const sj = Strings.isSpaceChar(cj);
+      const si = Strings.isSpaceChar(str.charAt(i));
+      const sj = Strings.isSpaceChar(str.charAt(j));
       if (!si && !sj) {
         return str.substring(i, j + 1);
       }
@@ -2085,7 +2264,14 @@ export abstract class Strings {
   }
 
   /**
-   * Converts the given string to upper case.
+   * Converts the specified string to uppercase.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.upperCase(""); // ""
+   * Strings.upperCase("ABC"); // "ABC"
+   * Strings.upperCase("abC"); // "ABC"
+   * ```
    *
    * @param {String} str Contains some string.
    * @return {String} the string converted to upper case.
@@ -2099,14 +2285,14 @@ export abstract class Strings {
    *
    * **Example:**
    * ```typescript
-   * Strings.capitalize('john'); // John
-   * Strings.capitalize('jOHN'); // JOHN
-   * Strings.capitalize('jOHN', true); // John
+   * Strings.capitalize("john"); // "John"
+   * Strings.capitalize("jOHN"); // "JOHN"
+   * Strings.capitalize("jOHN", true); // "John"
    * ```
    *
    * @param {String} str Contains some string.
    * @param {Boolean} lowerRest Contains whether to convert the characters
-   * from the second to the last character to lowercase.
+   * from the second to the last character to lowercase. Defaults to `false`.
    * @return {String} the capitalized string.
    */
   public static upperFirst(str: string, lowerRest?: boolean): string {

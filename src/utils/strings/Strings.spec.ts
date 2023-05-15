@@ -14,6 +14,8 @@ describe('Strings', () => {
 
   test('Strings.appendIfMissing()', () => {
     expect(Strings.appendIfMissing('', '')).toEqual('');
+    expect(Strings.appendIfMissing('abc', 'def')).toEqual('abcdef');
+    expect(Strings.appendIfMissing('abcdef', 'DeF', true)).toEqual('abcdef');
     expect(Strings.appendIfMissing('Lorem ', 'ipsum')).toEqual('Lorem ipsum');
     expect(Strings.appendIfMissing('Lorem ipsum', 'ipSum', true)).toEqual(
         'Lorem ipsum');
@@ -340,6 +342,7 @@ describe('Strings', () => {
   });
 
   test('Strings.isNilOrEmpty()', () => {
+    expect(Strings.isNilOrEmpty()).toEqual(true);
     expect(Strings.isNilOrEmpty('')).toEqual(true);
     expect(Strings.isNilOrEmpty(' ')).toEqual(false);
     expect(Strings.isNilOrEmpty(null)).toEqual(true);
@@ -379,6 +382,19 @@ describe('Strings', () => {
     expect(Strings.isNullOrWhitespace(' ')).toEqual(true);
     expect(Strings.isNullOrWhitespace(null)).toEqual(true);
     expect(Strings.isNullOrWhitespace('undefined')).toEqual(false);
+  });
+
+  test('Strings.isNumerical()', () => {
+    expect(Strings.isNumerical('')).toEqual(false);
+    expect(Strings.isNumerical(' ')).toEqual(false);
+    expect(Strings.isNumerical('undefined')).toEqual(false);
+    expect(Strings.isNumerical('1e3')).toEqual(true);
+    expect(Strings.isNumerical('-0')).toEqual(true);
+    expect(Strings.isNumerical('123')).toEqual(true);
+    expect(Strings.isNumerical('-56')).toEqual(true);
+    expect(Strings.isNumerical('0')).toEqual(true);
+    expect(Strings.isNumerical('0x12121')).toEqual(true);
+    expect(Strings.isNumerical('0b10011101')).toEqual(true);
   });
 
   test('Strings.isSpaceChar()', () => {
@@ -452,6 +468,7 @@ describe('Strings', () => {
   test('Strings.join()', () => {
     expect(Strings.join('')).toEqual('');
     expect(Strings.join('', '')).toEqual('');
+    expect(Strings.join('abc', '')).toEqual('abc');
     expect(Strings.join('Lorem')).toEqual('Lorem');
     expect(Strings.join('Lorem', ' ', 'ipsum', ' ', 'dolor')).toEqual(
         'Lorem ipsum dolor');
@@ -486,6 +503,7 @@ describe('Strings', () => {
   test('Strings.longest()', () => {
     expect(Strings.longest()).toEqual('');
     expect(Strings.longest('')).toEqual('');
+    expect(Strings.longest('abc', 'abc')).toEqual('abc');
     expect(Strings.longest('Alphabet', 'Alpha')).toEqual('Alphabet');
     expect(Strings.longest('Johndoe', 'John')).toEqual('Johndoe');
     expect(Strings.longest(
@@ -501,6 +519,7 @@ describe('Strings', () => {
 
   test('Strings.normalize()', () => {
     expect(Strings.normalize('')).toEqual(Strings.EMPTY);
+    expect(Strings.normalize('  Bye    -  bye   ! ')).toEqual('Bye - bye !');
     expect(Strings.normalize(' ')).toEqual(Strings.EMPTY);
     expect(Strings.normalize('   abc  de   f  ')).toEqual('abc de f');
     expect(Strings.normalize('   abc  de   f')).toEqual('abc de f');

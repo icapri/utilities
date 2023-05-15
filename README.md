@@ -1,9 +1,9 @@
 <p align="center">
   <br>
   <img src="/docs/logo.png" alt="Utilitates Logo" width="120px" height="115px"/>
-  <h2 align="center">Utilitates Framework</h1>
+  <h2 align="center">Utility Framework</h1>
 </p>
-<p align="center"><i>A framework intended for conversion, formatting, parsing, validation, and more.</i></p>
+<p align="center"><i>A modern framework intended for conversion, formatting, parsing, validation, and more.</i></p>
 
 ## Description
 
@@ -81,7 +81,7 @@ Sets.toMap(set);
 Strings.isNullOrEmpty(""); // true
 Strings.normalize("  Lorem  ipsum dolor sit "); // "Lorem ipsum dolor sit"
 Strings.isSpaceChar("\t"); // true
-Strings.isNumeric("12.34"); // true
+Strings.isNumerical("12.34"); // true
 Strings.hasWhitespace("Lorem\t"); // true
 Strings.countMatches("ho ho ho", "ho"); // 3
 Strings.toTitleCase("jOhN doE"); // John Doe
@@ -112,7 +112,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v1.3.11
+Latest stable: v1.3.12
 
 ## License
 
