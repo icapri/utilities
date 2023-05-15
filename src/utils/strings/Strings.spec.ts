@@ -102,6 +102,7 @@ describe('Strings', () => {
     expect(Strings.containsIgnoreCase('collaboration', 'rat')).toEqual(true);
     expect(Strings.containsIgnoreCase('\n', '\n')).toEqual(true);
     expect(Strings.containsIgnoreCase('abc def', 'EF')).toEqual(true);
+    expect(Strings.containsIgnoreCase('abc def', 'ghi')).toEqual(false);
   });
 
   test('Strings.containsNone()', () => {
@@ -138,6 +139,8 @@ describe('Strings', () => {
   });
 
   test('Strings.endsWith()', () => {
+    expect(Strings.endsWith('', '')).toEqual(true);
+    expect(Strings.endsWith('abc', '')).toEqual(true);
     expect(Strings.endsWith('Lorem ipsum', 'm')).toEqual(true);
     expect(Strings.endsWith('Lorem ipsum', 'am')).toEqual(false);
     expect(Strings.endsWith('', 'am')).toEqual(false);
@@ -145,6 +148,10 @@ describe('Strings', () => {
   });
 
   test('Strings.endsWithAny()', () => {
+    expect(Strings.endsWithAny('')).toEqual(false);
+    expect(Strings.endsWithAny('', 'abc')).toEqual(false);
+    expect(Strings.endsWithAny('abc')).toEqual(false);
+    expect(Strings.endsWithAny('abc', '')).toEqual(true);
     expect(Strings.endsWithAny('Lorem ipsum', 'm')).toEqual(true);
     expect(Strings.endsWithAny('Lorem ipsum', 'aps', 'sum', 'farn')).toEqual(
         true);
@@ -152,18 +159,22 @@ describe('Strings', () => {
   });
 
   test('Strings.endsWithIgnoreCase()', () => {
+    expect(Strings.endsWithIgnoreCase('', '')).toEqual(true);
+    expect(Strings.endsWithIgnoreCase('abc', '')).toEqual(true);
     expect(Strings.endsWithIgnoreCase('', 'Em')).toEqual(false);
     expect(Strings.endsWithIgnoreCase('Lorem', 'Em')).toEqual(true);
     expect(Strings.endsWithIgnoreCase('Lorem', 'am')).toEqual(false);
   });
 
   test('Strings.endsWithNone()', () => {
-    expect(Strings.endsWithNone('', 'Em')).toEqual(false);
+    expect(Strings.endsWithNone('')).toEqual(false);
+    expect(Strings.endsWithNone('', 'Em')).toEqual(true);
     expect(Strings.endsWithNone('Em', '')).toEqual(false);
     expect(Strings.endsWithNone('Lorem ipsum', 'sam', 'sem', 'sim')).toEqual(
         true);
     expect(Strings.endsWithNone('Lorem ipsum', 'sum', 'sem', 'sim')).toEqual(
         false);
+    expect(Strings.endsWithNone('abc', 'd', 'e', 'f')).toEqual(true);
   });
 
   test('Strings.equals()', () => {
@@ -179,14 +190,16 @@ describe('Strings', () => {
 
   test('Strings.equalsIgnoreCase()', () => {
     expect(Strings.equalsIgnoreCase('', '')).toEqual(true);
+    expect(Strings.equalsIgnoreCase(' ', ' ')).toEqual(true);
+    expect(Strings.equalsIgnoreCase('    ', '\t')).toEqual(false);
     expect(Strings.equalsIgnoreCase('LoReM', 'lorem')).toEqual(true);
     expect(Strings.equalsIgnoreCase('a', 'A')).toEqual(true);
     expect(Strings.equalsIgnoreCase('LoReMd', 'lorem')).toEqual(false);
   });
 
   test('Strings.equalsAny()', () => {
-    expect(Strings.equalsAny('', '')).toEqual(true);
     expect(Strings.equalsAny('')).toEqual(false);
+    expect(Strings.equalsAny('', '')).toEqual(true);
     expect(Strings.equalsAny('Lorem', 'Lorem')).toEqual(true);
     expect(Strings.equalsAny('Lorem', 'Ipsum', 'Dolor', 'Lorem')).toEqual(true);
     expect(Strings.equalsAny('Lorem', 'Ipsum', 'Dolor')).toEqual(false);
@@ -200,6 +213,8 @@ describe('Strings', () => {
         'Lorem', 'Ipsum', 'Dolor', 'lorem')).toEqual(true);
     expect(Strings.equalsAnyIgnoreCase(
         'Lorem', 'Ipsum', 'Dolor')).toEqual(false);
+    expect(Strings.equalsAnyIgnoreCase(
+        'abc', 'def', 'ABc', 'mno')).toEqual(true);
   });
 
   test('Strings.getBytes()', () => {
@@ -242,13 +257,16 @@ describe('Strings', () => {
 
   test('Strings.indexOf()', () => {
     expect(Strings.indexOf('', '')).toEqual(0);
+    expect(Strings.indexOf('abc', '')).toEqual(0);
     expect(Strings.indexOf('Lorem', 'em')).toEqual(3);
     expect(Strings.indexOf('Lorem', 'am')).toEqual(-1);
     expect(Strings.indexOf('Lorem', 'rem')).toEqual(2);
+    expect(Strings.indexOf('abcde', 'de')).toEqual(3);
   });
 
   test('Strings.indexOfAny()', () => {
     expect(Strings.indexOfAny('Lorem')).toEqual(-1);
+    expect(Strings.indexOfAny('Lorem', '')).toEqual(0);
     expect(Strings.indexOfAny('')).toEqual(-1);
     expect(Strings.indexOfAny('Lorem', 'em')).toEqual(3);
     expect(Strings.indexOfAny('Lorem', 'am')).toEqual(-1);
@@ -267,8 +285,11 @@ describe('Strings', () => {
 
   test('Strings.indexOfIgnoreCase()', () => {
     expect(Strings.indexOfIgnoreCase('', '')).toEqual(0);
+    expect(Strings.indexOfIgnoreCase('abc', '')).toEqual(0);
+    expect(Strings.indexOfIgnoreCase('', 'abc')).toEqual(-1);
     expect(Strings.indexOfIgnoreCase('Lorem', 'EM')).toEqual(3);
     expect(Strings.indexOfIgnoreCase('Lorem', 'em')).toEqual(3);
+    expect(Strings.indexOfIgnoreCase('abcde', 'cde')).toEqual(2);
   });
 
   test('Strings.isAllBlank()', () => {
@@ -441,6 +462,8 @@ describe('Strings', () => {
 
   test('Strings.lastIndexOf()', () => {
     expect(Strings.lastIndexOf('', '')).toEqual(0);
+    expect(Strings.lastIndexOf('abc', '')).toEqual(0);
+    expect(Strings.lastIndexOf('', 'abc')).toEqual(-1);
     expect(Strings.lastIndexOf('d', 'd')).toEqual(0);
     expect(Strings.lastIndexOf('d', 'da')).toEqual(-1);
     expect(Strings.lastIndexOf('Abcddemmaxdemala', 'dem')).toEqual(10);
