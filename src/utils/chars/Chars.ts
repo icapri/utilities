@@ -156,6 +156,40 @@ export abstract class Chars {
   }
 
   /**
+   * Checks whether the specified character is an Arabic digit.
+   *
+   * **Example:**
+   * ```typescript
+   * Chars.isArabicDigit('\u0660'); // true
+   * Chars.isArabicDigit('\u0661'); // true
+   * Chars.isArabicDigit('\u0667'); // true
+   * Chars.isArabicDigit('\u0668'); // true
+   * Chars.isArabicDigit('\u0669'); // true
+   * Chars.isArabicDigit('0'); // false
+   * Chars.isArabicDigit('6'); // false
+   * ```
+   *
+   * @param {String} char Contains some character.
+   * @return {Boolean} whether the specified character is an Arabic digit.
+   *
+   * @since v1.4.2
+   */
+  public static isArabicDigit(char: string): boolean {
+    return char.length === 1 && (
+      char === '\u0660' ||
+      char === '\u0661' ||
+      char === '\u0662' ||
+      char === '\u0663' ||
+      char === '\u0664' ||
+      char === '\u0665' ||
+      char === '\u0666' ||
+      char === '\u0667' ||
+      char === '\u0668' ||
+      char === '\u0669'
+    );
+  }
+
+  /**
    * Checks whether the specified character is [ASCII](https://www.ascii-code.com/).
    *
    * **Example:**
@@ -243,17 +277,14 @@ export abstract class Chars {
    *
    * **Example:**
    * ```typescript
-   * Chars.isDigit('0'); // true
+   * Chars.isDigit(''); // false
    * Chars.isDigit('3'); // true
-   * Chars.isDigit('5'); // true
-   * Chars.isDigit('6'); // true
-   * Chars.isDigit('7'); // true
-   * Chars.isDigit('9'); // true
-   * Chars.isDigit('B'); // false
-   * Chars.isDigit('z'); // false
-   * Chars.isDigit('`'); // false
-   * Chars.isDigit('ä'); // false
-   * Chars.isDigit('Ö'); // false
+   * Chars.isDigit('\u0660'); // true
+   * Chars.isDigit('\u0967'); // true
+   * Chars.isDigit('\u06f4'); // true
+   * Chars.isDigit('\u2175'); // true
+   * Chars.isDigit('\u216F'); // true
+   * Chars.isDigit('a'); // false
    * ```
    *
    * @param {String} char Contains some character.
@@ -262,9 +293,14 @@ export abstract class Chars {
    * @since v1.4.1
    */
   public static isDigit(char: string): boolean {
-    if (char.length !== 1) return false;
-    const charCode = char.charCodeAt(0);
-    return charCode > 47 && charCode < 58;
+    return char.length === 1 && (
+      Chars.isModernDigit(char) ||
+      Chars.isArabicDigit(char) ||
+      Chars.isHinduDigit(char) ||
+      Chars.isPersianDigit(char) ||
+      Chars.isLowerRomanDigit(char) ||
+      Chars.isUpperRomanDigit(char)
+    );
   }
 
   /**
@@ -289,6 +325,40 @@ export abstract class Chars {
     const charCode = char.charCodeAt(0);
     if (Number.isNaN(charCode)) return false;
     return 0xD800 <= charCode && charCode <= 0xDBFF;
+  }
+
+  /**
+   * Checks whether the specified character is a Hindu digit.
+   *
+   * **Example:**
+   * ```typescript
+   * Chars.isHinduDigit(''); // true
+   * Chars.isHinduDigit('0'); // true
+   * Chars.isHinduDigit('१'); // true
+   * Chars.isHindiDigit('२'); // true
+   * Chars.isHinduDigit('\u0967'); // true
+   * Chars.isHinduDigit('\u0968'); // true
+   * Chars.isHinduDigit('\u0969'); // true
+   * ```
+   *
+   * @param {String} char Contains some character.
+   * @return {Boolean} whether the specified character is a Hindu digit.
+   *
+   * @since v1.4.2
+   */
+  public static isHinduDigit(char: string): boolean {
+    return char.length === 1 && (
+      char === '\u0966' ||
+      char === '\u0967' ||
+      char === '\u0968' ||
+      char === '\u0969' ||
+      char === '\u096A' ||
+      char === '\u096B' ||
+      char === '\u096C' ||
+      char === '\u096D' ||
+      char === '\u096E' ||
+      char === '\u096F'
+    );
   }
 
   /**
@@ -346,6 +416,49 @@ export abstract class Chars {
   }
 
   /**
+   * Checks whether the specified character is an upper Roman numberal.
+   *
+   * **Example:**
+   * ```typescript
+   * Chars.isLowerRomanDigit(''); false
+   * Chars.isLowerRomanDigit('ⅳ'); true
+   * Chars.isLowerRomanDigit('\u2171'); true
+   * Chars.isLowerRomanDigit('\u2179'); true
+   * Chars.isLowerRomanDigit('\u217C'); true
+   * Chars.isLowerRomanDigit('\u217F'); true
+   * Chars.isLowerRomanDigit('a'); false
+   * Chars.isLowerRomanDigit('0'); false
+   * Chars.isLowerRomanDigit('9'); false
+   * ```
+   *
+   * @param {String} char Contains some character.
+   * @return {Boolean} whether the specified character is an upper Roman
+   * numberal.
+   *
+   * @since v1.4.2
+   */
+  public static isLowerRomanDigit(char: string): boolean {
+    return char.length === 1 && (
+      char === '\u2170' ||
+      char === '\u2171' ||
+      char === '\u2172' ||
+      char === '\u2173' ||
+      char === '\u2174' ||
+      char === '\u2175' ||
+      char === '\u2176' ||
+      char === '\u2177' ||
+      char === '\u2178' ||
+      char === '\u2179' ||
+      char === '\u217A' ||
+      char === '\u217B' ||
+      char === '\u217C' ||
+      char === '\u217D' ||
+      char === '\u217E' ||
+      char === '\u217F'
+    );
+  }
+
+  /**
    * Checks whether the specified character is low surrogate. A low
    * surrogate character is a 16-bit code character between `U+D800`
    * and `U+DBFF`.
@@ -367,6 +480,115 @@ export abstract class Chars {
     const charCode = char.charCodeAt(0);
     if (Number.isNaN(charCode)) return false;
     return 0xDC00 <= charCode && charCode <= 0xDFFF;
+  }
+
+  /**
+   * Checks whether the specified character is a modern digit.
+   *
+   * **Example:**
+   * ```typescript
+   * Chars.isModernDigit('0'); // true
+   * Chars.isModernDigit('3'); // true
+   * Chars.isModernDigit('9'); // true
+   * Chars.isModernDigit('B'); // false
+   * Chars.isModernDigit('z'); // false
+   * Chars.isModernDigit('`'); // false
+   * Chars.isModernDigit('ä'); // false
+   * Chars.isModernDigit('Ö'); // false
+   * ```
+   *
+   * @param {String} char Contains some character.
+   * @return {Boolean} whether the specified character is a modern digit.
+   *
+   * @since v1.4.2
+   */
+  public static isModernDigit(char: string): boolean {
+    if (char.length !== 1) return false;
+    const charCode = char.charCodeAt(0);
+    return charCode > 47 && charCode < 58;
+  }
+
+  /**
+   * Checks whether the specified character is a Persian digit.
+   *
+   * **Example:**
+   * ```typescript
+   * Chars.isPersianDigit('۰'); // true
+   * Chars.isPersianDigit('۱'); // true
+   * Chars.isPersianDigit('۲'); // true
+   * Chars.isPersianDigit('۳'); // true
+   * Chars.isPersianDigit('۴'); // true
+   * Chars.isPersianDigit('۵'); // true
+   * Chars.isPersianDigit('۶'); // true
+   * Chars.isPersianDigit('۷'); // true
+   * Chars.isPersianDigit('۸'); // true
+   * Chars.isPersianDigit('۹'); // true
+   * Chars.isPersianDigit('9'); // false
+   * ```
+   *
+   * @param {String} char Contains some character.
+   * @return {Boolean} whether the specified character is a Persian digit.
+   *
+   * @since v1.4.2
+   */
+  public static isPersianDigit(char: string): boolean {
+    return char.length === 1 && (
+      char === '\u06f0' ||
+      char === '\u06f1' ||
+      char === '\u06f2' ||
+      char === '\u06f3' ||
+      char === '\u06f4' ||
+      char === '\u06f5' ||
+      char === '\u06f6' ||
+      char === '\u06f7' ||
+      char === '\u06f8' ||
+      char === '\u06f9'
+    );
+  }
+
+  /**
+   * Checks whether the specified character is an upper Roman numberal.
+   *
+   * **Example:**
+   * ```typescript
+   * Chars.isUpperRomanDigit(''); false
+   * Chars.isUpperRomanDigit('\u2160'); true
+   * Chars.isUpperRomanDigit('\u2161'); true
+   * Chars.isUpperRomanDigit('\u2169'); true
+   * Chars.isUpperRomanDigit('\u216A'); true
+   * Chars.isUpperRomanDigit('\u216B'); true
+   * Chars.isUpperRomanDigit('\u216C'); true
+   * Chars.isUpperRomanDigit('\u216F'); true
+   * Chars.isUpperRomanDigit('a'); false
+   * Chars.isUpperRomanDigit('0'); false
+   * Chars.isUpperRomanDigit('9'); false
+   * ```
+   *
+   * @param {String} char Contains some character.
+   * @return {Boolean} whether the specified character is an upper Roman
+   * numberal.
+   *
+   * @since v1.4.2
+   */
+  public static isUpperRomanDigit(char: string): boolean {
+    return char.length === 1 && (
+      char === '\u2160' ||
+      char === '\u2161' ||
+      char === '\u2162' ||
+      char === '\u2163' ||
+      char === '\u2164' ||
+      char === '\u2165' ||
+      char === '\u2166' ||
+      char === '\u2167' ||
+      char === '\u2168' ||
+      char === '\u2169' ||
+      char === '\u216A' ||
+      char === '\u216B' ||
+      char === '\u216C' ||
+      char === '\u216D' ||
+      char === '\u216E' ||
+      char === '\u216F'
+    );
   }
 
   /**

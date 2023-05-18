@@ -1314,22 +1314,38 @@ export abstract class Strings {
    *
    * **Example:**
    * ```typescript
-   * Strings.isNumerical(""); // false
-   * Strings.isNumerical(" "); // false
-   * Strings.isNumerical("1e3"); // true
-   * Strings.isNumerical("-0"); // true
-   * Strings.isNumerical("123"); // true
-   * Strings.isNumerical("0x12121"); // true
-   * Strings.isNumerical("0b10011101"); // true
-   * Strings.isNumerical("abc"); // false
+   * Strings.isNumeric(""); // false
+   * Strings.isNumeric("1e3"); // true
+   * Strings.isNumeric("-0"); // true
+   * Strings.isNumeric("123"); // true
+   * Strings.isNumeric("\u0663\u0664"); // true
+   * Strings.isNumeric("\u0663 \u0664"); // false
+   * Strings.isNumeric("\u0664"); // true
    * ```
    *
    * @param {String} str Contains some string.
    * @return {Boolean} whether the specified string represents a stringified
    * number.
+   *
+   * @since v1.4.2
    */
-  public static isNumerical(str: string): boolean {
-    return !Number.isNaN(str) && !Number.isNaN(parseFloat(str));
+  public static isNumeric(str: string): boolean {
+    let j = str.length - 1;
+    if (j < 0) {
+      return false;
+    }
+
+    if (Number.isNaN(str) || Number.isNaN(parseFloat(str))) {
+      let i = 0;
+      while (i <= j) {
+        if (!Chars.isDigit(str.charAt(i)) || !Chars.isDigit(str.charAt(j))) {
+          return false;
+        }
+        i++; j--;
+      }
+    }
+
+    return true;
   }
 
   /**

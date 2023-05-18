@@ -1,6 +1,6 @@
 {
   "name": "utilitates",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "A library intended for conversion, formatting, parsing, validation, and more.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

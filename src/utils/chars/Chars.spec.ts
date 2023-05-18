@@ -128,6 +128,23 @@ describe('Chars', () => {
     expect(Chars.isAlphaUpper('0')).toEqual(false);
   });
 
+  test('Chars.isArabicDigit()', () => {
+    expect(Chars.isArabicDigit('')).toEqual(false);
+    expect(Chars.isArabicDigit(' ')).toEqual(false);
+    expect(Chars.isArabicDigit('\u0660')).toEqual(true);
+    expect(Chars.isArabicDigit('\u0661')).toEqual(true);
+    expect(Chars.isArabicDigit('\u0662')).toEqual(true);
+    expect(Chars.isArabicDigit('\u0663')).toEqual(true);
+    expect(Chars.isArabicDigit('\u0664')).toEqual(true);
+    expect(Chars.isArabicDigit('\u0665')).toEqual(true);
+    expect(Chars.isArabicDigit('\u0666')).toEqual(true);
+    expect(Chars.isArabicDigit('\u0667')).toEqual(true);
+    expect(Chars.isArabicDigit('\u0668')).toEqual(true);
+    expect(Chars.isArabicDigit('\u0669')).toEqual(true);
+    expect(Chars.isArabicDigit('0')).toEqual(false);
+    expect(Chars.isArabicDigit('6')).toEqual(false);
+  });
+
   test('Chars.isASCII()', () => {
     expect(Chars.isASCII('"')).toEqual(true);
     expect(Chars.isASCII('a')).toEqual(true);
@@ -204,6 +221,84 @@ describe('Chars', () => {
     expect(Chars.isDigit('z')).toEqual(false);
     expect(Chars.isDigit('ä')).toEqual(false);
     expect(Chars.isDigit('`')).toEqual(false);
+    expect(Chars.isDigit('')).toEqual(false);
+    expect(Chars.isDigit('12')).toEqual(false);
+    expect(Chars.isDigit('a')).toEqual(false);
+    expect(Chars.isDigit('\u06f0')).toEqual(true);
+    expect(Chars.isDigit('\u06f1')).toEqual(true);
+    expect(Chars.isDigit('۲')).toEqual(true);
+    expect(Chars.isDigit('۳')).toEqual(true);
+    expect(Chars.isDigit('۴')).toEqual(true);
+    expect(Chars.isDigit('\u06f5')).toEqual(true);
+    expect(Chars.isDigit('۶')).toEqual(true);
+    expect(Chars.isDigit('\u06f7')).toEqual(true);
+    expect(Chars.isDigit('۸')).toEqual(true);
+    expect(Chars.isDigit('۹')).toEqual(true);
+    expect(Chars.isDigit('')).toEqual(false);
+    expect(Chars.isDigit('\u2170')).toEqual(true);
+    expect(Chars.isDigit('\u2171')).toEqual(true);
+    expect(Chars.isDigit('\u2172')).toEqual(true);
+    expect(Chars.isDigit('\u2173')).toEqual(true);
+    expect(Chars.isDigit('\u2174')).toEqual(true);
+    expect(Chars.isDigit('\u2175')).toEqual(true);
+    expect(Chars.isDigit('\u2176')).toEqual(true);
+    expect(Chars.isDigit('\u2177')).toEqual(true);
+    expect(Chars.isDigit('\u2178')).toEqual(true);
+    expect(Chars.isDigit('\u2179')).toEqual(true);
+    expect(Chars.isDigit('\u217A')).toEqual(true);
+    expect(Chars.isDigit('\u217B')).toEqual(true);
+    expect(Chars.isDigit('\u217C')).toEqual(true);
+    expect(Chars.isDigit('\u217D')).toEqual(true);
+    expect(Chars.isDigit('\u217E')).toEqual(true);
+    expect(Chars.isDigit('\u217F')).toEqual(true);
+    expect(Chars.isDigit('a')).toEqual(false);
+    expect(Chars.isDigit('')).toEqual(false);
+    expect(Chars.isDigit('\u2160')).toEqual(true);
+    expect(Chars.isDigit('\u2161')).toEqual(true);
+    expect(Chars.isDigit('\u2162')).toEqual(true);
+    expect(Chars.isDigit('\u2163')).toEqual(true);
+    expect(Chars.isDigit('\u2164')).toEqual(true);
+    expect(Chars.isDigit('\u2165')).toEqual(true);
+    expect(Chars.isDigit('\u2166')).toEqual(true);
+    expect(Chars.isDigit('\u2167')).toEqual(true);
+    expect(Chars.isDigit('\u2168')).toEqual(true);
+    expect(Chars.isDigit('\u2169')).toEqual(true);
+    expect(Chars.isDigit('\u216A')).toEqual(true);
+    expect(Chars.isDigit('\u216B')).toEqual(true);
+    expect(Chars.isDigit('\u216C')).toEqual(true);
+    expect(Chars.isDigit('\u216D')).toEqual(true);
+    expect(Chars.isDigit('\u216E')).toEqual(true);
+    expect(Chars.isDigit('\u216F')).toEqual(true);
+    expect(Chars.isDigit('a')).toEqual(false);
+    expect(Chars.isDigit('')).toEqual(false);
+    expect(Chars.isDigit(' ')).toEqual(false);
+    expect(Chars.isDigit('\u0660')).toEqual(true);
+    expect(Chars.isDigit('\u0661')).toEqual(true);
+    expect(Chars.isDigit('\u0662')).toEqual(true);
+    expect(Chars.isDigit('\u0663')).toEqual(true);
+    expect(Chars.isDigit('\u0664')).toEqual(true);
+    expect(Chars.isDigit('\u0665')).toEqual(true);
+    expect(Chars.isDigit('\u0666')).toEqual(true);
+    expect(Chars.isDigit('\u0667')).toEqual(true);
+    expect(Chars.isDigit('\u0668')).toEqual(true);
+    expect(Chars.isDigit('\u0669')).toEqual(true);
+  });
+
+  test('Chars.isHinduDigit()', () => {
+    expect(Chars.isHinduDigit('')).toEqual(false);
+    expect(Chars.isHinduDigit('0')).toEqual(false);
+    expect(Chars.isHinduDigit('12')).toEqual(false);
+    expect(Chars.isHinduDigit('१')).toEqual(true);
+    expect(Chars.isHinduDigit('\u0966')).toEqual(true);
+    expect(Chars.isHinduDigit('\u0967')).toEqual(true);
+    expect(Chars.isHinduDigit('\u0968')).toEqual(true);
+    expect(Chars.isHinduDigit('\u0969')).toEqual(true);
+    expect(Chars.isHinduDigit('\u096A')).toEqual(true);
+    expect(Chars.isHinduDigit('\u096B')).toEqual(true);
+    expect(Chars.isHinduDigit('\u096C')).toEqual(true);
+    expect(Chars.isHinduDigit('\u096D')).toEqual(true);
+    expect(Chars.isHinduDigit('\u096E')).toEqual(true);
+    expect(Chars.isHinduDigit('\u096F')).toEqual(true);
   });
 
   test('Chars.isLetter()', () => {
@@ -258,10 +353,76 @@ describe('Chars', () => {
     expect(Chars.isLowerCase('0')).toEqual(false);
   });
 
+  test('Chars.isLowerRomanDigit()', () => {
+    expect(Chars.isLowerRomanDigit('')).toEqual(false);
+    expect(Chars.isLowerRomanDigit('\u2170')).toEqual(true);
+    expect(Chars.isLowerRomanDigit('\u2171')).toEqual(true);
+    expect(Chars.isLowerRomanDigit('\u2172')).toEqual(true);
+    expect(Chars.isLowerRomanDigit('\u2173')).toEqual(true);
+    expect(Chars.isLowerRomanDigit('\u2174')).toEqual(true);
+    expect(Chars.isLowerRomanDigit('\u2175')).toEqual(true);
+    expect(Chars.isLowerRomanDigit('\u2176')).toEqual(true);
+    expect(Chars.isLowerRomanDigit('\u2177')).toEqual(true);
+    expect(Chars.isLowerRomanDigit('\u2178')).toEqual(true);
+    expect(Chars.isLowerRomanDigit('\u2179')).toEqual(true);
+    expect(Chars.isLowerRomanDigit('\u217A')).toEqual(true);
+    expect(Chars.isLowerRomanDigit('\u217B')).toEqual(true);
+    expect(Chars.isLowerRomanDigit('\u217C')).toEqual(true);
+    expect(Chars.isLowerRomanDigit('\u217D')).toEqual(true);
+    expect(Chars.isLowerRomanDigit('\u217E')).toEqual(true);
+    expect(Chars.isLowerRomanDigit('\u217F')).toEqual(true);
+    expect(Chars.isLowerRomanDigit('a')).toEqual(false);
+    expect(Chars.isLowerRomanDigit('0')).toEqual(false);
+    expect(Chars.isLowerRomanDigit('9')).toEqual(false);
+  });
+
   test('Chars.isLowSurrogate()', () => {
     expect(Chars.isLowSurrogate('')).toEqual(false);
     expect(Chars.isLowSurrogate('\uDC00')).toEqual(true);
     expect(Chars.isLowSurrogate('\uDFFF')).toEqual(true);
+  });
+
+  test('Chars.isModernDigit()', () => {
+    expect(Chars.isModernDigit('0')).toEqual(true);
+    expect(Chars.isModernDigit('1')).toEqual(true);
+    expect(Chars.isModernDigit('2')).toEqual(true);
+    expect(Chars.isModernDigit('3')).toEqual(true);
+    expect(Chars.isModernDigit('4')).toEqual(true);
+    expect(Chars.isModernDigit('5')).toEqual(true);
+    expect(Chars.isModernDigit('6')).toEqual(true);
+    expect(Chars.isModernDigit('7')).toEqual(true);
+    expect(Chars.isModernDigit('8')).toEqual(true);
+    expect(Chars.isModernDigit('9')).toEqual(true);
+    expect(Chars.isModernDigit(Chars.NUL)).toEqual(false);
+    expect(Chars.isModernDigit(Chars.BS)).toEqual(false);
+    expect(Chars.isModernDigit(Chars.CR)).toEqual(false);
+    expect(Chars.isModernDigit(Chars.FF)).toEqual(false);
+    expect(Chars.isModernDigit(Chars.HT)).toEqual(false);
+    expect(Chars.isModernDigit(Chars.LF)).toEqual(false);
+    expect(Chars.isModernDigit(Chars.VT)).toEqual(false);
+    expect(Chars.isModernDigit('a')).toEqual(false);
+    expect(Chars.isModernDigit('B')).toEqual(false);
+    expect(Chars.isModernDigit('z')).toEqual(false);
+    expect(Chars.isModernDigit('ä')).toEqual(false);
+    expect(Chars.isModernDigit('`')).toEqual(false);
+  });
+
+  test('Chars.isPersianDigit()', () => {
+    expect(Chars.isPersianDigit('')).toEqual(false);
+    expect(Chars.isPersianDigit('0')).toEqual(false);
+    expect(Chars.isPersianDigit('12')).toEqual(false);
+    expect(Chars.isPersianDigit('a')).toEqual(false);
+    expect(Chars.isPersianDigit('\u06f0')).toEqual(true);
+    expect(Chars.isPersianDigit('\u06f1')).toEqual(true);
+    expect(Chars.isPersianDigit('۲')).toEqual(true);
+    expect(Chars.isPersianDigit('۳')).toEqual(true);
+    expect(Chars.isPersianDigit('۴')).toEqual(true);
+    expect(Chars.isPersianDigit('\u06f5')).toEqual(true);
+    expect(Chars.isPersianDigit('۶')).toEqual(true);
+    expect(Chars.isPersianDigit('\u06f7')).toEqual(true);
+    expect(Chars.isPersianDigit('۸')).toEqual(true);
+    expect(Chars.isPersianDigit('۹')).toEqual(true);
+    expect(Chars.isPersianDigit('9')).toEqual(false);
   });
 
   test('Chars.isUpperCase()', () => {
@@ -275,6 +436,29 @@ describe('Chars', () => {
     expect(Chars.isUpperCase('öä')).toEqual(false);
     expect(Chars.isUpperCase('Ü')).toEqual(true);
     expect(Chars.isUpperCase('0')).toEqual(false);
+  });
+
+  test('Chars.isUpperRomanDigit()', () => {
+    expect(Chars.isUpperRomanDigit('')).toEqual(false);
+    expect(Chars.isUpperRomanDigit('\u2160')).toEqual(true);
+    expect(Chars.isUpperRomanDigit('\u2161')).toEqual(true);
+    expect(Chars.isUpperRomanDigit('\u2162')).toEqual(true);
+    expect(Chars.isUpperRomanDigit('\u2163')).toEqual(true);
+    expect(Chars.isUpperRomanDigit('\u2164')).toEqual(true);
+    expect(Chars.isUpperRomanDigit('\u2165')).toEqual(true);
+    expect(Chars.isUpperRomanDigit('\u2166')).toEqual(true);
+    expect(Chars.isUpperRomanDigit('\u2167')).toEqual(true);
+    expect(Chars.isUpperRomanDigit('\u2168')).toEqual(true);
+    expect(Chars.isUpperRomanDigit('\u2169')).toEqual(true);
+    expect(Chars.isUpperRomanDigit('\u216A')).toEqual(true);
+    expect(Chars.isUpperRomanDigit('\u216B')).toEqual(true);
+    expect(Chars.isUpperRomanDigit('\u216C')).toEqual(true);
+    expect(Chars.isUpperRomanDigit('\u216D')).toEqual(true);
+    expect(Chars.isUpperRomanDigit('\u216E')).toEqual(true);
+    expect(Chars.isUpperRomanDigit('\u216F')).toEqual(true);
+    expect(Chars.isUpperRomanDigit('a')).toEqual(false);
+    expect(Chars.isUpperRomanDigit('0')).toEqual(false);
+    expect(Chars.isUpperRomanDigit('9')).toEqual(false);
   });
 
   test('Chars.isWhitespace()', () => {

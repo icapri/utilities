@@ -445,17 +445,20 @@ describe('Strings', () => {
     expect(Strings.isNullOrWhitespace('undefined')).toEqual(false);
   });
 
-  test('Strings.isNumerical()', () => {
-    expect(Strings.isNumerical('')).toEqual(false);
-    expect(Strings.isNumerical(' ')).toEqual(false);
-    expect(Strings.isNumerical('undefined')).toEqual(false);
-    expect(Strings.isNumerical('1e3')).toEqual(true);
-    expect(Strings.isNumerical('-0')).toEqual(true);
-    expect(Strings.isNumerical('123')).toEqual(true);
-    expect(Strings.isNumerical('-56')).toEqual(true);
-    expect(Strings.isNumerical('0')).toEqual(true);
-    expect(Strings.isNumerical('0x12121')).toEqual(true);
-    expect(Strings.isNumerical('0b10011101')).toEqual(true);
+  test('Strings.isNumeric()', () => {
+    expect(Strings.isNumeric('')).toEqual(false);
+    expect(Strings.isNumeric(' ')).toEqual(false);
+    expect(Strings.isNumeric('undefined')).toEqual(false);
+    expect(Strings.isNumeric('1e3')).toEqual(true);
+    expect(Strings.isNumeric('-0')).toEqual(true);
+    expect(Strings.isNumeric('123')).toEqual(true);
+    expect(Strings.isNumeric('-56')).toEqual(true);
+    expect(Strings.isNumeric('0')).toEqual(true);
+    expect(Strings.isNumeric('0x12121')).toEqual(true);
+    expect(Strings.isNumeric('0b10011101')).toEqual(true);
+    expect(Strings.isNumeric('\u0663\u0664\u0665\u0666')).toEqual(true);
+    expect(Strings.isNumeric('\u0968\u0969')).toEqual(true);
+    expect(Strings.isNumeric('\u2171')).toEqual(true);
   });
 
   test('Strings.isString()', () => {

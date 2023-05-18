@@ -122,7 +122,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v1.4.1
+Latest stable: v1.4.2
 
 ## License
 
