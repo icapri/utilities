@@ -1,4 +1,5 @@
 import {Arrays} from '../arrays/Arrays';
+import {Chars} from '../chars/Chars';
 import {Numbers} from '../numbers/Numbers';
 import {Utils} from '../Utils';
 
@@ -7,60 +8,9 @@ import {Utils} from '../Utils';
  */
 export abstract class Strings {
   /**
-   * Contains the backslash escape character "`\`".
-   */
-  public static readonly BACKSLASH: string = '\\' as const;
-
-  /**
-   * Contains the backspace escape character "`\b`".
-   */
-  public static readonly BACKSPACE: string = '\b' as const;
-
-  /**
-   * Contains the carriage return escape character "`\r`". Unicode: `000d`.
-   */
-  public static readonly CR: string = '\r' as const;
-
-  /**
-   * Contains the double quote escape character "`"`".
-   */
-  public static readonly DBL_QUOTE: string = '\"' as const;
-
-  /**
    * Contains an empty string.
    */
   public static readonly EMPTY: string = '' as const;
-
-  /**
-   * Contains the form feed escape character "`\f`".
-   */
-  public static readonly FF: string = '\f' as const;
-
-  /**
-   * Contains the horizontal tabulator escape character "`\t`".
-   */
-  public static readonly HT: string = '\t' as const;
-
-  /**
-   * Contains the "new line" a. k. a. linefeed escape character "`\n`".
-   * Unicode: `000a`.
-   */
-  public static readonly LF: string = '\n' as const;
-
-  /**
-   * Contains the single quote escape character "`'`".
-   */
-  public static readonly SINGLE_QUOTE: string = '\'' as const;
-
-  /**
-   * Contains a white space.
-   */
-  public static readonly SPACE: string = ' ' as const;
-
-  /**
-   * Contains the vertical tabulator escape character "`\v`".
-   */
-  public static readonly VT: string = '\v' as const;
 
   /**
    * Gets the index returned when some sequence is not found in some
@@ -186,7 +136,7 @@ export abstract class Strings {
     }
 
     if (length === 1) {
-      if ([Strings.CR, Strings.LF].includes(str.charAt(0))) {
+      if ([Chars.CR, Chars.LF].includes(str.charAt(0))) {
         return Strings.EMPTY;
       }
 
@@ -195,11 +145,11 @@ export abstract class Strings {
 
     let end = length - 1;
     const lastChar = str.charAt(end);
-    if (lastChar === Strings.LF) {
-      if (str.charAt(end - 1) === Strings.CR) {
+    if (lastChar === Chars.LF) {
+      if (str.charAt(end - 1) === Chars.CR) {
         end--;
       }
-    } else if (lastChar !== Strings.CR) {
+    } else if (lastChar !== Chars.CR) {
       end++;
     }
 
@@ -228,8 +178,8 @@ export abstract class Strings {
 
     const end = l - 1;
     const r = str.substring(0, end);
-    if (str.charAt(end) === Strings.LF) {
-      if (r.charAt(end - 1) === Strings.CR) {
+    if (str.charAt(end) === Chars.LF) {
+      if (r.charAt(end - 1) === Chars.CR) {
         return r.substring(0, end - 1);
       }
     }
@@ -287,9 +237,8 @@ export abstract class Strings {
   public static contains(
       str: string,
       subStr: string,
-      ignoreCase?: boolean,
+      ignoreCase: boolean = false,
   ): boolean {
-    ignoreCase ??= false;
     const l = str.length;
     const n = subStr.length;
     if (n === 0) {
@@ -838,7 +787,7 @@ export abstract class Strings {
     const l = str.length;
     if (l === 1) {
       const c = str.charAt(0);
-      if (Strings.isSpaceChar(c)) {
+      if (Chars.isWhitespace(c)) {
         return true;
       }
     }
@@ -847,8 +796,8 @@ export abstract class Strings {
     let j = l - 1;
 
     while (i <= j) {
-      if (Strings.isSpaceChar(str.charAt(i)) ||
-        Strings.isSpaceChar(str.charAt(j))) {
+      if (Chars.isWhitespace(str.charAt(i)) ||
+        Chars.isWhitespace(str.charAt(j))) {
         return true;
       }
       i++; j--;
@@ -1014,6 +963,116 @@ export abstract class Strings {
   }
 
   /**
+   * Checks whether the specified string contains only lowercase and
+   * uppercase letters a - z and A - Z.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.isAlpha(''); // false
+   * Strings.isAlpha('a'); // true
+   * Strings.isAlpha('abc'); // true
+   * Strings.isAlpha('abcDEF'); // true
+   * Strings.isAlpha('abc DEF'); // false
+   * ```
+   *
+   * @param {String} str Contains some string.
+   * @return {Boolean} whether the specified string contains only lowercase
+   * and uppercase letters a - z and A - Z.
+   *
+   * @since v1.4.1
+   */
+  public static isAlpha(str: string): boolean {
+    let i = 0;
+    let j = str.length - 1;
+    if (j < 0) return false;
+    while (i <= j) {
+      const ci = str.charCodeAt(i++);
+      const cj = str.charCodeAt(j--);
+      if (!(ci > 64 && ci < 91) && !(ci > 96 && ci < 123)) {
+        return false;
+      }
+
+      if (!(cj > 64 && cj < 91) && !(cj > 96 && cj < 123)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Checks whether the specified string is an alphanumeric string.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.isAlphanumeric(''); // false
+   * Strings.isAlphanumeric('a'); // true
+   * Strings.isAlphanumeric('abc'); // true
+   * Strings.isAlphanumeric('abcDEF'); // true
+   * Strings.isAlphanumeric('abc DEF'); // false
+   * Strings.isAlphanumeric('0123'); // true
+   * Strings.isAlphanumeric('abcDEF123'); // true
+   * ```
+   *
+   * @param {String} str Contains some string.
+   * @return {Boolean} whether the specified string is an alphanumeric
+   * string.
+   *
+   * @since v1.4.1
+   */
+  public static isAlphanumeric(str: string): boolean {
+    let i = 0;
+    let j = str.length - 1;
+    if (j < 0) return false;
+    while (i <= j) {
+      const ci = str.charCodeAt(i++);
+      const cj = str.charCodeAt(j--);
+      if ((!(ci > 47 && ci < 58) &&
+          !(ci > 64 && ci < 91) &&
+          !(ci > 96 && ci < 123)) ||
+          (!(cj > 47 && cj < 58) &&
+          !(cj > 64 && cj < 91) &&
+          !(cj > 96 && cj < 123))
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Checks whether any of the specified strings is blank.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.isAnyBlank(); // true
+   * Strings.isAnyBlank(''); // true
+   * Strings.isAnyBlank('a'); // false
+   * Strings.isAnyBlank('a', ''); // true
+   * ```
+   *
+   * @param {Array} strings Contains some strings.
+   * @return {Boolean} whether any of the specified strings is blank.
+   *
+   * @since v1.4.1
+   */
+  public static isAnyBlank(...strings: string[]): boolean {
+    let j = strings.length - 1;
+    if (j >= 0) {
+      let i = 0;
+      while (i <= j) {
+        if (Strings.isBlank(strings[i]) || Strings.isBlank(strings[j])) {
+          return true;
+        }
+        i++;
+        j--;
+      }
+    }
+    return false;
+  }
+
+  /**
    * Checks whether the given string is binary i. e. each character of the
    * string occupies only one byte.
    *
@@ -1071,30 +1130,6 @@ export abstract class Strings {
   }
 
   /**
-   * Checks whether the string character at the specified index is high
-   * surrogate. A high surrogate character is a 16-bit code character
-   * between `U+D800` and `U+DBFF`.
-   *
-   * @param {String} str Contains some string.
-   * @param {Number} index Contains the index of the character to be checked
-   * whether it is low surrogate.
-   * @return {Boolean} whether the string character at the specified index is
-   * low surrogate.
-   */
-  public static isHighSurrogate(str: string, index: number): boolean {
-    if (index >= str.length - 1 || Strings.isEmpty(str)) {
-      return false;
-    }
-
-    const charCode = str.charCodeAt(index);
-    if (Number.isNaN(charCode)) {
-      return false;
-    }
-
-    return 0xD800 <= charCode && charCode <= 0xDBFF;
-  }
-
-  /**
    * Checks whether all the characters of the specified string are
    * lowercase.
    *
@@ -1128,27 +1163,50 @@ export abstract class Strings {
   }
 
   /**
-   * Checks whether the string character at the specified index is a
-   * low surrogate. A low surrogate character is a 16-bit code character
-   * between `U+D800` and `U+DBFF`.
+   * Checks whether the specified string contains at least one uppercase
+   * and one lowercase character.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.isMixedCase(''); // false
+   * Strings.isMixedCase(' '); // false
+   * Strings.isMixedCase('abc'); // false
+   * Strings.isMixedCase('Abc'); // true
+   * Strings.isMixedCase('ab Cd ef'); // true
+   * ```
    *
    * @param {String} str Contains some string.
-   * @param {Number} index Contains the index of the character to be checked
-   * whether it is low surrogate.
-   * @return {Boolean} whether the string character at the specified index is
-   * low surrogate.
+   * @return {Boolean} whether the specified string contains at least one
+   * uppercase and one lowercase character.
+   *
+   * @since v1.4.1
    */
-  public static isLowSurrogate(str: string, index: number): boolean {
-    if (index < 1 || Strings.isEmpty(str)) {
+  public static isMixedCase(str: string): boolean {
+    if (Strings.isWhitespace(str)) {
       return false;
     }
 
-    const charCode = str.charCodeAt(index);
-    if (Number.isNaN(charCode)) {
-      return false;
+    let i = 0;
+    let j = str.length - 1;
+    let hasLowerChar = false;
+    let hasUpperChar = false;
+    while (i <= j) {
+      const ci = str.charAt(i++);
+      const cj = str.charAt(j--);
+      if (Chars.isLowerCase(ci) || Chars.isLowerCase(cj)) {
+        hasLowerChar = true;
+      }
+
+      if (Chars.isUpperCase(ci) || Chars.isUpperCase(cj)) {
+        hasUpperChar = true;
+      }
+
+      if (hasLowerChar && hasUpperChar) {
+        return true;
+      }
     }
 
-    return 0xDC00 <= charCode && charCode <= 0xDFFF;
+    return hasLowerChar && hasUpperChar;
   }
 
   /**
@@ -1273,41 +1331,6 @@ export abstract class Strings {
   public static isNumerical(str: string): boolean {
     return !Number.isNaN(str) && !Number.isNaN(parseFloat(str));
   }
-
-  /**
-   * Checks whether the specified character is a space i. e. `" "`,
-   * `"\t"`, `"\r"`, `"\n"`, `"\f"`.
-   *
-   * **Example:**
-   * ```typescript
-   * Strings.isSpaceChar(""); // false
-   * Strings.isSpaceChar(" "); // true
-   * Strings.isSpaceChar("\t"); // true
-   * Strings.isSpaceChar("\r"); // true
-   * Strings.isSpaceChar("\f"); // true
-   * Strings.isSpaceChar("\n"); // true
-   * Strings.isSpaceChar("\n\n"); // false
-   * Strings.isSpaceChar("a"); // false
-   * ```
-   *
-   * @param {String} char Contains some character.
-   * @return {Boolean} whether the specified character is a space.
-   */
-  public static isSpaceChar(char: string): boolean {
-    return char === Strings.SPACE ||
-      char === Strings.HT ||
-      char === Strings.CR ||
-      char === Strings.LF ||
-      char === Strings.FF;
-  }
-
-  /*
-  expect(Strings.isString('')).toEqual(true);
-    expect(Strings.isString(' ')).toEqual(true);
-    expect(Strings.isString(null)).toEqual(false);
-    expect(Strings.isString('undefined')).toEqual(true);
-    expect(Strings.isString()).toEqual(false);
-  */
 
   /**
    * Checks whether the specified value is a string.
@@ -1455,7 +1478,7 @@ export abstract class Strings {
     const l = str.length;
     if (l === 1) {
       const c = str.charAt(0);
-      if (Strings.isSpaceChar(c)) {
+      if (Chars.isWhitespace(c)) {
         return true;
       }
     }
@@ -1464,8 +1487,8 @@ export abstract class Strings {
     let j = l - 1;
 
     while (i <= j) {
-      if (!Strings.isSpaceChar(str.charAt(i++)) ||
-        !Strings.isSpaceChar(str.charAt(j--))) {
+      if (!Chars.isWhitespace(str.charAt(i++)) ||
+        !Chars.isWhitespace(str.charAt(j--))) {
         return false;
       }
     }
@@ -1676,7 +1699,7 @@ export abstract class Strings {
     let i = 0; let r = Strings.EMPTY;
     for (; i < l; i++) {
       const c = str.charAt(i);
-      if (Strings.isSpaceChar(c) && Strings.isSpaceChar(str.charAt(i + 1))) {
+      if (Chars.isWhitespace(c) && Chars.isWhitespace(str.charAt(i + 1))) {
         continue;
       }
 
@@ -1720,10 +1743,14 @@ export abstract class Strings {
    * @param {String} str Contains some string.
    * @param {String} prefix Contains some string prefix.
    * @param {Boolean} ignoreCase Contains whether to ignore case sensitivity.
+   * Defaults to `false`.
    * @return {String} a string.
    */
   public static prependIfMissing(
-      str: string, prefix: string, ignoreCase?: boolean): string {
+      str: string,
+      prefix: string,
+      ignoreCase: boolean = false,
+  ): string {
     if (Strings.isEmpty(prefix) ||
       Strings.startsWith(str, prefix, ignoreCase)) {
       return str;
@@ -1750,7 +1777,9 @@ export abstract class Strings {
    * @return {String} the extended string.
    */
   public static prependIfMissingIgnoreCase(
-      str: string, prefix: string): string {
+      str: string,
+      prefix: string,
+  ): string {
     return Strings.prependIfMissing(str, prefix, true);
   }
 
@@ -1877,7 +1906,7 @@ export abstract class Strings {
       return str;
     }
 
-    if (len === 1 && Strings.isSpaceChar(str.charAt(0))) {
+    if (len === 1 && Chars.isWhitespace(str.charAt(0))) {
       return Strings.EMPTY;
     }
 
@@ -1886,7 +1915,7 @@ export abstract class Strings {
 
     while (i < len) {
       const c = str.charAt(i++);
-      if (!Strings.isSpaceChar(c)) {
+      if (!Chars.isWhitespace(c)) {
         res += c;
       }
     }
@@ -1957,7 +1986,7 @@ export abstract class Strings {
   public static startsWith(
       str: string,
       sequence: string,
-      ignoreCase?: boolean,
+      ignoreCase: boolean = false,
       position?: number,
   ): boolean {
     ignoreCase ??= false;
@@ -2050,12 +2079,12 @@ export abstract class Strings {
     while (index < length) {
       const char = str.charAt(index);
       const charLower = char.toLowerCase();
-      if (Strings.isSpaceChar(char)) {
+      if (Chars.isWhitespace(char)) {
         index++;
         continue;
       }
 
-      const isPrevSpace = Strings.isSpaceChar(str.charAt(index - 1));
+      const isPrevSpace = Chars.isWhitespace(str.charAt(index - 1));
       if (isPrevSpace) {
         const empty = camelCase.length === 0;
         camelCase += empty ? charLower : char.toUpperCase();
@@ -2110,12 +2139,12 @@ export abstract class Strings {
     while (index < length) {
       const char = str.charAt(index);
       const charLower = char.toLowerCase();
-      if (Strings.isSpaceChar(char)) {
+      if (Chars.isWhitespace(char)) {
         index++;
         continue;
       }
 
-      const isPrevSpace = Strings.isSpaceChar(str.charAt(index - 1));
+      const isPrevSpace = Chars.isWhitespace(str.charAt(index - 1));
       const empty = kebabCase.length === 0;
       if (isPrevSpace && !empty) {
         kebabCase += '-'.concat(charLower);
@@ -2153,12 +2182,12 @@ export abstract class Strings {
 
     while (index < length) {
       const char = str.charAt(index);
-      const isSpace = Strings.isSpaceChar(char);
+      const isSpace = Chars.isWhitespace(char);
       if (isSpace) {
         index++;
         continue;
       }
-      const isPrevSpace = Strings.isSpaceChar(str.charAt(index - 1));
+      const isPrevSpace = Chars.isWhitespace(str.charAt(index - 1));
       const empty = pascalCase.length === 0;
       pascalCase += isPrevSpace || empty ? char.toUpperCase() : char;
       index++;
@@ -2194,14 +2223,14 @@ export abstract class Strings {
 
     while (i < str.length) {
       const c = str.charAt(i);
-      const s = Strings.isSpaceChar(c);
+      const s = Chars.isWhitespace(c);
       if (i === 0) {
         r += s ? c : c.toUpperCase();
       }
 
       if (i > 0) {
         if (!s) {
-          const p = Strings.isSpaceChar(str.charAt(i - 1));
+          const p = Chars.isWhitespace(str.charAt(i - 1));
           r += p ? c.toUpperCase() : c.toLowerCase();
         } else {
           r += c;
@@ -2245,8 +2274,8 @@ export abstract class Strings {
     let j = l - 1;
 
     while (i <= j) {
-      const si = Strings.isSpaceChar(str.charAt(i));
-      const sj = Strings.isSpaceChar(str.charAt(j));
+      const si = Chars.isWhitespace(str.charAt(i));
+      const sj = Chars.isWhitespace(str.charAt(j));
       if (!si && !sj) {
         return str.substring(i, j + 1);
       }
@@ -2295,12 +2324,11 @@ export abstract class Strings {
    * from the second to the last character to lowercase. Defaults to `false`.
    * @return {String} the capitalized string.
    */
-  public static upperFirst(str: string, lowerRest?: boolean): string {
+  public static upperFirst(str: string, lowerRest: boolean = false): string {
     if (Strings.isWhitespace(str)) {
       return str;
     }
 
-    lowerRest ??= false;
     const rest = lowerRest ? str.slice(1).toLowerCase() : str.slice(1);
     return str.charAt(0).toUpperCase() + rest;
   }

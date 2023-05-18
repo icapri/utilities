@@ -3,6 +3,7 @@
  */
 export {Utils} from './utils/Utils';
 export {Arrays} from './utils/arrays/Arrays';
+export {Chars} from './utils/chars/Chars';
 export {Dates} from './utils/dates/Dates';
 export {Maps} from './utils/maps/Maps';
 export {Numbers} from './utils/numbers/Numbers';

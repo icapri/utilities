@@ -294,6 +294,58 @@ describe('Strings', () => {
     expect(Strings.indexOfIgnoreCase('abcde', 'cde')).toEqual(2);
   });
 
+  test('Strings.isAlpha()', () => {
+    expect(Strings.isAlpha('')).toEqual(false);
+    expect(Strings.isAlpha('0')).toEqual(false);
+    expect(Strings.isAlpha('-')).toEqual(false);
+    expect(Strings.isAlpha('.')).toEqual(false);
+    expect(Strings.isAlpha('}')).toEqual(false);
+    expect(Strings.isAlpha('\\')).toEqual(false);
+    expect(Strings.isAlpha('a')).toEqual(true);
+    expect(Strings.isAlpha('B')).toEqual(true);
+    expect(Strings.isAlpha('f')).toEqual(true);
+    expect(Strings.isAlpha('Z')).toEqual(true);
+    expect(Strings.isAlpha('o')).toEqual(true);
+    expect(Strings.isAlpha('abc')).toEqual(true);
+    expect(Strings.isAlpha('abcDEF')).toEqual(true);
+    expect(Strings.isAlpha('abc DEF')).toEqual(false);
+  });
+
+  test('Strings.isAlphanumeric()', () => {
+    expect(Strings.isAlphanumeric('')).toEqual(false);
+    expect(Strings.isAlphanumeric('ab')).toEqual(true);
+    expect(Strings.isAlphanumeric('abc123')).toEqual(true);
+    expect(Strings.isAlphanumeric('abc 123')).toEqual(false);
+    expect(Strings.isAlphanumeric('0')).toEqual(true);
+    expect(Strings.isAlphanumeric('1')).toEqual(true);
+    expect(Strings.isAlphanumeric('2')).toEqual(true);
+    expect(Strings.isAlphanumeric('3')).toEqual(true);
+    expect(Strings.isAlphanumeric('4')).toEqual(true);
+    expect(Strings.isAlphanumeric('5')).toEqual(true);
+    expect(Strings.isAlphanumeric('6')).toEqual(true);
+    expect(Strings.isAlphanumeric('7')).toEqual(true);
+    expect(Strings.isAlphanumeric('8')).toEqual(true);
+    expect(Strings.isAlphanumeric('9')).toEqual(true);
+    expect(Strings.isAlphanumeric('-')).toEqual(false);
+    expect(Strings.isAlphanumeric('.')).toEqual(false);
+    expect(Strings.isAlphanumeric('}')).toEqual(false);
+    expect(Strings.isAlphanumeric('\\')).toEqual(false);
+    expect(Strings.isAlphanumeric('a')).toEqual(true);
+    expect(Strings.isAlphanumeric('B')).toEqual(true);
+    expect(Strings.isAlphanumeric('f')).toEqual(true);
+    expect(Strings.isAlphanumeric('Z')).toEqual(true);
+    expect(Strings.isAlphanumeric('o')).toEqual(true);
+    expect(Strings.isAlphanumeric('abcDEF123')).toEqual(true);
+    expect(Strings.isAlphanumeric('0123')).toEqual(true);
+  });
+
+  test('Strings.isAnyBlank()', () => {
+    expect(Strings.isAnyBlank()).toEqual(false);
+    expect(Strings.isAnyBlank('')).toEqual(true);
+    expect(Strings.isAnyBlank('a')).toEqual(false);
+    expect(Strings.isAnyBlank('a', '', 'b')).toEqual(true);
+  });
+
   test('Strings.isAllBlank()', () => {
     expect(Strings.isAllBlank('')).toEqual(true);
     expect(Strings.isAllBlank(' ')).toEqual(true);
@@ -339,6 +391,15 @@ describe('Strings', () => {
     expect(Strings.isLowerCase('123')).toEqual(true);
     expect(Strings.isLowerCase('123 abc de\nfg')).toEqual(true);
     expect(Strings.isLowerCase('123 abc de\nfG')).toEqual(false);
+  });
+
+  test('Strings.isMixedCase()', () => {
+    expect(Strings.isMixedCase('')).toEqual(false);
+    expect(Strings.isMixedCase(' ')).toEqual(false);
+    expect(Strings.isMixedCase('abc')).toEqual(false);
+    expect(Strings.isMixedCase('Abc')).toEqual(true);
+    expect(Strings.isMixedCase('ab Cd ef')).toEqual(true);
+    expect(Strings.isMixedCase('ы ü Б Ö')).toEqual(true);
   });
 
   test('Strings.isNilOrEmpty()', () => {
@@ -395,17 +456,6 @@ describe('Strings', () => {
     expect(Strings.isNumerical('0')).toEqual(true);
     expect(Strings.isNumerical('0x12121')).toEqual(true);
     expect(Strings.isNumerical('0b10011101')).toEqual(true);
-  });
-
-  test('Strings.isSpaceChar()', () => {
-    expect(Strings.isSpaceChar('')).toEqual(false);
-    expect(Strings.isSpaceChar(' ')).toEqual(true);
-    expect(Strings.isSpaceChar('\t')).toEqual(true);
-    expect(Strings.isSpaceChar('\r')).toEqual(true);
-    expect(Strings.isSpaceChar('\f')).toEqual(true);
-    expect(Strings.isSpaceChar('\n')).toEqual(true);
-    expect(Strings.isSpaceChar('\n\n')).toEqual(false);
-    expect(Strings.isSpaceChar('d')).toEqual(false);
   });
 
   test('Strings.isString()', () => {

@@ -39,18 +39,8 @@ export abstract class Arrays {
    * @param {*} item Contains some array item.
    * @return {Array} an array.
    */
-  public static addFirst<T>(array: T[], item: T): T[] {
-    if (Arrays.isEmpty(array)) {
-      return [item];
-    }
-
-    let i = 0;
-    const result: T[] = [item];
-    for (; i < array.length; i++) {
-      result.push(array[i]);
-    }
-
-    return result;
+  public static addFirst<T>(array: T[], item: T | any): T[] | any[] {
+    return Arrays.isEmpty(array) ? [item] : [item, ...array];
   }
 
   /**
@@ -213,7 +203,7 @@ export abstract class Arrays {
    * @param {Array} array Contains some array.
    * @return {*} the first array item.
    */
-  public static first<T>(array: readonly T[]): T | null;
+  public static first<T>(array: readonly T[]): T;
   /**
    * Gets the first array item.
    *
@@ -221,11 +211,7 @@ export abstract class Arrays {
    * @return {*} the first array item.
    */
   public static first<T>(array: T[] | readonly T[]): T | null {
-    if (Arrays.isEmpty(array)) {
-      return null;
-    }
-
-    return array[0];
+    return Arrays.isEmpty(array) ? null : array[0];
   }
 
   /**

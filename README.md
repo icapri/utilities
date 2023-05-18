@@ -41,6 +41,17 @@ Arrays.isEmpty([]); // true
 Arrays.has(["a", "b", "c"], "a"); // true
 Arrays.last(["a", "b", "c"]); // "c"
 
+// Chars examples:
+Chars.isAlpha('E'); // true
+Chars.isASCII('|'); // true
+Chars.isASCIIControl(Chars.BS); // true
+Chars.isDigit('9'); // true
+Chars.isLetter('我'); // true
+Chars.isLowerCase('ы'); // true
+Chars.isLowSurrogate('\uDFFF'); // true
+Chars.isUpperCase('Б'); // true
+Chars.isWhitespace("\t"); // true
+
 // Dates examples:
 Dates.isAfter(Dates.now, "2023-05-11T23:20:12")
 Dates.addDays(Dates.now, 12)
@@ -80,7 +91,6 @@ Sets.toMap(set);
 // Strings examples:
 Strings.isNullOrEmpty(""); // true
 Strings.normalize("  Lorem  ipsum dolor sit "); // "Lorem ipsum dolor sit"
-Strings.isSpaceChar("\t"); // true
 Strings.isNumerical("12.34"); // true
 Strings.hasWhitespace("Lorem\t"); // true
 Strings.countMatches("ho ho ho", "ho"); // 3
@@ -112,7 +122,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v1.3.12
+Latest stable: v1.4.1
 
 ## License
 
