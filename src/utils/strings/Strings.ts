@@ -1979,6 +1979,44 @@ export abstract class Strings {
   }
 
   /**
+   * Reverses the specified string.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.reverse(""); // ""
+   * Strings.reverse("cba"); // "abc"
+   * Strings.reverse("😃😄😁😆🤣"); // "🤣😆😁😄😃"
+   * ```
+   *
+   * @param {String} str Contains some string.
+   * @return {String} the reversed string.
+   *
+   * @since v1.4.3
+   */
+  public static reverse(str: string): string {
+    const l = str.length; let j = l - 1;
+    if (j < 0) {
+      return str;
+    }
+
+    if (!Strings.isBinary(str)) {
+      return [...str].reverse().join('');
+    }
+
+    let i = (j + 1) % 2 === 0 ? (j + 1) / 2 : j / 2;
+    let left = ''; let right = '';
+    while (i >= 0) {
+      left += str.charAt(--i);
+      right += str.charAt(j--);
+      if (left.length + right.length > l) {
+        return right.concat(left.substring(1));
+      }
+    }
+
+    return right + left;
+  }
+
+  /**
    * Checks whether the specified string starts with the specified substring.
    *
    * **Example:**

@@ -1,14 +1,23 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "module": "ES6",
     "declaration": true,
+    "experimentalDecorators": false,
+    "importHelpers": true,
+    "lib": ["DOM", "ES2020", "ES2020.Promise", "ESNext.Intl"],
+    "module": "ES6",
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "outDir": "./lib",
     "strict": true,
-    "moduleResolution": "node",
-    "noImplicitOverride": true,
-    "experimentalDecorators": true
+    "strictNullChecks": true,
+    "target": "ES6",
   },
   "include": ["src"],
-  "exclude": ["node_modules", "src/**/*.spec.ts"]
+  "exclude": ["node_modules", "src/**/*.spec.ts", "lib"]
 }

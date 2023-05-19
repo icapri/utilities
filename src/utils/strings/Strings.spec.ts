@@ -648,6 +648,13 @@ describe('Strings', () => {
     expect(Strings.repeat('+', 10)).toEqual('++++++++++');
   });
 
+  test('Strings.reverse()', () => {
+    expect(Strings.reverse('')).toEqual('');
+    expect(Strings.reverse('cba')).toEqual('abc');
+    expect(Strings.reverse('cba edf')).toEqual('fde abc');
+    expect(Strings.reverse('🤨🤗')).toEqual('🤗🤨');
+  });
+
   test('Strings.startsWith()', () => {
     expect(Strings.startsWith('', '')).toEqual(true);
     expect(Strings.startsWith('abc', 'ab')).toEqual(true);

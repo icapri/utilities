@@ -46,11 +46,15 @@ Chars.isAlpha('E'); // true
 Chars.isASCII('|'); // true
 Chars.isASCIIControl(Chars.BS); // true
 Chars.isDigit('9'); // true
+Chars.isHinduDigit('१'); // true
 Chars.isLetter('我'); // true
+Chars.isLetterOrDigit('ぃ'); // true
 Chars.isLowerCase('ы'); // true
 Chars.isLowSurrogate('\uDFFF'); // true
+Chars.isPersianDigit('۴'); // true
+Chars.isSurrogatePair('\ud801\udbff', '\udc9f'); // false
 Chars.isUpperCase('Б'); // true
-Chars.isWhitespace("\t"); // true
+Chars.isWhitespace('\t'); // true
 
 // Dates examples:
 Dates.isAfter(Dates.now, "2023-05-11T23:20:12")
@@ -69,9 +73,13 @@ map.set("c", 123)
 Maps.toObject(map)
 
 // Numbers examples:
-Numbers.abs(-1)
-Numbers.isPrime(2)
-Numbers.isNatural(-123)
+Numbers.abs(-1); // 1
+Numbers.isInteger(1); // true
+Numbers.isNatural(-123); // false
+Numbers.isNumber({}); // false
+Numbers.isPrime(2); // true
+Numbers.randomInt(1, 8);
+Numbers.toString(123); // "123"
 
 // Objects examples:
 Objects.omit({ a: !0 }, "a")
@@ -98,6 +106,7 @@ Strings.toTitleCase("jOhN doE"); // John Doe
 Strings.toCharArray("🐑🐑🐑"); // ["🐑", "🐑", "🐑"]
 Strings.repeat("abc", 5); // "abcabcabcabcabc"
 Strings.remove("adefbc", "def"); // "abc"
+Strings.reverse("😃😄😁😆🤣"); // "🤣😆😁😄😃"
 Strings.toCamelCase("\nAbc  def"); // "abcDef"
 Strings.toKebabCase("\nAbc  def"); // "abc-def"
 Strings.upperFirst("john Doe"); // "John Doe"
@@ -122,7 +131,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v1.4.2
+Latest stable: v1.4.3
 
 ## License
 

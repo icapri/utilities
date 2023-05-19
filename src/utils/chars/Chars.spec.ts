@@ -340,6 +340,32 @@ describe('Chars', () => {
     expect(Chars.isLetter('°')).toEqual(false);
   });
 
+  test('Chars.isLetterOrDigit()', () => {
+    expect(Chars.isLetterOrDigit(' ')).toEqual(false);
+    expect(Chars.isLetterOrDigit('c')).toEqual(true);
+    expect(Chars.isLetterOrDigit('Ā')).toEqual(true);
+    expect(Chars.isLetterOrDigit('ה')).toEqual(true);
+    expect(Chars.isLetterOrDigit('ت')).toEqual(true);
+    expect(Chars.isLetterOrDigit('δ')).toEqual(true);
+    expect(Chars.isLetterOrDigit('ю')).toEqual(true);
+    expect(Chars.isLetterOrDigit('Ö')).toEqual(true);
+    expect(Chars.isLetterOrDigit('ぃ')).toEqual(true);
+    expect(Chars.isLetterOrDigit('`')).toEqual(false);
+    expect(Chars.isLetterOrDigit('°')).toEqual(false);
+    expect(Chars.isLetterOrDigit('©')).toEqual(false);
+    expect(Chars.isLetterOrDigit('')).toEqual(false);
+    expect(Chars.isLetterOrDigit('3')).toEqual(true);
+    expect(Chars.isLetterOrDigit('\u0660')).toEqual(true);
+    expect(Chars.isLetterOrDigit('\u0967')).toEqual(true);
+    expect(Chars.isLetterOrDigit('\u06f4')).toEqual(true);
+    expect(Chars.isLetterOrDigit('\u2175')).toEqual(true);
+    expect(Chars.isLetterOrDigit('\u216F')).toEqual(true);
+    expect(Chars.isLetterOrDigit('a')).toEqual(true);
+    expect(Chars.isLetterOrDigit('-')).toEqual(false);
+    expect(Chars.isLetterOrDigit('_')).toEqual(false);
+    expect(Chars.isLetterOrDigit('|')).toEqual(false);
+  });
+
   test('Chars.isLowerCase()', () => {
     expect(Chars.isLowerCase('')).toEqual(false);
     expect(Chars.isLowerCase('ā')).toEqual(true);
@@ -423,6 +449,32 @@ describe('Chars', () => {
     expect(Chars.isPersianDigit('۸')).toEqual(true);
     expect(Chars.isPersianDigit('۹')).toEqual(true);
     expect(Chars.isPersianDigit('9')).toEqual(false);
+  });
+
+  test('Chars.isSurrogate()', () => {
+    expect(Chars.isSurrogate(' ')).toEqual(false);
+    expect(Chars.isSurrogate('\uD800')).toEqual(true);
+    expect(Chars.isSurrogate('\uDC00')).toEqual(true);
+    expect(Chars.isSurrogate('\uD891')).toEqual(true);
+    expect(Chars.isSurrogate('\uDE12')).toEqual(true);
+    expect(Chars.isSurrogate('\uD882')).toEqual(true);
+    expect(Chars.isSurrogate('\uDF01')).toEqual(true);
+    expect(Chars.isSurrogate('\uD914')).toEqual(true);
+    expect(Chars.isSurrogate('\uDFFF')).toEqual(true);
+    expect(Chars.isSurrogate('\uDBFF')).toEqual(true);
+    expect(Chars.isSurrogate('\uDA87')).toEqual(true);
+    expect(Chars.isSurrogate('\uD914\uD882')).toEqual(false);
+    expect(Chars.isSurrogate('\uDFFF\uD882')).toEqual(false);
+  });
+
+  test('Chars.isSurrogatePair()', () => {
+    expect(Chars.isSurrogatePair(' ', ' ')).toEqual(false);
+    expect(Chars.isSurrogatePair('\uD800', '\uDC00')).toEqual(true);
+    expect(Chars.isSurrogatePair('\uD891', '\uDE12')).toEqual(true);
+    expect(Chars.isSurrogatePair('\uD882', '\uDF01')).toEqual(true);
+    expect(Chars.isSurrogatePair('\uD914', '\uDFFF')).toEqual(true);
+    expect(Chars.isSurrogatePair('\uDBFF', '\uDA87')).toEqual(false);
+    expect(Chars.isSurrogatePair('\uD914\uD882', '\uDFFF')).toEqual(false);
   });
 
   test('Chars.isUpperCase()', () => {

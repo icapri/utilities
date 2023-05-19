@@ -321,10 +321,7 @@ export abstract class Chars {
    * @since v1.4.1
    */
   public static isHighSurrogate(char: string): boolean {
-    if (char.length === 0 || [...char].length !== 1) return false;
-    const charCode = char.charCodeAt(0);
-    if (Number.isNaN(charCode)) return false;
-    return 0xD800 <= charCode && charCode <= 0xDBFF;
+    return char.length === 1 && /[\uD800-\uDBFF]/g.test(char);
   }
 
   /**
@@ -387,6 +384,38 @@ export abstract class Chars {
   public static isLetter(char: string): boolean {
     return char.length === 1 &&
       /^[a-zA-Z\u00C0-\u1FFF\u2800-\uFFFD]+$/.test(char);
+  }
+
+  /**
+   * Checks whether the specified character is either letter or digit.
+   *
+   * **Example:**
+   * ```typescript
+   * Chars.isLetterOrDigit('c'); // true
+   * Chars.isLetterOrDigit('Ā'); // true
+   * Chars.isLetterOrDigit('ה'); // true
+   * Chars.isLetterOrDigit('ت'); // true
+   * Chars.isLetterOrDigit('δ'); // true
+   * Chars.isLetterOrDigit('ю'); // true
+   * Chars.isLetterOrDigit('Ö'); // true
+   * Chars.isLetterOrDigit('ぃ'); // true
+   * Chars.isLetterOrDigit('3'); // true
+   * Chars.isLetterOrDigit('\u0660'); // true
+   * Chars.isLetterOrDigit('\u0967'); // true
+   * Chars.isLetterOrDigit('\u06f4'); // true
+   * Chars.isLetterOrDigit('\u2175'); // true
+   * Chars.isLetterOrDigit('\u216F'); // true
+   * Chars.isLetterOrDigit('a'); // false
+   * ```
+   *
+   * @param {String} char Contains some character.
+   * @return {Boolean} whether the specified character is either letter
+   * or digit.
+   *
+   * @since v1.4.3
+   */
+  public static isLetterOrDigit(char: string): boolean {
+    return char.length === 1 && (Chars.isLetter(char) || Chars.isDigit(char));
   }
 
   /**
@@ -476,10 +505,7 @@ export abstract class Chars {
    * @since v1.4.1
    */
   public static isLowSurrogate(char: string): boolean {
-    if (char.length === 0 || [...char].length !== 1) return false;
-    const charCode = char.charCodeAt(0);
-    if (Number.isNaN(charCode)) return false;
-    return 0xDC00 <= charCode && charCode <= 0xDFFF;
+    return char.length === 1 && /[\uDC00-\uDFFF]/g.test(char);
   }
 
   /**
@@ -544,6 +570,69 @@ export abstract class Chars {
       char === '\u06f8' ||
       char === '\u06f9'
     );
+  }
+
+  /**
+   * Checks whether the specified character is a space character.
+   *
+   * **Example:**
+   * ```typescript
+   * Chars.isSpace(' '); // true
+   * Chars.isSpace('_'); // false
+   * ```
+   *
+   * @param {String} char Contains some character.
+   * @return {Boolean} whether the specified character is a space character.
+   *
+   * @since v1.4.3
+   */
+  public static isSpace(char: string): boolean {
+    return char.length === 1 && char === Chars.SPACE;
+  }
+
+  /**
+   * Checks whether the specified character is surrogate (high or low
+   * surrogate).
+   *
+   * **Example:**
+   * ```typescript
+   * Chars.isSurrogate(' '); // false
+   * Chars.isSurrogate('\uD800'); // true
+   * Chars.isSurrogate('\uDC00'); // true
+   * ```
+   *
+   * @param {String} char Contains some character.
+   * @return {Boolean} whether the specified character is surrogate.
+   *
+   * @since v1.4.3
+   */
+  public static isSurrogate(char: string): boolean {
+    return Chars.isLowSurrogate(char) || Chars.isHighSurrogate(char);
+  }
+
+  /**
+   * Checks whether the specified characters create a surrogate pair. A
+   * surrogate pair according to the [Unicode Standard](https://unicode.org/standard/standard.html)
+   * is a combination of a Unicode code point from U+D800 to U+DBFF a. k.
+   * a. "high surrogate" with another in range from U+DC00 to U+DFFF a. k.
+   * a. "low surrogate".
+   *
+   * **Example:**
+   * ```typescript
+   * Chars.isSurrogatePair('', ''); // false
+   * Chars.isSurrogatePair('\ud801', '\udc9f'); // true
+   * Chars.isSurrogatePair('\ud801\udbff', '\udc9f'); // false
+   * ```
+   *
+   * @param {String} high Contains some character.
+   * @param {String} low Contains some other character.
+   * @return {Boolean} whether the specified characters create a surrogate
+   * pair.
+   *
+   * @since v1.4.3
+   */
+  public static isSurrogatePair(high: string, low: string): boolean {
+    return Chars.isHighSurrogate(high) && Chars.isLowSurrogate(low);
   }
 
   /**
