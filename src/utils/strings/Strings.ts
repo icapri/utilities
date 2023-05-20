@@ -115,6 +115,58 @@ export abstract class Strings {
   }
 
   /**
+   * Converts a Base64-encoded string to an UTF-8 encoded bytes array.
+   *
+   * @param {String} base64 Contains a Base64-encoded string.
+   * @param {Number} blocksSize Contains the amount of buffer memory
+   * to be used.
+   * @return {Uint8Array} an UTF-8 encoded bytes array.
+   *
+   * @since v1.5.0
+   */
+  public static base64ToBytes(
+      base64: string,
+      blocksSize?: number,
+  ): Uint8Array {
+    // escape non-Base64 chars such as whitespace, trailing '=' etc.
+    const esc = base64.replace(/[^A-Za-z0-9+/]/g, '');
+    const l = esc.length;
+    const arrLength = blocksSize ?
+      Math.ceil(((l * 3 + 1) >> 2) / blocksSize) * blocksSize :
+      (l * 3 + 1) >> 2;
+    const bytes = new Uint8Array(arrLength);
+    let mod3;
+    let mod4;
+    let uint24 = 0;
+    let i = 0;
+    let j = 0;
+
+    for (; i < l; i++) {
+      mod4 = i & 3;
+      const charCode = esc.charCodeAt(i);
+      const uint6 = charCode > 64 && charCode < 91 ?
+        charCode - 65 :
+        charCode > 96 && charCode < 123 ?
+        charCode - 71 :
+        charCode > 47 && charCode < 58 ?
+        charCode + 4 :
+        charCode === 43 ? 62 : charCode === 47 ? 63 : 0;
+
+      uint24 |= uint6 << (6 * (3 - mod4));
+      if (mod4 === 3 || l - i === 1) {
+        mod3 = 0;
+        while (mod3 < 3 && j < arrLength) {
+          bytes[j] = (uint24 >>> ((16 >>> mod3) & 24)) & 255;
+          mod3++; j++;
+        }
+        uint24 = 0;
+      }
+    }
+
+    return bytes;
+  }
+
+  /**
    * Removes a newline from the end of the specified string if there
    * is such one.
    *
@@ -228,7 +280,7 @@ export abstract class Strings {
    * ```
    *
    * @param {String} str Contains some string.
-   * @param {String} subStr Contains some string substring.
+   * @param {String} substring Contains some string substring.
    * @param {Boolean} ignoreCase Contains whether to ignore case sensitivity.
    * Defaults to `false`.
    * @return {Boolean} whether the specified string contains the specified
@@ -236,58 +288,26 @@ export abstract class Strings {
    */
   public static contains(
       str: string,
-      subStr: string,
+      substring: string,
       ignoreCase: boolean = false,
   ): boolean {
-    const l = str.length;
-    const n = subStr.length;
-    if (n === 0) {
-      return true;
+    if (ignoreCase) {
+      const subLow = substring.toLowerCase();
+      return Strings.indexOf(str.toLowerCase(), subLow) !== Strings.NOT_FOUND;
     }
-
-    if (n <= l) {
-      let i = 0; let j = l - 1;
-      while (i <= j) {
-        let ci; let cj; let cs;
-        if (ignoreCase) {
-          ci = str.charAt(i).toLowerCase();
-          cj = str.charAt(j).toLowerCase();
-          cs = subStr.charAt(0).toLowerCase();
-        } else {
-          ci = str.charAt(i);
-          cj = str.charAt(j);
-          cs = subStr.charAt(0);
-        }
-
-        if (ci === cs) {
-          if (n <= l - i) {
-            const ic = str.substring(i, i + n);
-            const a = ignoreCase ? ic.toLowerCase() : ic;
-            const b = ignoreCase ? subStr.toLowerCase() : subStr;
-            if (a === b) {
-              return true;
-            }
-          }
-        } else if (cj === cs) {
-          if (n <= l - j + 1) {
-            const ic = str.substring(j, j + n);
-            const a = ignoreCase ? ic.toLowerCase() : ic;
-            const b = ignoreCase ? subStr.toLowerCase() : subStr;
-            if (a === b) {
-              return true;
-            }
-          }
-        }
-        i++; j--;
-      }
-    }
-
-    return false;
+    return Strings.indexOf(str, substring) !== Strings.NOT_FOUND;
   }
 
   /**
    * Checks whether the specified string contains either of the given
    * substrings.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.containsAny(""); // false
+   * Strings.containsAny("", ""); // true
+   * Strings.containsAny("ab", "cd", "ab", "ef"); // true
+   * ```
    *
    * @param {String} str Contains some string.
    * @param {Array} substrings Contains some substrings.
@@ -295,12 +315,15 @@ export abstract class Strings {
    * given substrings.
    */
   public static containsAny(str: string, ...substrings: string[]): boolean {
-    if (substrings.length > 0) {
+    let j = substrings.length - 1;
+    if (j > -1) {
       let i = 0;
-      while (i < substrings.length) {
-        if (Strings.contains(str, substrings[i++])) {
+      while (i <= j) {
+        if (Strings.contains(str, substrings[i]) ||
+          Strings.contains(str, substrings[j])) {
           return true;
         }
+        i++; j--;
       }
     }
 
@@ -346,12 +369,15 @@ export abstract class Strings {
    * substrings.
    */
   public static containsNone(str: string, ...substrings: string[]): boolean {
-    if (substrings.length > 0) {
+    let j = substrings.length - 1;
+    if (j > -1) {
       let i = 0;
-      while (i < substrings.length) {
-        if (Strings.contains(str, substrings[i++])) {
+      while (i <= j) {
+        if (Strings.contains(str, substrings[i]) ||
+          Strings.contains(str, substrings[j])) {
           return false;
         }
+        i++; j--;
       }
     }
 
@@ -398,6 +424,26 @@ export abstract class Strings {
     }
 
     return r;
+  }
+
+  /**
+   * Decodes a string encoded using Base64.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.decode("27Hbstuz"); // "۱۲۳"
+   * Strings.decode("2aMgaXMgMyBpbiBBcmFiaWM="); // "٣ is 3 in Arabic"
+   * Strings.decode("VGhlIOKFsS1uZCBDZW50dXJ5IEIuIEMu");
+   * //= "The ⅱ-nd Century B. C."
+   * ```
+   *
+   * @param {String} base64 Contains a Base64-encoded string.
+   * @return {String} the decoded string.
+   *
+   * @since v1.5.0
+   */
+  public static decode(base64: string): string {
+    return Strings.fromBytesArray(Strings.base64ToBytes(base64));
   }
 
   /**
@@ -449,6 +495,51 @@ export abstract class Strings {
     } else {
       return str2.substring(diffIndex);
     }
+  }
+
+  /**
+   * Encodes the specified string using Base64 encoding.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.encode("\u06f1\u06f2\u06f3"); // "27Hbstuz"
+   * Strings.encode("\u0663 is 3 in Arabic"); // "2aMgaXMgMyBpbiBBcmFiaWM="
+   * Strings.encode("The \u2171-nd Century B. C.");
+   * //= "VGhlIOKFsS1uZCBDZW50dXJ5IEIuIEMu"
+   * ```
+   *
+   * @param {String} str Contains the string to be encoded.
+   * @param {Boolean} lineBreak Contains whether to break the base64 string
+   * into lines of at most 80 characters.
+   * @return {String} the encoded string.
+   *
+   * @since v1.5.0
+   */
+  public static encode(str: string, lineBreak: boolean = false): string {
+    let mod3 = 2; let encoded = Strings.EMPTY;
+    const bytes: Uint8Array = Strings.toBytesArray(str);
+    const l = bytes.length; let u24 = 0; let i = 0;
+    while (i < l) {
+      mod3 = i % 3;
+      if (lineBreak && i > 0 && ((i * 4) / 3) % 76 === 0) {
+        encoded += '\r\n';
+      }
+
+      u24 |= bytes[i] << ((16 >>> mod3) & 24);
+      if (mod3 === 2 || bytes.length - i === 1) {
+        const $ = (u6: number) => u6 < 26 ? u6 + 65 : u6 < 52 ? u6 + 71 :
+          u6 < 62 ? u6 - 4 : u6 === 62 ? 43 : u6 === 63 ? 47 : 65;
+        encoded += String.fromCodePoint(
+            $((u24 >>> 18) & 63), $((u24 >>> 12) & 63),
+            $((u24 >>> 6) & 63), $(u24 & 63),
+        );
+        u24 = 0;
+      }
+      i++;
+    }
+
+    const e = mod3 === 2 ? '' : mod3 === 1 ? '=' : '==';
+    return encoded.substring(0, encoded.length - 2 + mod3).concat(e);
   }
 
   /**
@@ -592,11 +683,9 @@ export abstract class Strings {
    * @return {Boolean} whether the specified strings equal.
    */
   public static equals<T extends string | String>(a: T, b: T): boolean {
-    if (Strings.isString(a) && Strings.isString(b)) {
-      return a === b;
-    }
-
-    return a.valueOf() === b.valueOf();
+    const value1 = Strings.isStringObject(a) ? a.valueOf() : a;
+    const value2 = Strings.isStringObject(b) ? b.valueOf() : b;
+    return value1 === value2;
   }
 
   /**
@@ -702,6 +791,75 @@ export abstract class Strings {
   }
 
   /**
+   * Converts a binary string to Unicode in case it has previously
+   * contained Unicode.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.fromBinary(Strings.decode('PsOYFMOdIAA9w5hDw54=')); // "🤔 🙃"
+   * ```
+   *
+   * @param {String} binaryStr Contains some binary string.
+   * @return {String} a string which might contain Unicode.
+   *
+   * @since v1.5.0
+   */
+  public static fromBinary(binaryStr: string): string {
+    const length = binaryStr.length;
+    if (length === 0) {
+      return binaryStr;
+    }
+
+    const bytesArray = Uint8Array.from({length}, (_, index) =>
+      binaryStr.charCodeAt(index),
+    );
+    const ccs = new Uint16Array(bytesArray.buffer);
+    let r = Strings.EMPTY;
+    ccs.forEach((char) => {
+      r += String.fromCharCode(char);
+    });
+
+    return r;
+  }
+
+  /**
+   * Converts an UTF-8 encoded bytes array to string.
+   *
+   * @param {Uint8Array} bytes Contains the UTF-8 encoded bytes array.
+   * @return {String} a Base64-encoded string.
+   *
+   * @since v1.5.0
+   */
+  public static fromBytesArray(bytes: Uint8Array): string {
+    let s = Strings.EMPTY;
+    let b;
+    const l = bytes.length;
+    let i = 0;
+    for (; i < l; i++) {
+      b = bytes[i];
+      s += String.fromCodePoint(
+        b > 251 && b < 254 && i + 5 < l ?
+            (b - 252) * 1073741824 + ((bytes[++i] - 128) << 24) +
+              ((bytes[++i] - 128) << 18) + ((bytes[++i] - 128) << 12) +
+              ((bytes[++i] - 128) << 6) + bytes[++i] - 128 :
+          b > 247 && b < 252 && i + 4 < l ?
+          ((b - 248) << 24) +
+            ((bytes[++i] - 128) << 18) + ((bytes[++i] - 128) << 12) +
+            ((bytes[++i] - 128) << 6) + bytes[++i] - 128 :
+          b > 239 && b < 248 && i + 3 < l ?
+          ((b - 240) << 18) + ((bytes[++i] - 128) << 12) +
+            ((bytes[++i] - 128) << 6) + bytes[++i] - 128 :
+          b > 223 && b < 240 && i + 2 < l ? ((b - 224) << 12) +
+            ((bytes[++i] - 128) << 6) + bytes[++i] - 128 :
+          b > 191 && b < 224 && i + 1 < l ?
+          ((b - 192) << 6) + bytes[++i] - 128 : b,
+      );
+    }
+
+    return s;
+  }
+
+  /**
    * Gets the string bytes.
    *
    * @param {String} str Contains some string.
@@ -710,39 +868,6 @@ export abstract class Strings {
   public static getBytes(str: string): number {
     const encoder = new TextEncoder();
     return encoder.encode(str).length;
-  }
-
-  /**
-   * Checks whether the specified string contains the specified character.
-   *
-   * **Example:**
-   * ```typescript
-   * Strings.hasChar("abc", ""); // false
-   * Strings.hasChar("", ""); // false
-   * Strings.hasChar("", "a"); // false
-   * Strings.hasChar("", "ab"); // false
-   * Strings.hasChar("abc", "b"); // true
-   * ```
-   *
-   * @param {String} str Contains some string.
-   * @param {String} char Contains some character.
-   * @return {Boolean} whether the specified string contains the specified
-   * character.
-   */
-  public static hasChar(str: string, char: string): boolean {
-    const l = str.length;
-    let i = 0;
-    let j = l - 1;
-
-    if (l > 0 && char.length === 1) {
-      while (i <= j) {
-        if (str.charAt(i++) === char || str.charAt(j--) === char) {
-          return true;
-        }
-      }
-    }
-
-    return false;
   }
 
   /**
@@ -2109,6 +2234,100 @@ export abstract class Strings {
   }
 
   /**
+   * Converts the specified string to binary string in case it contains
+   * Unicode characters. A binary string is a string in which each 16-bit
+   * unit occupies only 1 byte.
+   *
+   * **Example:**
+   * ```typescript
+   * const binary = Strings.toBinary("🤔 🙃");
+   * Strings.encode(binary); // "PtgU3SAAPdhD3g=="
+   * ```
+   *
+   * @param {String} str Contains some string.
+   * @return {String} a binary string.
+   *
+   * @since v1.5.0
+   */
+  public static toBinary(str: string): string {
+    const length = str.length;
+    if (length === 0 || Strings.isBinary(str)) return str;
+    const charCodeUnits = Uint16Array.from(
+        {length},
+        (_, index) => str.charCodeAt(index),
+    );
+    const ccs = new Uint8Array(charCodeUnits.buffer);
+    let bin = '';
+    ccs.forEach((c) => {
+      bin += String.fromCharCode(c);
+    });
+    return bin;
+  }
+
+  /**
+   * Converts the specified string to a UTF8 bytes array.
+   *
+   * @param {String} str Contains some string.
+   * @return {Uint8Array} an UTF8 array.
+   *
+   * @since v1.5.0
+   */
+  public static toBytesArray(str: string): Uint8Array {
+    const strLength = str.length;
+    let arrayLength = 0; let i = 0; let p: number;
+
+    for (; i < strLength; i++) {
+      p = str.codePointAt(i) as number;
+      if (p >= 0x10000) {
+        i++;
+      }
+
+      arrayLength += p < 0x80 ? 1 : p < 0x800 ? 2 :
+      p < 0x10000 ? 3 : p < 0x200000 ? 4 : p < 0x4000000 ? 5 : 6;
+    }
+
+    let pi = 0; i = 0;
+    const bytes: Uint8Array = new Uint8Array(arrayLength);
+    while (i < arrayLength) {
+      p = str.codePointAt(pi) as number;
+      if (p < 128) { // ASCII character (1 byte)
+        bytes[i++] = p;
+      } else if (p < 0x800) { // (2 bytes)
+        bytes[i++] = 192 + (p >>> 6);
+        bytes[i++] = 128 + (p & 63);
+      } else if (p < 0x10000) { // (3 bytes)
+        bytes[i++] = 224 + (p >>> 12);
+        bytes[i++] = 128 + ((p >>> 6) & 63);
+        bytes[i++] = 128 + (p & 63);
+      } else if (p < 0x200000) { // (4 bytes)
+        bytes[i++] = 240 + (p >>> 18);
+        bytes[i++] = 128 + ((p >>> 12) & 63);
+        bytes[i++] = 128 + ((p >>> 6) & 63);
+        bytes[i++] = 128 + (p & 63);
+        pi++;
+      } else if (p < 0x4000000) { // (5 bytes)
+        bytes[i++] = 248 + (p >>> 24);
+        bytes[i++] = 128 + ((p >>> 18) & 63);
+        bytes[i++] = 128 + ((p >>> 12) & 63);
+        bytes[i++] = 128 + ((p >>> 6) & 63);
+        bytes[i++] = 128 + (p & 63);
+        pi++;
+      } else { // (6 bytes)
+        bytes[i++] = 252 + (p >>> 30);
+        bytes[i++] = 128 + ((p >>> 24) & 63);
+        bytes[i++] = 128 + ((p >>> 18) & 63);
+        bytes[i++] = 128 + ((p >>> 12) & 63);
+        bytes[i++] = 128 + ((p >>> 6) & 63);
+        bytes[i++] = 128 + (p & 63);
+        pi++;
+      }
+      pi++;
+    }
+
+    return bytes;
+  }
+
+  /**
    * Converts the specified string to camel-case.
    *
    * **Example:**
@@ -2248,6 +2467,52 @@ export abstract class Strings {
     }
 
     return Strings.trim(pascalCase);
+  }
+
+  /**
+   * Converts the specified string to snake-case.
+   *
+   * **Example:**
+   * ```typescript
+   * Strings.toSnakeCase(""); // ""
+   * Strings.toSnakeCase("ABC"); // "abc"
+   * Strings.toSnakeCase("aBC\nDeF"); // "abc_def"
+   * ```
+   *
+   * @param {String} str Contains some string.
+   * @return {String} the specified string converted to snake-case.
+   *
+   * @since v1.5.0
+   */
+  public static toSnakeCase(str: string): string {
+    const length = str.length;
+    if (length === 0 || Strings.isWhitespace(str)) {
+      return Strings.EMPTY;
+    }
+
+    let index = 0; // the index of the char
+    let snakeCase = Strings.EMPTY;
+
+    while (index < length) {
+      const char = str.charAt(index);
+      const charLower = char.toLowerCase();
+      if (Chars.isWhitespace(char)) {
+        index++;
+        continue;
+      }
+
+      const isPrevSpace = Chars.isWhitespace(str.charAt(index - 1));
+      const empty = snakeCase.length === 0;
+      if (isPrevSpace && !empty) {
+        snakeCase += '_'.concat(charLower);
+      } else {
+        snakeCase += charLower;
+      }
+
+      index++;
+    }
+
+    return Strings.trim(snakeCase);
   }
 
   /**

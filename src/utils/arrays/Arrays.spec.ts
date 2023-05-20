@@ -13,6 +13,31 @@ describe('Arrays', () => {
     expect(cloned).toEqual([1, 2, 4]);
   });
 
+  test('Arrays.contains()', () => {
+    expect(Arrays.contains([], 'a')).toEqual(false);
+    expect(Arrays.contains([''], '')).toEqual(true);
+    expect(Arrays.contains(
+        ['a', 1, false, Symbol.iterator], Symbol.iterator),
+    ).toEqual(true);
+    expect(Arrays.contains(['🐑', '🐑', '🐑', '😀', '💖'], '🐑')).toEqual(true);
+  });
+
+  test('Arrays.containsAny()', () => {
+    expect(Arrays.containsAny([], 'a')).toEqual(false);
+    expect(Arrays.containsAny([''], '')).toEqual(true);
+    expect(Arrays.containsAny(
+        ['a', 1, false, Symbol.iterator], Symbol.iterator),
+    ).toEqual(true);
+    expect(Arrays.containsAny(['🐑', '🐑', '🐑', '😀', '💖'], '🐑')).toEqual(true);
+    expect(Arrays.containsAny(
+        ['a', 1, false, Symbol.iterator], 'c', Symbol.iterator),
+    ).toEqual(true);
+    expect(Arrays.containsAny(['🐑', '🐑', '🐑', '😀', '💖'], '🐑', '💖'))
+        .toEqual(true);
+    expect(Arrays.containsAny(['🐑', '🐑', '🐑', '😀', '💖'], 'a', 'b'))
+        .toEqual(false);
+  });
+
   test('Arrays.each()', () => {
     const array = ['My ', 'name ', 'is ', 'John ', 'Doe'];
     let text = '';
@@ -36,15 +61,6 @@ describe('Arrays', () => {
   test('Arrays.first()', () => {
     const array = ['a', 'b', 'c'];
     expect(Arrays.first(array)).toEqual('a');
-  });
-
-  test('Arrays.has()', () => {
-    expect(Arrays.has([], 'a')).toEqual(false);
-    expect(Arrays.has([''], '')).toEqual(true);
-    expect(Arrays.has(
-        ['a', 1, false, Symbol.iterator], Symbol.iterator),
-    ).toEqual(true);
-    expect(Arrays.has(['🐑', '🐑', '🐑', '😀', '💖'], '🐑')).toEqual(true);
   });
 
   test('Arrays.insertAt()', () => {

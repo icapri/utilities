@@ -529,9 +529,7 @@ export abstract class Chars {
    * @since v1.4.2
    */
   public static isModernDigit(char: string): boolean {
-    if (char.length !== 1) return false;
-    const charCode = char.charCodeAt(0);
-    return charCode > 47 && charCode < 58;
+    return char.length === 1 && char >= '0' && char <= '9';
   }
 
   /**

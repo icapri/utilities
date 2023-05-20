@@ -54,6 +54,82 @@ export abstract class Arrays {
   }
 
   /**
+   * Checks whether the given array contains the given item.
+   *
+   * **Example:**
+   * ```typescript
+   * Arrays.contains([], "a"); // false
+   * Arrays.contains(["a", "b", "c"], "c"); // true
+   * Arrays.contains(["a", "b", "c"], "d"); // false
+   * ```
+   *
+   * @param {Array} array Contains some array.
+   * @param {*} item Contains the item to be checked whether it exists in the
+   * given array.
+   * @return {Boolean} whether the given array contains the given item.
+   *
+   * @since v1.5.0
+   */
+  public static contains<T>(array: T[] | readonly T[], item: T): boolean {
+    let j = array.length - 1;
+    if (j > -1) {
+      let i = 0;
+      while (i <= j) {
+        if (array[i] === item || array[j] === item) {
+          return true;
+        }
+        i++; j--;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Checks whether the specified array contains either of the specified
+   * items.
+   *
+   * **Example:**
+   * ```typescript
+   * Arrays.containsAny([], "a"); // false
+   * Arrays.containsAny(["a", "b", "c"], "g", "c", "i"); // true
+   * Arrays.containsAny(["a", "b", "c"], "d", "e"); // false
+   * ```
+   *
+   * @param {Array} array Contains some array.
+   * @param {Array} items Contains the items to be checked whether it exists
+   * in the given array.
+   * @return {Boolean} whether the specified array contains either of the
+   * specified items.
+   *
+   * @since v1.5.0
+   */
+  public static containsAny<T>(
+      array: T[] | readonly T[],
+      ...items: T[]
+  ): boolean {
+    let j = array.length - 1;
+    if (j > -1) {
+      let i = 0;
+      while (i <= j) {
+        let m = 0; let n = items.length - 1;
+        while (m <= n) {
+          const mi = items[m++];
+          const ni = items[n--];
+          if (array[i] === mi || array[i] === ni ||
+              array[j] === mi || array[j] === ni) {
+            return true;
+          }
+        }
+        i++;
+        j--;
+      }
+    }
+
+    return false;
+  }
+
+  /**
    * Calls the specified predicate function for each of the array elements.
    *
    * **Example:**
@@ -212,47 +288,6 @@ export abstract class Arrays {
    */
   public static first<T>(array: T[] | readonly T[]): T | null {
     return Arrays.isEmpty(array) ? null : array[0];
-  }
-
-  /**
-   * Checks whether the given array contains the given item.
-   *
-   * @param {Array} array Contains some array.
-   * @param {*} item Contains the item to be checked whether it exists in the
-   * given array.
-   * @return {Boolean} whether the given array contains the given item.
-   */
-  public static has<T>(array: T[], item: T): boolean;
-  /**
-   * Checks whether the given array contains the given item.
-   *
-   * @param {Array} array Contains some array.
-   * @param {*} item Contains the item to be checked whether it exists in the
-   * given array.
-   * @return {Boolean} whether the given array contains the given item.
-   */
-  public static has<T>(array: readonly T[], item: T): boolean;
-  /**
-   * Checks whether the given array contains the given item.
-   *
-   * @param {Array} array Contains some array.
-   * @param {*} item Contains the item to be checked whether it exists in the
-   * given array.
-   * @return {Boolean} whether the given array contains the given item.
-   */
-  public static has<T>(array: T[] | readonly T[], item: T): boolean {
-    const l = array.length;
-    if (l !== 0) {
-      let i = 0;
-      let j = l - 1;
-      while (i <= j) {
-        if (array[i++] === item || array[j--] === item) {
-          return true;
-        }
-      }
-    }
-
-    return false;
   }
 
   /**

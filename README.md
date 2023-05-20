@@ -102,6 +102,8 @@ Strings.normalize("  Lorem  ipsum dolor sit "); // "Lorem ipsum dolor sit"
 Strings.isNumerical("12.34"); // true
 Strings.hasWhitespace("Lorem\t"); // true
 Strings.countMatches("ho ho ho", "ho"); // 3
+Strings.decode("2aMgaXMgMyBpbiBBcmFiaWM="); // "٣ is 3 in Arabic"
+Strings.encode("\u0663 is 3 in Arabic"); // "2aMgaXMgMyBpbiBBcmFiaWM="
 Strings.toTitleCase("jOhN doE"); // John Doe
 Strings.toCharArray("🐑🐑🐑"); // ["🐑", "🐑", "🐑"]
 Strings.repeat("abc", 5); // "abcabcabcabcabc"
@@ -131,7 +133,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v1.4.3
+Latest stable: v1.5.0
 
 ## License
 
