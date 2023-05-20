@@ -133,7 +133,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v1.5.0
+Latest stable: v1.5.1
 
 ## License
 

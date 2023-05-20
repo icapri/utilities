@@ -115,58 +115,6 @@ export abstract class Strings {
   }
 
   /**
-   * Converts a Base64-encoded string to an UTF-8 encoded bytes array.
-   *
-   * @param {String} base64 Contains a Base64-encoded string.
-   * @param {Number} blocksSize Contains the amount of buffer memory
-   * to be used.
-   * @return {Uint8Array} an UTF-8 encoded bytes array.
-   *
-   * @since v1.5.0
-   */
-  public static base64ToBytes(
-      base64: string,
-      blocksSize?: number,
-  ): Uint8Array {
-    // escape non-Base64 chars such as whitespace, trailing '=' etc.
-    const esc = base64.replace(/[^A-Za-z0-9+/]/g, '');
-    const l = esc.length;
-    const arrLength = blocksSize ?
-      Math.ceil(((l * 3 + 1) >> 2) / blocksSize) * blocksSize :
-      (l * 3 + 1) >> 2;
-    const bytes = new Uint8Array(arrLength);
-    let mod3;
-    let mod4;
-    let uint24 = 0;
-    let i = 0;
-    let j = 0;
-
-    for (; i < l; i++) {
-      mod4 = i & 3;
-      const charCode = esc.charCodeAt(i);
-      const uint6 = charCode > 64 && charCode < 91 ?
-        charCode - 65 :
-        charCode > 96 && charCode < 123 ?
-        charCode - 71 :
-        charCode > 47 && charCode < 58 ?
-        charCode + 4 :
-        charCode === 43 ? 62 : charCode === 47 ? 63 : 0;
-
-      uint24 |= uint6 << (6 * (3 - mod4));
-      if (mod4 === 3 || l - i === 1) {
-        mod3 = 0;
-        while (mod3 < 3 && j < arrLength) {
-          bytes[j] = (uint24 >>> ((16 >>> mod3) & 24)) & 255;
-          mod3++; j++;
-        }
-        uint24 = 0;
-      }
-    }
-
-    return bytes;
-  }
-
-  /**
    * Removes a newline from the end of the specified string if there
    * is such one.
    *
@@ -443,7 +391,27 @@ export abstract class Strings {
    * @since v1.5.0
    */
   public static decode(base64: string): string {
-    return Strings.fromBytesArray(Strings.base64ToBytes(base64));
+    const esc = base64.replace(/[^A-Za-z0-9+/]/g, ''); // escape non-Base64 char
+    const l = esc.length; const length = (l * 3 + 1) >> 2;
+    const bytes = new Uint8Array(length);
+    let mod3; let mod4; let u24 = 0; let i = 0; let j = 0;
+    while (i < l) {
+      mod4 = i & 3;
+      const c = esc.charCodeAt(i);
+      const u6 = c > 64 && c < 91 ? c - 65 : c > 96 && c < 123 ? c - 71 :
+        c > 47 && c < 58 ? c + 4 : c === 43 ? 62 : c === 47 ? 63 : 0;
+      u24 |= u6 << (6 * (3 - mod4));
+      if (mod4 === 3 || l - i === 1) {
+        mod3 = 0;
+        while (mod3 < 3 && j < length) {
+          bytes[j] = (u24 >>> ((16 >>> mod3) & 24)) & 255; mod3++; j++;
+        }
+        u24 = 0;
+      }
+      i++;
+    }
+
+    return Strings.fromBytesArray(bytes);
   }
 
   /**
