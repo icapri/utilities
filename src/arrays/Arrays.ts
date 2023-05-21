@@ -595,6 +595,23 @@ export abstract class Arrays {
   }
 
   /**
+   * Reverses the specified array.
+   *
+   * **Example:**
+   * ```typescript
+   * Arrays.reverse([]); // []
+   * Arrays.reverse(["a"]); // ["a"]
+   * Arrays.reverse(["a", "b", "c"]); // ["c", "b", "a"]
+   * ```
+   *
+   * @param {Array} array Contains some array.
+   * @return {Array} the reverse array.
+   */
+  public static reverse<T>(array: T[]): T[] {
+    return array.length < 2 ? array : [...array].reverse();
+  }
+
+  /**
    * Sorts the specified array.
    *
    * @param {Array} array Contains some array.

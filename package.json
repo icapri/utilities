@@ -1,7 +1,7 @@
 {
   "name": "utilitates",
-  "version": "1.5.1",
-  "description": "A library intended for conversion, formatting, parsing, validation, and more.",
+  "version": "1.5.2",
+  "description": "A library for converting, formatting, parsing, validating and more.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
@@ -19,7 +19,7 @@
     "Utilities",
     "Utils"
   ],
-  "author": "icapri",
+  "author": "Igli Kapri",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/icapri/utilities/issues"

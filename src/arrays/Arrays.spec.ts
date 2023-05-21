@@ -140,6 +140,14 @@ describe('Arrays', () => {
     expect(Arrays.last(['a', 'b'])).toEqual('b');
   });
 
+  test('Arrays.reverse()', () => {
+    expect(Arrays.reverse([])).toEqual([]);
+    expect(Arrays.reverse(['a'])).toEqual(['a']);
+    expect(Arrays.reverse(['a', 'b', 'c'])).toEqual(['c', 'b', 'a']);
+    expect(Arrays.reverse(['', 0, null, undefined]))
+        .toEqual([undefined, null, 0, '']);
+  });
+
   test('Arrays.sort()', () => {
     const array = [7, 1, 6, 3, 5, 8, 2, 9, 4];
     expect(Arrays.sort(array)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
