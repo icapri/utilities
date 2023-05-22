@@ -1243,11 +1243,8 @@ export abstract class Strings {
     let j = str.length - 1;
     while (i <= j) {
       const ci = str.charAt(i++);
-      if (ci !== ci.toLowerCase()) {
-        return false;
-      }
       const cj = str.charAt(j--);
-      if (cj !== cj.toLowerCase()) {
+      if (ci !== ci.toLowerCase() || cj !== cj.toLowerCase()) {
         return false;
       }
     }
@@ -1543,11 +1540,8 @@ export abstract class Strings {
     let j = str.length - 1;
     while (i <= j) {
       const ci = str.charAt(i++);
-      if (ci !== ci.toUpperCase()) {
-        return false;
-      }
       const cj = str.charAt(j--);
-      if (cj !== cj.toUpperCase()) {
+      if (ci !== ci.toUpperCase() || cj !== cj.toUpperCase()) {
         return false;
       }
     }

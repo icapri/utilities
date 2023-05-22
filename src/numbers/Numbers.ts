@@ -1,3 +1,5 @@
+import {Objects} from '../objects/Objects';
+
 /**
  * Defines an abstract class with number utilities.
  */
@@ -73,6 +75,27 @@ export abstract class Numbers {
    */
   public static isNumber(value?: any): value is number {
     return typeof value === 'number' && Number.isFinite(value);
+  }
+
+  /**
+   * Checks whether the specified value is an instance of the `Number`
+   * object.
+   *
+   * **Example:**
+   * ```typescript
+   * Numbers.isNumberObject(); // false
+   * Numbers.isNumberObject(5); // false
+   * Numbers.isNumberObject("44"); // false
+   * Numbers.isNumberObject(new Number(12)); // true
+   * ```
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is an instance
+   * of the `Number` object.
+   */
+  public static isNumberObject(value?: any): value is Number {
+    return Objects.isObject(value) &&
+      Objects.getType(value) === '[object Number]';
   }
 
   /**

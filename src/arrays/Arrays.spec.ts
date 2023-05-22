@@ -140,6 +140,15 @@ describe('Arrays', () => {
     expect(Arrays.last(['a', 'b'])).toEqual('b');
   });
 
+  test('Arrays.removeAt()', () => {
+    expect(Arrays.removeAt([], 0)).toEqual([]);
+    expect(Arrays.removeAt(['a', 'b'], 1)).toEqual(['a']);
+    expect(Arrays.removeAt(['a', 'b', 'c'], 0)).toEqual(['b', 'c']);
+    expect(Arrays.removeAt(['a', 'b'], -1)).toEqual(['a']);
+    expect(Arrays.removeAt(['a', 'b'], 2.3)).toEqual(['a', 'b']);
+    expect(Arrays.removeAt(['a'], 0)).toEqual([]);
+  });
+
   test('Arrays.reverse()', () => {
     expect(Arrays.reverse([])).toEqual([]);
     expect(Arrays.reverse(['a'])).toEqual(['a']);

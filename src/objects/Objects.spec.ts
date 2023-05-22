@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import {Objects} from './Objects';
 
 interface User {
@@ -121,6 +125,17 @@ describe('Objects', () => {
     expect(Objects.pick({a: null, b: true}, 'a')).toEqual({a: null});
   });
 
+  test('Objects.serialize()', () => {
+    const json = `{"a":true}`;
+    expect(Objects.serialize({a: !0})).toEqual(json);
+    const json1 = `{"a":null,"b":true}`;
+    expect(Objects.serialize({a: null, b: true, c: undefined})).toEqual(json1);
+    // make sure circular object references are handled
+    const obj = {self: {}};
+    obj.self = obj;
+    expect(Objects.serialize(obj)).toEqual('{}');
+  });
+
   test('Objects.toIterable()', () => {
     const o = {
       a: 'abc',
@@ -132,17 +147,6 @@ describe('Objects', () => {
       expect(['a', 'b', 'c'].includes(key as string)).toEqual(true);
       expect(['abc', 444, true].includes(value)).toEqual(true);
     }
-  });
-
-  test('Objects.toJSON()', () => {
-    const json = `{\n  "a": true\n}`;
-    expect(Objects.toJSON({a: !0})).toEqual(json);
-    const json1 = `{\n  "a": null,\n  "b": true\n}`;
-    expect(Objects.toJSON({a: null, b: true, c: undefined})).toEqual(json1);
-    // make sure circular object references are handled
-    const obj = {self: {}};
-    obj.self = obj;
-    expect(Objects.toJSON(obj)).toEqual('{}');
   });
 
   test('Objects.toMap()', () => {

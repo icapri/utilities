@@ -82,12 +82,14 @@ Numbers.randomInt(1, 8);
 Numbers.toString(123); // "123"
 
 // Objects examples:
-Objects.omit({ a: !0 }, "a")
-Objects.toJSON({ a: null, b: true, c: undefined })
-Objects.isObject({})
-Objects.isNotNull({})
-Objects.pick({ a: null, b: true }, "a")
-Objects.toIterable({ a: 'abc', b: 444, c: true })
+Objects.omit({ a: !0 }, "a"); // {}
+Objects.deserialize('{"a":2,"b":"abc"}'); // {a: 2, b: "abc"}
+Objects.hasProperty({a: true, b: 'abc'}, 'a'); // true
+Objects.isObject({}); // true
+Objects.isNotNull({}); // false
+Objects.pick({ a: null, b: true }, "a");
+Objects.serialize({a: true}); // "{"a":true}"
+Objects.toIterable({ a: 'abc', b: 444, c: true });
 
 // Sets examples:
 Sets.isNotEmpty(new Set()); // false
@@ -133,7 +135,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v1.5.4
+Latest stable: v1.5.5
 
 ## License
 

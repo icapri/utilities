@@ -595,6 +595,32 @@ export abstract class Arrays {
   }
 
   /**
+   * Removes the array item at the specified index and returns an array copy.
+   *
+   * **Example:**
+   * ```typescript
+   * Arrays.removeAt([], 0); // []
+   * Arrays.removeAt(['a'], 0); // []
+   * Arrays.removeAt(['a', 'b'], 1); // ['a']
+   * Arrays.removeAt(['a', 'b', 'c'], 0); // ['b', 'c']
+   * Arrays.removeAt(['a', 'b', 'c'], -1); // ['a', 'b']
+   * ```
+   *
+   * @param {Array} array Contains some array.
+   * @param {Number} index Contains the index of the array item to be removed.
+   * @return {Array} an array.
+   */
+  public static removeAt<T>(array: T[], index: number): T[] {
+    if (Number.isSafeInteger(index) && index < array.length &&
+      index >= array.length * -1) {
+      const copy = Arrays.clone(array);
+      copy.splice(index, 1);
+      return copy;
+    }
+    return array;
+  }
+
+  /**
    * Reverses the specified array.
    *
    * **Example:**

@@ -1,4 +1,5 @@
 import {Utils} from '../Utils';
+import {JsonSerializer} from './JsonSerializer';
 
 /**
  * Gets the object entries.
@@ -87,6 +88,25 @@ export abstract class Objects {
     }
 
     return true;
+  }
+
+  /**
+   * Deserializes a JSON string.
+   *
+   * **Example:**
+   * ```typescript
+   * Objects.deserialize("{}"); // {}
+   * Objects.deserialize('{"a":true}'); // {a: true}
+   * Objects.deserialize('{"a":2,"b":"abc"}'); // {a: 2, b: "abc"}
+   * ```
+   *
+   * @param {String} json Contains some JSON string.
+   * @return {T} a JavaScript value equivalent to the JSON string.
+   *
+   * @since v1.5.5
+   */
+  public static deserialize<T>(json: string): T {
+    return JsonSerializer.deserialize(json);
   }
 
   /**
@@ -335,6 +355,25 @@ export abstract class Objects {
   }
 
   /**
+   * Serializes the specified value i. e. converts it to a JSON string.
+   *
+   * **Example:**
+   * ```typescript
+   * Objects.serialize({}); // "{}"
+   * Objects.serialize({a: true}); // "{"a":true}"
+   * Objects.serialize({a: 2, b: "abc"}); // "{"a":2,"b":"abc"}"
+   * ```
+   *
+   * @param {String} value Contains some value.
+   * @return {String} a JSON string.
+   *
+   * @since v1.5.5
+   */
+  public static serialize<T>(value: T): string {
+    return JsonSerializer.serialize(value);
+  }
+
+  /**
    * Makes the specified object iterable.
    *
    * @param {Object} obj Contains some object.
@@ -349,41 +388,6 @@ export abstract class Objects {
         yield* Object.entries(obj);
       },
     };
-  }
-
-  /**
-   * Converts the specified object to a JSON string. This method also handles
-   * circular object references.
-   *
-   * **Example:**
-   * ```typescript
-   * const obj = {self: {}};
-   * obj.self = obj;
-   *
-   * JSON.stringify(obj); // throws "TypeError: cyclic object value"
-   *
-   * console.log(Objects.toJSON(obj)); // "{}"
-   * ```
-   *
-   * @param {Object} o Contains some object.
-   * @param {String} indent Contains the text indent to be used in the JSON
-   * string. Defaults to `2` white spaces.
-   * @return {String} a JSON string.
-   *
-   * @see `Objects.serialize()`
-   */
-  public static toJSON<T extends object>(
-      o: T, indent: number | string = 2): string {
-    let cache = new WeakSet<object>();
-    const json = JSON.stringify(o, (_, value) => Objects.isObject(value) ?
-      cache.has(value) ?
-        undefined : // circular object reference detected
-        cache.add(value) && value : // Store value in our collection
-      value,
-    indent,
-    );
-    cache = null as unknown as WeakSet<object>;
-    return json;
   }
 
   /**
