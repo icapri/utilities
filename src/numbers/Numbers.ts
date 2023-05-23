@@ -68,6 +68,19 @@ export abstract class Numbers {
   }
 
   /**
+   * Checks whether the specified value equals `NaN`.
+   *
+   * @param {*} value
+   * @return {Boolean} whether the specified value is not a number.
+   *
+   * @since v1.5.6
+   */
+  public static isNotNumber(value?: any): value is typeof Number.NaN {
+    return (typeof value === 'number' && Number.isNaN(value)) ||
+      (Numbers.isNumberObject(value) && Number.isNaN(value.valueOf()));
+  }
+
+  /**
    * Checks whether the given value is a number.
    *
    * @param {*} value Contains some value.

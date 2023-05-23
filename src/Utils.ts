@@ -1,13 +1,44 @@
 import {Objects} from './objects/Objects';
 
 /**
+ * Represents the type of a class.
+ *
+ * @since v1.5.6
+ */
+type ConstructorType<T = any> = new(...args: any[]) => T;
+
+/**
+ * Represents the type of a function.
+ *
+ * @since v1.5.6
+ */
+type FunctionType<T = any> = (...args: any[]) => T;
+
+/**
  * Defines a base utility class.
  */
 export abstract class Utils {
-  /** @private */
+  /**
+   * @constructor
+   *
+   * @private
+   */
   private constructor() {
     throw new Error('Cannot create an instance of an abstract class.');
   }
+
+  /**
+   * Checks whether the specified value is a `Blob` instance.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is a `Blob` instance.
+   *
+   * @since v1.5.6
+   */
+  public static isBlob(value?: any): value is Blob {
+    return Objects.getType(value) === '[object Blob]';
+  }
+
 
   /**
    * Checks whether the given value is of boolean type.
@@ -30,6 +61,18 @@ export abstract class Utils {
   }
 
   /**
+   * Checks whether the specified value is an `Error` instance.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is an error instance.
+   *
+   * @since v1.5.6
+   */
+  public static isError(value?: any): value is Error {
+    return Objects.getType(value) === '[object Error]';
+  }
+
+  /**
    * Checks whether the given value is falsy i. e.: `null`, `undefined`,
    * `false`, `NaN`, `0`, `-0`, `0n` or `''`.
    *
@@ -42,6 +85,24 @@ export abstract class Utils {
       // @ts-expect-error
       null, undefined, false, Number.NaN, 0, -0, 0n, '',
     ].includes(value);
+  }
+
+  /**
+   * Checks whether the specified value is a `File` instance.
+   *
+   * **Example:**
+   * ```typescript
+   * Utils.isFile(null); // false
+   * Utils.isFile(new File([], "abc"); // true
+   * ```
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is a `File` instance.
+   *
+   * @since v1.5.6
+   */
+  public static isFile(value?: any): value is File {
+    return Objects.getType(value) === '[object File]';
   }
 
   /**
@@ -135,6 +196,18 @@ export abstract class Utils {
   }
 
   /**
+   * Checks whether the specified value is a `Promise`.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is a JavaScript `promise`.
+   *
+   * @since v1.5.6
+   */
+  public static isPromise(value?: any): value is Promise<any> {
+    return Objects.getType(value) === '[object Promise]';
+  }
+
+  /**
    * Checks whether the specified value is a regular expression.
    *
    * @param {*} value Contains some value.
@@ -177,3 +250,8 @@ export abstract class Utils {
     return value === undefined || typeof value === 'undefined';
   }
 }
+
+export type {
+  ConstructorType,
+  FunctionType,
+};

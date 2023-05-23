@@ -40,6 +40,15 @@ describe('Numbers', () => {
     expect(Numbers.isNatural(Number.MAX_SAFE_INTEGER + 1)).toEqual(false);
   });
 
+  test('Numbers.isNotNumber()', () => {
+    expect(Numbers.isNotNumber(1)).toEqual(false);
+    expect(Numbers.isNotNumber(3.4e+2)).toEqual(false);
+    expect(Numbers.isNotNumber(Number.NaN)).toEqual(true);
+    expect(Numbers.isNotNumber(0/0)).toEqual(true);
+    expect(Numbers.isNotNumber(Number.POSITIVE_INFINITY)).toEqual(false);
+    expect(Numbers.isNotNumber(Number.MAX_SAFE_INTEGER + 1)).toEqual(false);
+  });
+
   test('Numbers.isNumber()', () => {
     expect(Numbers.isNumber(1)).toEqual(true);
     expect(Numbers.isNumber(3.4e+2)).toEqual(true);

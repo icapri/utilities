@@ -24,6 +24,13 @@ describe('Utils', () => {
     expect(Utils.isDefined([])).toEqual(true);
   });
 
+  test('Utils.isError()', () => {
+    expect(Utils.isError()).toEqual(false);
+    expect(Utils.isError(new SyntaxError('abc'))).toEqual(true);
+    expect(Utils.isError(new TypeError('abc'))).toEqual(true);
+    expect(Utils.isError(new Error('abc'))).toEqual(true);
+  });
+
   test('Utils.isFalsy()', () => {
     expect(Utils.isFalsy(null)).toEqual(true);
     expect(Utils.isFalsy(undefined)).toEqual(true);
@@ -132,6 +139,14 @@ describe('Utils', () => {
     expect(Utils.isPrimitive(55)).toEqual(true);
     expect(Utils.isPrimitive(0)).toEqual(true);
     expect(Utils.isPrimitive({})).toEqual(false);
+  });
+
+  test('Utils.isPromise()', () => {
+    expect(Utils.isPromise()).toEqual(false);
+    expect(Utils.isPromise(/a/gm)).toEqual(false);
+    expect(Utils.isPromise(new RegExp('abc', 'g'))).toEqual(false);
+    expect(Utils.isPromise(Promise.resolve())).toEqual(true);
+    expect(Utils.isPromise(new Promise(() => {}))).toEqual(true);
   });
 
   test('Utils.isRegExp()', () => {

@@ -1,6 +1,6 @@
 {
   "name": "utilitates",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "description": "A library for converting, formatting, parsing, validating and more.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -15,9 +15,21 @@
     "url": "git+https://github.com/icapri/utilities.git"
   },
   "keywords": [
-    "Util",
-    "Utilities",
-    "Utils"
+    "javascript",
+    "typescript",
+    "utils",
+    "util",
+    "utility",
+    "utilities",
+    "validators",
+    "validation",
+    "parsers",
+    "parsing",
+    "converters",
+    "convertion",
+    "formatters",
+    "formatting",
+    "typecheck"
   ],
   "author": "Igli Kapri",
   "license": "MIT",

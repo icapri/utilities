@@ -108,6 +108,15 @@ describe('Objects', () => {
     expect(Objects.isObject(new Object())).toEqual(true);
   });
 
+  test('Objects.isPlainObject()', () => {
+    expect(Objects.isPlainObject({})).toEqual(true);
+    expect(Objects.isPlainObject({a: !0})).toEqual(true);
+    expect(Objects.isPlainObject(null)).toEqual(false);
+    expect(Objects.isPlainObject(undefined)).toEqual(false);
+    // eslint-disable-next-line no-new-object
+    expect(Objects.isPlainObject(new Object())).toEqual(true);
+  });
+
   test('Objects.noNilProps()', () => {
     expect(Objects.noNilProps({})).toEqual(true);
     expect(Objects.noNilProps({a: !0})).toEqual(true);
