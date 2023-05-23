@@ -93,7 +93,7 @@ export abstract class Utils {
    * **Example:**
    * ```typescript
    * Utils.isFile(null); // false
-   * Utils.isFile(new File([], "abc"); // true
+   * Utils.isFile(new File([], "abc")); // true
    * ```
    *
    * @param {*} value Contains some value.
