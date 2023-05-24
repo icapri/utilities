@@ -214,7 +214,7 @@ export abstract class Utils {
    * @return {Boolean} whether the specified value is a regular expression.
    */
   public static isRegExp(value?: any): value is RegExp {
-    return value instanceof RegExp ||
+    return Objects.isObject(value) &&
       Objects.getType(value) === '[object RegExp]';
   }
 
@@ -247,7 +247,7 @@ export abstract class Utils {
    * @return {Boolean} whether the given value is not defined.
    */
   public static isUndefined(value?: any): value is undefined {
-    return value === undefined || typeof value === 'undefined';
+    return value === void 0;
   }
 }
 

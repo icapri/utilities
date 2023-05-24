@@ -17,6 +17,17 @@ function* __entries<T extends object>(o: T): Generator<any[], void, unknown> {
 }
 
 /**
+ * Defines a type for the property descriptors of an object.
+ *
+ * @since v1.5.8
+ */
+type PropertyDescriptors<TObject extends object> = {
+  [TProperty in keyof TObject]: TypedPropertyDescriptor<TObject[TProperty]>;
+} & {
+  [propertyKey: string]: PropertyDescriptor;
+}
+
+/**
  * Defines an abstract class with object utilities.
  */
 export abstract class Objects {
@@ -146,6 +157,30 @@ export abstract class Objects {
    */
   public static equals(a: object, b: object): boolean {
     return a === b;
+  }
+
+  /**
+   * Gets the property descriptors of the specified object.
+   *
+   * @param {Object} obj Contains some object.
+   * @return {PropertyDescriptors} the property descriptors of the specified
+   * object.
+   *
+   * @since v1.5.8
+   */
+  public static getPropertyDescriptors<TObject extends object>(
+      obj: TObject,
+  ): PropertyDescriptors<TObject> {
+    if (Objects.hasProperty(Object, 'getOwnPropertyDescriptors') &&
+      Utils.isFunction(Object.getOwnPropertyDescriptors)) {
+      return Object.getOwnPropertyDescriptors(obj);
+    }
+
+    const descriptors: any = {};
+    Object.keys(obj).forEach((key) => {
+      descriptors[key] = Object.getOwnPropertyDescriptor(obj, key);
+    });
+    return descriptors;
   }
 
   /**
@@ -292,7 +327,7 @@ export abstract class Objects {
    * @return {Boolean} whether the given value is an object.
    */
   public static isObject(value?: any): value is object {
-    return value !== null && typeof value === 'object';
+    return typeof value === 'object' && value !== null;
   }
 
   /**
@@ -442,4 +477,26 @@ export abstract class Objects {
     const values = Object.values(obj);
     return new Set<T[keyof T]>(values);
   }
+
+  /**
+   * Gets the string representation of the specified object.
+   *
+   * **Example:**
+   * ```typescript
+   * Objects.toString(); // "[object Undefined]"
+   * Objects.toString({}); // "[object Object]"
+   * Objects.toString(["a"]); // "[object Array]"
+   * Objects.toString(12345); // "[object Number]"
+   * ```
+   *
+   * @param {*} obj Contains some object.
+   * @return {String} the string representation of the specified object.
+   *
+   * @since v1.5.8
+   */
+  public static toString(obj?: any): string {
+    return Object.prototype.toString.call(obj);
+  }
 }
+
+export type {PropertyDescriptors};

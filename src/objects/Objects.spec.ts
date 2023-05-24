@@ -63,6 +63,33 @@ describe('Objects', () => {
     expect(Objects.equals(x, y)).toEqual(true);
   });
 
+  test('Objects.getPropertyDescriptors()', () => {
+    expect(Objects.getPropertyDescriptors({
+      a: 'abc',
+      b: 123,
+      c: false,
+    })).toEqual({
+      a: {
+        value: 'abc',
+        writable: true,
+        enumerable: true,
+        configurable: true,
+      },
+      b: {
+        value: 123,
+        writable: true,
+        enumerable: true,
+        configurable: true,
+      },
+      c: {
+        value: false,
+        writable: true,
+        enumerable: true,
+        configurable: true,
+      },
+    } );
+  });
+
   test('Objects.hasProperty()', () => {
     const o = {
       a: true,
@@ -170,5 +197,12 @@ describe('Objects', () => {
     const s = new Set();
     s.add(true);
     expect(Objects.toSet({a: true})).toEqual(s);
+  });
+
+  test('Objects.toString()', () => {
+    expect(Objects.toString()).toEqual('[object Undefined]');
+    expect(Objects.toString({})).toEqual('[object Object]');
+    expect(Objects.toString(['a'])).toEqual('[object Array]');
+    expect(Objects.toString(12345)).toEqual('[object Number]');
   });
 });

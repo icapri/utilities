@@ -1,6 +1,7 @@
 import {Arrays} from '../arrays/Arrays';
 import {Chars} from '../chars/Chars';
 import {Numbers} from '../numbers/Numbers';
+import {Objects} from '../objects/Objects';
 import {Utils} from '../Utils';
 
 /**
@@ -429,11 +430,7 @@ export abstract class Strings {
    * @return {String} the default string if the specified string is empty.
    */
   public static defaultIfEmpty(str: string, defaultStr: string): string {
-    if (Strings.isEmpty(str)) {
-      return defaultStr;
-    }
-
-    return str;
+    return Strings.isEmpty(str) ? defaultStr : str;
   }
 
   /**
@@ -558,15 +555,13 @@ export abstract class Strings {
    * substrings.
    */
   public static endsWithAny(str: string, ...substrings: string[]): boolean {
-    if (Arrays.isEmpty(substrings)) {
-      return false;
-    }
-
-    let i = 0;
-    let j = substrings.length - 1;
-    while (i <= j) {
-      if (str.endsWith(substrings[i++]) || str.endsWith(substrings[j--])) {
-        return true;
+    if (Arrays.isNotEmpty(substrings)) {
+      let i = 0;
+      let j = substrings.length - 1;
+      while (i <= j) {
+        if (str.endsWith(substrings[i++]) || str.endsWith(substrings[j--])) {
+          return true;
+        }
       }
     }
 
@@ -673,22 +668,21 @@ export abstract class Strings {
    * case-sensitivity.
    */
   public static equalsIgnoreCase(str1: string, str2: string): boolean {
-    if (str1 === str2) {
-      return true;
-    }
-
-    let l = str1.length;
-    if (l !== str2.length) {
-      return false;
-    }
-
-    let i = 0;
-    while (i <= l - 1) {
-      if (str1.charAt(i).toLowerCase() !== str2.charAt(i).toLowerCase() ||
-        str1.charAt(l).toLowerCase() !== str2.charAt(l).toLowerCase()) {
+    if (str1 !== str2) {
+      let l = str1.length;
+      if (l !== str2.length) {
         return false;
       }
-      i++; l--;
+
+      let i = 0;
+      while (i <= l - 1) {
+        if (str1.charAt(i).toLowerCase() !== str2.charAt(i).toLowerCase() ||
+        str1.charAt(l).toLowerCase() !== str2.charAt(l).toLowerCase()) {
+          return false;
+        }
+        i++;
+        l--;
+      }
     }
 
     return true;
@@ -712,7 +706,8 @@ export abstract class Strings {
    */
   public static equalsAny(str: string, ...substrings: string[]): boolean {
     if (substrings.length > 0) {
-      let i = 0; let j = substrings.length - 1;
+      let i = 0;
+      let j = substrings.length - 1;
       while (i <= j) {
         if (str === substrings[i++] || str === substrings[j--]) {
           return true;
@@ -746,7 +741,8 @@ export abstract class Strings {
   ): boolean {
     const lowerStr = str.toLowerCase();
     if (substrings.length > 0) {
-      let i = 0; let j = substrings.length - 1;
+      let i = 0;
+      let j = substrings.length - 1;
       while (i <= j) {
         if (lowerStr === substrings[i++].toLowerCase() ||
           lowerStr === substrings[j--].toLowerCase()) {
@@ -873,27 +869,24 @@ export abstract class Strings {
    * @return {Boolean} whether the given string has whitespaces.
    */
   public static hasWhitespace(str: string): boolean {
-    if (Strings.isEmpty(str)) {
-      return false;
-    }
-
-    const l = str.length;
-    if (l === 1) {
-      const c = str.charAt(0);
-      if (Chars.isWhitespace(c)) {
-        return true;
+    if (Strings.isNotEmpty(str)) {
+      const l = str.length;
+      if (l === 1) {
+        const c = str.charAt(0);
+        if (Chars.isWhitespace(c)) {
+          return true;
+        }
       }
-    }
-
-    let i = 0;
-    let j = l - 1;
-
-    while (i <= j) {
-      if (Chars.isWhitespace(str.charAt(i)) ||
+      let i = 0;
+      let j = l - 1;
+      while (i <= j) {
+        if (Chars.isWhitespace(str.charAt(i)) ||
         Chars.isWhitespace(str.charAt(j))) {
-        return true;
+          return true;
+        }
+        i++;
+        j--;
       }
-      i++; j--;
     }
 
     return false;
@@ -920,7 +913,9 @@ export abstract class Strings {
   public static indexOf(str: string, substring: string): number {
     const m = str.length;
     const n = substring.length;
-    if (n === 0) return 0;
+    if (n === 0) {
+      return 0;
+    }
     if (n <= m) {
       let i = 0;
       while (i < m) {
@@ -960,7 +955,9 @@ export abstract class Strings {
       let i = 0;
       while (i < l) {
         const index = Strings.indexOf(str, substrings[i++]);
-        if (index >= 0) return index;
+        if (index >= 0) {
+          return index;
+        }
       }
     }
 
@@ -1077,15 +1074,14 @@ export abstract class Strings {
   public static isAlpha(str: string): boolean {
     let i = 0;
     let j = str.length - 1;
-    if (j < 0) return false;
+    if (j < 0) {
+      return false;
+    }
     while (i <= j) {
       const ci = str.charCodeAt(i++);
       const cj = str.charCodeAt(j--);
-      if (!(ci > 64 && ci < 91) && !(ci > 96 && ci < 123)) {
-        return false;
-      }
-
-      if (!(cj > 64 && cj < 91) && !(cj > 96 && cj < 123)) {
+      if ((!(ci > 64 && ci < 91) && !(ci > 96 && ci < 123)) ||
+        (!(cj > 64 && cj < 91) && !(cj > 96 && cj < 123))) {
         return false;
       }
     }
@@ -1431,7 +1427,8 @@ export abstract class Strings {
         if (!Chars.isDigit(str.charAt(i)) || !Chars.isDigit(str.charAt(j))) {
           return false;
         }
-        i++; j--;
+        i++;
+        j--;
       }
     }
 
@@ -1478,8 +1475,7 @@ export abstract class Strings {
    * @return {Boolean} whether the specified value is a string object.
    */
   public static isStringObject(str?: any): str is String {
-    const proto = Object.prototype.toString.call(str);
-    return proto === '[object String]' && typeof str === 'object';
+    return Objects.isObject(str) && Objects.getType(str) === '[object String]';
   }
 
   /**
@@ -1652,7 +1648,9 @@ export abstract class Strings {
   public static lastIndexOf(str: string, substring: string): number {
     const m = str.length;
     const n = substring.length;
-    if (n === 0) return 0;
+    if (n === 0) {
+      return 0;
+    }
     if (n <= m) {
       let i = m;
       while (i >= 0) {
@@ -1946,7 +1944,9 @@ export abstract class Strings {
    * @return {String} a string.
    */
   public static removeEnd(str: string, substring: string): string {
-    const l = str.length; const sl = substring.length;
+    const l = str.length;
+    const sl = substring.length;
+
     if (l === 0 || sl === 0) {
       return str;
     }
@@ -2141,14 +2141,13 @@ export abstract class Strings {
    * specified substrings.
    */
   public static startsWithAny(str: string, ...substrings: string[]): boolean {
-    let i = 0; const l = substrings.length;
-    if (l === 0) {
-      return false;
-    }
-
-    while (i < l) {
-      if (Strings.indexOf(str, substrings[i++]) === 0) {
-        return true;
+    let i = 0;
+    const l = substrings.length;
+    if (l > 0) {
+      while (i < l) {
+        if (Strings.indexOf(str, substrings[i++]) === 0) {
+          return true;
+        }
       }
     }
 
@@ -2217,7 +2216,9 @@ export abstract class Strings {
    */
   public static toBytesArray(str: string): Uint8Array {
     const strLength = str.length;
-    let arrayLength = 0; let i = 0; let p: number;
+    let arrayLength = 0;
+    let i = 0;
+    let p: number;
 
     for (; i < strLength; i++) {
       p = str.codePointAt(i) as number;

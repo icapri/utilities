@@ -140,7 +140,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v1.5.7
+Latest stable: v1.5.8
 
 ## License
 
