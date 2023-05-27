@@ -304,8 +304,17 @@ describe('Strings', () => {
   });
 
   test('Strings.getBytes()', () => {
+    expect(Strings.getBytes('')).toEqual(0);
+    expect(Strings.getBytes('🤔 abc')).toEqual(8);
     expect(Strings.getBytes('Lorem')).toEqual(5);
     expect(Strings.getBytes('sdcscdcsdsd')).toEqual(11);
+    expect(Strings.getBytes('🤔 🙃'))
+        .toEqual((new TextEncoder()).encode('🤔 🙃').length);
+    expect(Strings.getBytes('\u0663\u0664\u0665\u0666'))
+        .toEqual((new TextEncoder()).encode('\u0663\u0664\u0665\u0666').length);
+    expect(Strings.getBytes('\u0663\u0664\u0665\u0666AbFeE'))
+        .toEqual((new TextEncoder()).encode(
+            '\u0663\u0664\u0665\u0666AbFeE').length);
   });
 
   test('Strings.hasWhitespace()', () => {

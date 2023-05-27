@@ -19,5 +19,16 @@
     "ignorePatterns": [
         "lib/**/*",
         "src/**/*.js"
+    ],
+    "overrides": [
+        {
+            "files": [
+                "*.js",
+                "*.ts"
+            ],
+            "rules": {
+                "one-var": "off"
+            }
+        }
     ]
 }

@@ -826,12 +826,33 @@ export abstract class Strings {
   /**
    * Gets the string bytes.
    *
+   * **Example:**
+   * ```typescript
+   * Strings.getBytes(""); // 0
+   * Strings.getBytes("abc"); // 3
+   * Strings.getBytes("🤔 🙃"); // 9
+   * Strings.getBytes("🤔 abc"); 8
+   * ```
+   *
    * @param {String} str Contains some string.
    * @return {Number} the string bytes.
    */
   public static getBytes(str: string): number {
-    const encoder = new TextEncoder();
-    return encoder.encode(str).length;
+    const l = str.length;
+    let i = 0, c = 0, p, n;
+    for (; i < l; i++) {
+      p = str.charCodeAt(i);
+      if (p >= 0xD800 && p < 0xE000 && p < 0xDC00 && i + 1 < l) {
+        n = str.charCodeAt(i + 1);
+        if (n >= 0xDC00 && n < 0xE000) {
+          c += 4;
+          i++;
+        }
+      } else {
+        c += (p < 0x80 ? 1 : (p < 0x800 ? 2 : 3));
+      }
+    }
+    return c;
   }
 
   /**

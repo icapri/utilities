@@ -128,8 +128,13 @@ export abstract class Numbers {
    * @return {Boolean} whether the specified number is a prime number.
    */
   public static isPrime(num: number): boolean {
-    let i = 2; const s = Math.sqrt(num);
-    for (; i <= s; i++) if (num % i === 0) return false;
+    let i = 2;
+    const s = Math.sqrt(num);
+    for (; i <= s; i++) {
+      if (num % i === 0) {
+        return false;
+      }
+    }
     return num > 1;
   }
 
