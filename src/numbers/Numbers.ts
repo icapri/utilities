@@ -4,7 +4,11 @@ import {Objects} from '../objects/Objects';
  * Defines an abstract class with number utilities.
  */
 export abstract class Numbers {
-  /** @private */
+  /**
+   * @constructor
+   *
+   * @private
+   */
   private constructor() {
     throw new Error('Cannot create an instance of an abstract class.');
   }
@@ -94,7 +98,7 @@ export abstract class Numbers {
    * Checks whether the specified value is an instance of the `Number`
    * object.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Numbers.isNumberObject(); // false
    * Numbers.isNumberObject(5); // false
@@ -164,7 +168,7 @@ export abstract class Numbers {
   /**
    * Converts the specified number to string.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Numbers.toString(123); // "123"
    * Numbers.toString(12.3); // "12.3"

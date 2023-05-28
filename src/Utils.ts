@@ -90,7 +90,7 @@ export abstract class Utils {
   /**
    * Checks whether the specified value is a `File` instance.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Utils.isFile(null); // false
    * Utils.isFile(new File([], "abc")); // true

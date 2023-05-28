@@ -4,7 +4,11 @@ import {Objects} from '../objects/Objects';
  * Defines an abstract class with set utilities.
  */
 export abstract class Sets {
-  /** @private */
+  /**
+   * @constructor
+   *
+   * @private
+   */
   private constructor() {
     throw new Error('Cannot create an instance of an abstract class.');
   }

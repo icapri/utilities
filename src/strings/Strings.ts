@@ -21,7 +21,11 @@ export abstract class Strings {
    */
   private static readonly NOT_FOUND: number = -1 as const;
 
-  /** @private */
+  /**
+   * @constructor
+   *
+   * @private
+   */
   private constructor() {
     throw new Error('Cannot create an instance of an abstract class.');
   }
@@ -31,7 +35,7 @@ export abstract class Strings {
    * The rest of characters are replaced by some user-defined marker string
    * or the default marker i. e. ellipsis "...".
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.abbreviate("", 2); // ""
    * Strings.abbreviate("a", 1); // "a"
@@ -64,7 +68,7 @@ export abstract class Strings {
    * Appends the specified suffix to the given string if the given string
    * doesn't end with it.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.appendIfMissing("", ""); // ""
    * Strings.appendIfMissing("abc", "def"); // "abcdef"
@@ -94,7 +98,7 @@ export abstract class Strings {
   /**
    * Gets the character at the specified index in the specified string.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.at("", 0); // ""
    * Strings.at(" ", 0); // " "
@@ -119,7 +123,7 @@ export abstract class Strings {
    * Removes a newline from the end of the specified string if there
    * is such one.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.chomp(''); // ""
    * Strings.chomp('\n'); // ""
@@ -160,7 +164,7 @@ export abstract class Strings {
   /**
    * Removes the last character from the specified string.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.chop(''); // ""
    * Strings.chop('\n\r'); // "\n"
@@ -219,7 +223,7 @@ export abstract class Strings {
   /**
    * Contains whether the specified string contains the given substring.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.contains("", ""); // true
    * Strings.contains(" ", ""); // true
@@ -251,7 +255,7 @@ export abstract class Strings {
    * Checks whether the specified string contains either of the given
    * substrings.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.containsAny(""); // false
    * Strings.containsAny("", ""); // true
@@ -283,7 +287,7 @@ export abstract class Strings {
    * Checks whether the specified string contains the specified substring by
    * ignoring case sensitivity.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.containsIgnoreCase("", ""); // true
    * Strings.containsIgnoreCase("\n\n", ""); // true
@@ -304,7 +308,7 @@ export abstract class Strings {
    * Checks whether the specified string contains none of the specified
    * substrings.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.containsNone("abc"); // true
    * Strings.containsNone("", "de", "bc"); // true
@@ -337,7 +341,7 @@ export abstract class Strings {
    * Gets the number of times the specified substring appears in the
    * specified string.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.countMatches("", ""); // 0
    * Strings.countMatches("", "ho"); // 0
@@ -376,9 +380,31 @@ export abstract class Strings {
   }
 
   /**
+   * Decapitalizes the specified string if it begins with a capital letter.
+   *
+   * **Usage Examples:**
+   * ```typescript
+   * Strings.decapitalize(""); // ""
+   * Strings.decapitalize("\n"); // "\n"
+   * Strings.decapitalize("Abc"); // "abc"
+   * Strings.decapitalize("ABC"); // "aBC"
+   * ```
+   *
+   * @param {String} str Contains some string.
+   * @return {String} the decapitalized string.
+   */
+  public static decapitalize(str: string): string {
+    if (str.length === 0) {
+      return Strings.EMPTY;
+    }
+
+    return str.charAt(0).toLowerCase() + str.slice(1);
+  }
+
+  /**
    * Decodes a string encoded using Base64.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.decode("27Hbstuz"); // "۱۲۳"
    * Strings.decode("2aMgaXMgMyBpbiBBcmFiaWM="); // "٣ is 3 in Arabic"
@@ -418,7 +444,7 @@ export abstract class Strings {
   /**
    * Returns the default string if the specified string is empty.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.defaultIfEmpty("", ""); // ""
    * Strings.defaultIfEmpty("", " "); // " "
@@ -437,7 +463,7 @@ export abstract class Strings {
    * Gets the part of the second string which is not contained in the
    * first string or vice-versa.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.difference("abc", "abc"); // ""
    * Strings.difference("abc ", "abc"); // " "
@@ -465,7 +491,7 @@ export abstract class Strings {
   /**
    * Encodes the specified string using Base64 encoding.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.encode("\u06f1\u06f2\u06f3"); // "27Hbstuz"
    * Strings.encode("\u0663 is 3 in Arabic"); // "2aMgaXMgMyBpbiBBcmFiaWM="
@@ -510,7 +536,7 @@ export abstract class Strings {
   /**
    * Checks whether the specified string ends with the given substring.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.endsWith("", "ab"); // false
    * Strings.endsWith("abc", "c"); // true
@@ -541,7 +567,7 @@ export abstract class Strings {
    * Checks whether the specified string ends with either of the specified
    * substrings.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.endsWithAny(""); // false
    * Strings.endsWithAny("abc"); // false
@@ -572,7 +598,7 @@ export abstract class Strings {
    * Checks whether the specified string ends with the specified substring
    * by ignoring case-sensitivity.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.endsWithIgnoreCase("", ""); // true
    * Strings.endsWithIgnoreCase("abc", ""); // true
@@ -593,7 +619,7 @@ export abstract class Strings {
    * Checks whether the specified string ends with neither of the specified
    * substrings.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.endsWithNone(""); // false
    * Strings.endsWithNone("", "abc"); // true
@@ -655,7 +681,7 @@ export abstract class Strings {
    * Checks whether the two specified strings equal by ignoring case
    * sensitivity.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.equalsIgnoreCase("", ""); // true
    * Strings.equalsIgnoreCase("abc", "aBC"); // true
@@ -691,7 +717,7 @@ export abstract class Strings {
   /**
    * Checks whether the specified string equals any of the specified substrings.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.equalsAny(""); // false
    * Strings.equalsAny("", ""); // true
@@ -722,7 +748,7 @@ export abstract class Strings {
    * Checks whether the specified string equals either of the specified
    * substrings by ignoring case-sensitivity.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.equalsAnyIgnoreCase(""); // false
    * Strings.equalsAnyIgnoreCase("", ""); // true
@@ -758,7 +784,7 @@ export abstract class Strings {
    * Converts a binary string to Unicode in case it has previously
    * contained Unicode.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.fromBinary(Strings.decode('PsOYFMOdIAA9w5hDw54=')); // "🤔 🙃"
    * ```
@@ -826,7 +852,7 @@ export abstract class Strings {
   /**
    * Gets the string bytes.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.getBytes(""); // 0
    * Strings.getBytes("abc"); // 3
@@ -875,7 +901,7 @@ export abstract class Strings {
   /**
    * Checks whether the given string has whitespaces.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.hasWhitespace("Lorem"); // false
    * Strings.hasWhitespace("Lor em"); // true
@@ -917,7 +943,7 @@ export abstract class Strings {
    * Gets the index of the specified substring in the specified string. If
    * the specified substring is not contained in it, -1 is returned.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.indexOf("", ""); // 0
    * Strings.indexOf("abc", ""); // 0
@@ -956,7 +982,7 @@ export abstract class Strings {
    * Gets the first index of any of the specified substrings in the
    * specified string.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.indexOfAny(""); // -1
    * Strings.indexOfAny("abc"); // -1
@@ -989,7 +1015,7 @@ export abstract class Strings {
    * Gets the first index at which the characters of both strings begin
    * to differ. If both strings are equal, the method returns -1.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.indexOfDifference("", ""); // -1
    * Strings.indexOfDifference("", "a"); // 0
@@ -1028,7 +1054,7 @@ export abstract class Strings {
    * This method is case-insensitive. If the specified substring is not
    * contained in the given string, -1 is returned.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.indexOfIgnoreCase("", ""); // 0
    * Strings.indexOfIgnoreCase("abc", ""); // 0
@@ -1048,7 +1074,7 @@ export abstract class Strings {
   /**
    * Checks whether the specified string is all blank i. e. white space.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.isAllBlank(''); // true
    * Strings.isAllBlank(' '); // true
@@ -1057,9 +1083,7 @@ export abstract class Strings {
    * Strings.isAllBlank('\r'); // true
    * Strings.isAllBlank('\f'); // true
    * Strings.isAllBlank('\f\n'); // true
-   * Strings.isAllBlank('\f\r'); // true
    * Strings.isAllBlank('\t\r\f'); // true
-   * Strings.isAllBlank('\f\t\r\n\n'); // true
    * Strings.isAllBlank('\f\t\r\n\na'); // false
    * ```
    *
@@ -1077,7 +1101,7 @@ export abstract class Strings {
    * Checks whether the specified string contains only lowercase and
    * uppercase letters a - z and A - Z.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.isAlpha(''); // false
    * Strings.isAlpha('a'); // true
@@ -1113,7 +1137,7 @@ export abstract class Strings {
   /**
    * Checks whether the specified string is an alphanumeric string.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.isAlphanumeric(''); // false
    * Strings.isAlphanumeric('a'); // true
@@ -1154,7 +1178,7 @@ export abstract class Strings {
   /**
    * Checks whether any of the specified strings is blank.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.isAnyBlank(); // true
    * Strings.isAnyBlank(''); // true
@@ -1186,7 +1210,7 @@ export abstract class Strings {
    * Checks whether the given string is binary i. e. each character of the
    * string occupies only one byte.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.isBinary('☻'); // false
    * Strings.isBinary(''); // true
@@ -1204,7 +1228,7 @@ export abstract class Strings {
   /**
    * Checks whether the specified string is empty/blank.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.isBlank(""); // true
    * Strings.isBlank(" "); // false
@@ -1223,7 +1247,7 @@ export abstract class Strings {
   /**
    * Checks whether the specified string is empty/blank.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.isEmpty(""); // true
    * Strings.isEmpty(" "); // false
@@ -1243,7 +1267,7 @@ export abstract class Strings {
    * Checks whether all the characters of the specified string are
    * lowercase.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.isLowerCase(""); // true
    * Strings.isLowerCase("123"); // true
@@ -1273,7 +1297,7 @@ export abstract class Strings {
    * Checks whether the specified string contains at least one uppercase
    * and one lowercase character.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.isMixedCase(''); // false
    * Strings.isMixedCase(' '); // false
@@ -1319,7 +1343,7 @@ export abstract class Strings {
   /**
    * Checks  whether the given string value is `null`, `undefined` or `""`.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.isNilOrEmpty(); // true
    * Strings.isNilOrEmpty(""); // true
@@ -1342,7 +1366,7 @@ export abstract class Strings {
   /**
    * Checks whether the given string is `null`, `undefined` or white space.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.isNilOrWhitespace(); // true
    * Strings.isNilOrWhitespace(""); // true
@@ -1364,7 +1388,7 @@ export abstract class Strings {
   /**
    * Checks whether the specified string is not empty.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.isNotEmpty(""); // false
    * Strings.isNotEmpty(" "); // true
@@ -1381,7 +1405,7 @@ export abstract class Strings {
   /**
    * Checks whether the specified string is equal to `null` or `""`.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.isNullOrEmpty(""); // true
    * Strings.isNullOrEmpty(null); // true
@@ -1399,7 +1423,7 @@ export abstract class Strings {
   /**
    * Checks whether the specified string is equal to `null` or white space.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.isNullOrWhitespace(""); // true
    * Strings.isNullOrWhitespace(" "); // true
@@ -1419,7 +1443,7 @@ export abstract class Strings {
   /**
    * Checks whether the specified string represents a stringified number.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.isNumeric(""); // false
    * Strings.isNumeric("1e3"); // true
@@ -1459,7 +1483,7 @@ export abstract class Strings {
   /**
    * Checks whether the specified value is a string.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.isString(); // false
    * Strings.isString(""); // true
@@ -1480,7 +1504,7 @@ export abstract class Strings {
   /**
    * Checks whether the specified value is a string object i. e. `String`.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.isStringObject(); // false
    * Strings.isStringObject(""); // false
@@ -1507,7 +1531,7 @@ export abstract class Strings {
    * surrogate" with another in range from U+DC00 to U+DFFF a. k. a. "low
    * surrogate".
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.isSurrogatePair("🐑🐑🐑😀💖", 0); // true
    * Strings.isSurrogatePair("😀💖", 0); // true
@@ -1540,7 +1564,7 @@ export abstract class Strings {
    * Checks whether all the characters of the specified string are
    * upper case.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.isUpperCase(""); // true
    * Strings.isUpperCase("123"); // true
@@ -1569,7 +1593,7 @@ export abstract class Strings {
   /**
    * Checks whether the specified string is all blank i. e. white space.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.isWhitespace(""); // true
    * Strings.isWhitespace(" "); // true
@@ -1619,7 +1643,7 @@ export abstract class Strings {
   /**
    * Concatenates the specified string with other strings.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.join("abc"); // "abc"
    * Strings.join("abc", ""); // "abc"
@@ -1653,7 +1677,7 @@ export abstract class Strings {
    * Gets the last index at which the specified substring is found in the
    * specified string.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.lastIndexOf("", ""); // 0
    * Strings.lastIndexOf("abc", ""); // 0
@@ -1690,7 +1714,7 @@ export abstract class Strings {
    * Gets the last index at which the specified substring is found in the
    * given string by ignoring case-sensitivity.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.lastIndexOfIgnoreCase("", ""); // 0
    * Strings.lastIndexOfIgnoreCase("abc", ""); // 0
@@ -1710,7 +1734,7 @@ export abstract class Strings {
   /**
    * Gets the `length` leftmost characters of the specified string.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.left("abc", 2); // "ab"
    * Strings.left("abc", 5); // "abc"
@@ -1737,7 +1761,7 @@ export abstract class Strings {
   /**
    * Gets the longest of the specified strings.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.longest(); // ""
    * Strings.longest(""); // ""
@@ -1784,7 +1808,7 @@ export abstract class Strings {
   /**
    * Converts the specified string to upper case.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.toLowerCase(""); // ""
    * Strings.toLowerCase("abc"); // "abc"
@@ -1802,7 +1826,7 @@ export abstract class Strings {
    * Normalizes the string white spaces i. e. if there are more than one
    * consecutive white space, only one of them remains.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.normalize("  "); // ""
    * Strings.normalize("  Bye    -  bye   ! "); // "Bye - bye !"
@@ -1834,7 +1858,7 @@ export abstract class Strings {
   /**
    * Appends the specified prefix to the beginning of the given string.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.prepend("a", ""); // "a"
    * Strings.prepend("", "abc"); // "abc"
@@ -1853,7 +1877,7 @@ export abstract class Strings {
    * Appends the specified prefix to the beginning of the given string in
    * case it does not begin with it.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.prependIfMissing("", "abc"); // "abc"
    * Strings.prependIfMissing("a", "bc"); // "bca"
@@ -1885,7 +1909,7 @@ export abstract class Strings {
    * Appends the specified prefix to the beginning of the string in case
    * the string does not begin with it by ignoring case-sensitivity.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.prependIfMissingIgnoreCase("", "abc"); // "abc"
    * Strings.prependIfMissingIgnoreCase("a", "bc"); // "bca"
@@ -1909,7 +1933,7 @@ export abstract class Strings {
    * Removes all the string parts in the specified string which match the
    * specified substring.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.remove("", ""); // "--"
    * Strings.remove("  ", " "); // "--"
@@ -1953,7 +1977,7 @@ export abstract class Strings {
    * Removes the specified substring from the given string if the string
    * ends with it; otherwise simply returns the given string.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.removeEnd("", "abc"); // ""
    * Strings.removeEnd("abc", ""); // "abc"
@@ -1984,7 +2008,7 @@ export abstract class Strings {
    * with it by ignoring case-sensitivity; otherwise simply returns the given
    * string.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.removeEndIgnoreCase("", "abc"); // ""
    * Strings.removeEndIgnoreCase("abc", ""); // "abc"
@@ -2012,7 +2036,7 @@ export abstract class Strings {
   /**
    * Removes all the white spaces from the specified string.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.removeWhitespace(""); // ""
    * Strings.removeWhitespace(" "); // ""
@@ -2050,7 +2074,7 @@ export abstract class Strings {
   /**
    * Repeats the specified string the given number of times.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.repeat("", 10); // ""
    * Strings.repeat(" ", 1); // " "
@@ -2089,7 +2113,7 @@ export abstract class Strings {
   /**
    * Reverses the specified string.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.reverse(""); // ""
    * Strings.reverse("cba"); // "abc"
@@ -2108,7 +2132,7 @@ export abstract class Strings {
   /**
    * Checks whether the specified string starts with the specified substring.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.startsWith("", "") // true
    * Strings.startsWith("abc", "ab") // true
@@ -2144,7 +2168,7 @@ export abstract class Strings {
    * Checks whether the specified string starts with any of the specified
    * substrings.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.startsWithAny(""); // false
    * Strings.startsWithAny("", ""); // true
@@ -2179,7 +2203,7 @@ export abstract class Strings {
    * Removes the white spaces from the beginning and from the end of the
    * specified string.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.strip(""); // ""
    * Strings.strip(" "); // ""
@@ -2201,7 +2225,7 @@ export abstract class Strings {
    * Unicode characters. A binary string is a string in which each 16-bit
    * unit occupies only 1 byte.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * const binary = Strings.toBinary("🤔 🙃");
    * Strings.encode(binary); // "PtgU3SAAPdhD3g=="
@@ -2295,7 +2319,7 @@ export abstract class Strings {
   /**
    * Converts the specified string to camel-case.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.toCamelCase(""); // ""
    * Strings.toCamelCase("\n\t\n"); // ""
@@ -2306,39 +2330,13 @@ export abstract class Strings {
    * @return {String} the specified string converted to camel-case.
    */
   public static toCamelCase(str: string): string {
-    const length = str.length;
-    if (length === 0 || Strings.isWhitespace(str)) {
-      return Strings.EMPTY;
-    }
-
-    let index = 0; // the index of the char
-    let camelCase = Strings.EMPTY;
-
-    while (index < length) {
-      const char = str.charAt(index);
-      const charLower = char.toLowerCase();
-      if (Chars.isWhitespace(char)) {
-        index++;
-        continue;
-      }
-
-      const isPrevSpace = Chars.isWhitespace(str.charAt(index - 1));
-      if (isPrevSpace) {
-        const empty = camelCase.length === 0;
-        camelCase += empty ? charLower : char.toUpperCase();
-      } else {
-        camelCase += index === 0 ? charLower : char;
-      }
-      index++;
-    }
-
-    return Strings.trim(camelCase);
+    return Strings.decapitalize(Strings.toPascalCase(str));
   }
 
   /**
    * Converts the specified string to an array of characters.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.toCharArray(''); // []
    * Strings.toCharArray('abc'); // ['a', 'b', 'c']
@@ -2353,9 +2351,53 @@ export abstract class Strings {
   }
 
   /**
+   * Converts the specified string to constant-case.
+   *
+   * **Usage Examples:**
+   * ```typescript
+   * Strings.toConstantCase(""); // ""
+   * Strings.toConstantCase("ABC"); // "ABC"
+   * Strings.toConstantCase("aBC\nDeF"); // "ABC_DEF"
+   * ```
+   *
+   * @param {String} str Contains some string.
+   * @return {String} the specified string converted to constant-case.
+   *
+   * @since v1.5.10
+   */
+  public static toConstantCase(str: string): string {
+    const length = str.length;
+    if (length === 0 || Strings.isWhitespace(str)) {
+      return Strings.EMPTY;
+    }
+
+    let index = 0, constantCase = Strings.EMPTY;
+    while (index < length) {
+      const char = str.charAt(index);
+      const charUpper = char.toUpperCase();
+      if (Chars.isWhitespace(char)) {
+        index++;
+        continue;
+      }
+
+      const isPrevSpace = Chars.isWhitespace(str.charAt(index - 1));
+      const empty = constantCase.length === 0;
+      if (isPrevSpace && !empty) {
+        constantCase += '_'.concat(charUpper);
+      } else {
+        constantCase += charUpper;
+      }
+
+      index++;
+    }
+
+    return Strings.trim(constantCase);
+  }
+
+  /**
    * Converts the specified string to kebab-case.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.toKebabCase(""); // ""
    * Strings.toKebabCase("ABC"); // "abc"
@@ -2399,11 +2441,12 @@ export abstract class Strings {
   /**
    * Converts the specified string to pascal-case.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.toPascalCase(""); // ""
    * Strings.toPascalCase("  "); // ""
    * Strings.toPascalCase("abc def"); // "AbcDef"
+   * Strings.toPascalCase("abc_def"); // "AbcDef"
    * ```
    *
    * @param {String} str Contains some string.
@@ -2411,33 +2454,27 @@ export abstract class Strings {
    */
   public static toPascalCase(str: string): string {
     const length = str.length;
-    if (length === 0 || Strings.isWhitespace(str)) {
+    if (length === 0) {
       return Strings.EMPTY;
     }
 
-    let index = 0;
-    let pascalCase = Strings.EMPTY;
-
-    while (index < length) {
-      const char = str.charAt(index);
-      const isSpace = Chars.isWhitespace(char);
-      if (isSpace) {
-        index++;
-        continue;
+    let i = 0, c, p, r = '';
+    while (i < length) {
+      c = str.charAt(i);
+      if (!Chars.isWhitespace(c) && c !== '_' && c !== '-') {
+        p = str.charAt(i - 1);
+        r += i === 0 || Chars.isWhitespace(p) || p === '_' || p === '-' ?
+          c.toUpperCase() : c.toLowerCase();
       }
-      const isPrevSpace = Chars.isWhitespace(str.charAt(index - 1));
-      const empty = pascalCase.length === 0;
-      pascalCase += isPrevSpace || empty ? char.toUpperCase() : char;
-      index++;
+      i++;
     }
-
-    return Strings.trim(pascalCase);
+    return r;
   }
 
   /**
    * Converts the specified string to snake-case.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.toSnakeCase(""); // ""
    * Strings.toSnakeCase("ABC"); // "abc"
@@ -2485,7 +2522,7 @@ export abstract class Strings {
    * of the words between spaces is capitalized and the rest is converted
    * to lowercase.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.toTitleCase(""); // ""
    * Strings.toTitleCase("aBc"); // "Abc"
@@ -2530,7 +2567,7 @@ export abstract class Strings {
    * Removes the whitespaces both from the beginning and from the
    * end of the specified string.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.trim(""); // ""
    * Strings.trim(" "); // ""
@@ -2579,7 +2616,7 @@ export abstract class Strings {
   /**
    * Converts the specified string to uppercase.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.upperCase(""); // ""
    * Strings.upperCase("ABC"); // "ABC"
@@ -2596,7 +2633,7 @@ export abstract class Strings {
   /**
    * Capitalizes the specified string.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Strings.capitalize("john"); // "John"
    * Strings.capitalize("jOHN"); // "JOHN"

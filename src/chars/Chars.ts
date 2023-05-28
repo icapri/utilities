@@ -81,7 +81,11 @@ export abstract class Chars {
    */
   public static readonly VT: string = '\v' as const;
 
-  /** @private */
+  /**
+   * @constructor
+   *
+   * @private
+   */
   private constructor() {
     throw new Error('Cannot create an instance of an abstract class.');
   }
@@ -89,7 +93,7 @@ export abstract class Chars {
   /**
    * Checks whether the specified character is alpha (a-z or A-Z).
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isAlpha('a'); // true
    * Chars.isAlpha('B'); // true
@@ -110,7 +114,7 @@ export abstract class Chars {
   /**
    * Checks whether the specified character is a lowercase letter (a-z).
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isAlphaLower('a'); // true
    * Chars.isAlphaLower('B'); // false
@@ -134,7 +138,7 @@ export abstract class Chars {
   /**
    * Checks whether the specified character is an uppercase letter (A-Z).
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isAlphaLower('a'); // true
    * Chars.isAlphaLower('B'); // false
@@ -158,7 +162,7 @@ export abstract class Chars {
   /**
    * Checks whether the specified character is an Arabic digit.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isArabicDigit('\u0660'); // true
    * Chars.isArabicDigit('\u0661'); // true
@@ -192,7 +196,7 @@ export abstract class Chars {
   /**
    * Checks whether the specified character is [ASCII](https://www.ascii-code.com/).
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isASCII('a'); // true
    * Chars.isASCII('f'); // true
@@ -219,7 +223,7 @@ export abstract class Chars {
   /**
    * Checks whether the specified character is an ASCII control character.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isASCIIControl(Chars.NUL); // true
    * Chars.isASCIIControl(Chars.BS); // true
@@ -250,7 +254,7 @@ export abstract class Chars {
   /**
    * Checks whether the specified character is a printable character.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isASCIIPrintable('0'); // true
    * Chars.isASCIIPrintable('a'); // true
@@ -275,7 +279,7 @@ export abstract class Chars {
   /**
    * Checks whether the specified character is a digit.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isDigit(''); // false
    * Chars.isDigit('3'); // true
@@ -308,7 +312,7 @@ export abstract class Chars {
    * surrogate character is a 16-bit code character between `U+D800`
    * and `U+DBFF`.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isHighSurrogate(''); // false
    * Chars.isHighSurrogate('😀'); // true
@@ -327,7 +331,7 @@ export abstract class Chars {
   /**
    * Checks whether the specified character is a Hindu digit.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isHinduDigit(''); // true
    * Chars.isHinduDigit('0'); // true
@@ -361,7 +365,7 @@ export abstract class Chars {
   /**
    * Checks whether the specified character is a letter.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isLetter('c'); // true
    * Chars.isLetter('Ā'); // true
@@ -389,7 +393,7 @@ export abstract class Chars {
   /**
    * Checks whether the specified character is either letter or digit.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isLetterOrDigit('c'); // true
    * Chars.isLetterOrDigit('Ā'); // true
@@ -421,7 +425,7 @@ export abstract class Chars {
   /**
    * Checks whether the specified character is lowercase.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isLowerCase(''); // false
    * Chars.isLowerCase('abc'); // false
@@ -447,7 +451,7 @@ export abstract class Chars {
   /**
    * Checks whether the specified character is an upper Roman numberal.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isLowerRomanDigit(''); false
    * Chars.isLowerRomanDigit('ⅳ'); true
@@ -492,7 +496,7 @@ export abstract class Chars {
    * surrogate character is a 16-bit code character between `U+D800`
    * and `U+DBFF`.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isLowSurrogate(''); // false
    * Chars.isLowSurrogate('\uDC00'); // true
@@ -511,7 +515,7 @@ export abstract class Chars {
   /**
    * Checks whether the specified character is a modern digit.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isModernDigit('0'); // true
    * Chars.isModernDigit('3'); // true
@@ -535,7 +539,7 @@ export abstract class Chars {
   /**
    * Checks whether the specified character is a Persian digit.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isPersianDigit('۰'); // true
    * Chars.isPersianDigit('۱'); // true
@@ -573,7 +577,7 @@ export abstract class Chars {
   /**
    * Checks whether the specified character is a space character.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isSpace(' '); // true
    * Chars.isSpace('_'); // false
@@ -592,7 +596,7 @@ export abstract class Chars {
    * Checks whether the specified character is surrogate (high or low
    * surrogate).
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isSurrogate(' '); // false
    * Chars.isSurrogate('\uD800'); // true
@@ -615,7 +619,7 @@ export abstract class Chars {
    * a. "high surrogate" with another in range from U+DC00 to U+DFFF a. k.
    * a. "low surrogate".
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isSurrogatePair('', ''); // false
    * Chars.isSurrogatePair('\ud801', '\udc9f'); // true
@@ -636,7 +640,7 @@ export abstract class Chars {
   /**
    * Checks whether the specified character is an upper Roman numberal.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isUpperRomanDigit(''); false
    * Chars.isUpperRomanDigit('\u2160'); true
@@ -681,7 +685,7 @@ export abstract class Chars {
   /**
    * Checks whether the specified character is uppercase.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isUpperCase(''); // false
    * Chars.isUpperCase('abc'); // false
@@ -708,7 +712,7 @@ export abstract class Chars {
    * Checks whether the specified character is a space i. e. `" "`,
    * `"\t"`, `"\r"`, `"\n"`, `"\f"`.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Chars.isWhitespace(""); // false
    * Chars.isWhitespace(" "); // true

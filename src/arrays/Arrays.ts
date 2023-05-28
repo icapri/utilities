@@ -11,7 +11,11 @@ export abstract class Arrays {
    */
   public static readonly EMPTY: readonly [] = [] as const;
 
-  /** @private */
+  /**
+   * @constructor
+   *
+   * @private
+   */
   private constructor() {
     throw new Error('Cannot create an instance of an abstract class.');
   }
@@ -56,7 +60,7 @@ export abstract class Arrays {
   /**
    * Checks whether the given array contains the given item.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Arrays.contains([], "a"); // false
    * Arrays.contains(["a", "b", "c"], "c"); // true
@@ -89,7 +93,7 @@ export abstract class Arrays {
    * Checks whether the specified array contains either of the specified
    * items.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Arrays.containsAny([], "a"); // false
    * Arrays.containsAny(["a", "b", "c"], "g", "c", "i"); // true
@@ -132,7 +136,7 @@ export abstract class Arrays {
   /**
    * Calls the specified predicate function for each of the array elements.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Arrays.each(['a', 'b', 'c'], (item, index, self) => {
    *   // Code goes here..
@@ -150,7 +154,7 @@ export abstract class Arrays {
   /**
    * Calls the specified predicate function for each of the array elements.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Arrays.each(['a', 'b', 'c'], (item, index, self) => {
    *   // Code goes here..
@@ -168,7 +172,7 @@ export abstract class Arrays {
   /**
    * Calls the specified predicate function for each of the array elements.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Arrays.each(['a', 'b', 'c'], (item, index, self) => {
    *   // Code goes here..
@@ -293,7 +297,7 @@ export abstract class Arrays {
   /**
    * Inserts the given item at the given index in the given array.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * const arr = ["f", "o", "o", "b", "r"];
    * Arrays.insertAt(arr, 4, "a"); // ["f", "o", "o", "b", "a", "r"]
@@ -309,7 +313,7 @@ export abstract class Arrays {
   /**
    * Inserts the given items at the given index in the given array.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * const arr = ["f", "o", "o", "b", "r"];
    * Arrays.insertAt(arr, 4, "a"); // ["f", "o", "o", "b", "a", "r"]
@@ -325,7 +329,7 @@ export abstract class Arrays {
   /**
    * Inserts the given item or items at the given index in the given array.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * const arr = ["f", "o", "o", "b", "r"];
    * Arrays.insertAt(arr, 4, "a"); // ["f", "o", "o", "b", "a", "r"]
@@ -346,7 +350,7 @@ export abstract class Arrays {
    * Generates an array where each of the items of the given array is followed
    * by the given separator item.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * const arr1 = ['a', 'b', 'c'];
    * const arr2 = Arrays.intersperse(arr1, 'x');
@@ -385,7 +389,7 @@ export abstract class Arrays {
   /**
    * Check whether the specified value is of type `ArrayBuffer`.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Arrays.isArrayBuffer([]); // false
    * Arrays.isArrayBuffer(new ArrayBuffer(5)); // true
@@ -427,11 +431,10 @@ export abstract class Arrays {
    */
   public static isBinary(array: number[] | readonly number[]): boolean {
     if (Arrays.isNotEmpty(array)) {
-      let i = 0;
-      let j = array.length - 1;
+      let i = 0, j = array.length - 1, ai, aj;
       while (i <= j) {
-        const ai = array[i++];
-        const aj = array[j--];
+        ai = array[i++];
+        aj = array[j--];
         if ((ai !== 0 && ai !== 1) || (aj !== 0 && aj !== 1)) {
           return false;
         }
@@ -468,7 +471,7 @@ export abstract class Arrays {
    * Checks whether the specified array is identical i. e. whether
    * all the array items are equal to one another.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Arrays.isIdentical([]); // true
    * Arrays.isIdentical(["a"]); // true
@@ -521,7 +524,7 @@ export abstract class Arrays {
   /**
    * Checks whether the specified value is a typed array.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Arrays.isTypedArray(new Int8Array()); // true
    * Arrays.isTypedArray(new Int16Array()); // true
@@ -597,7 +600,7 @@ export abstract class Arrays {
   /**
    * Removes the array item at the specified index and returns an array copy.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Arrays.removeAt([], 0); // []
    * Arrays.removeAt(['a'], 0); // []
@@ -623,7 +626,7 @@ export abstract class Arrays {
   /**
    * Reverses the specified array.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Arrays.reverse([]); // []
    * Arrays.reverse(["a"]); // ["a"]

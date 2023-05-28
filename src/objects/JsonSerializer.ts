@@ -80,7 +80,7 @@ export abstract class JsonSerializer {
   /**
    * Deserializes the specified JSON string.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Objects.deserialize("{}"); // {}
    * Objects.deserialize('{"a":true}'); // {a: true}
@@ -123,7 +123,7 @@ export abstract class JsonSerializer {
   /**
    * Converts the specified JavaScript value to a JSON string.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * JsonSerializer.serialize({}); // "{}"
    * JsonSerializer.serialize({a: true}); // "{"a":true}"

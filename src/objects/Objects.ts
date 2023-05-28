@@ -4,13 +4,13 @@ import {JsonSerializer} from './JsonSerializer';
 /**
  * Gets the object entries.
  *
- * @param {Object} o Contains some object.
+ * @param {Object} obj Contains some object.
  *
  * @private
  */
-function* __entries<T extends object>(o: T): Generator<any[], void, unknown> {
+function* __entries<T extends object>(obj: T): Generator<any[], void, unknown> {
   let i = 0;
-  const entries = Object.entries(o);
+  const entries = Object.entries(obj);
   for (; i < entries.length; i++) {
     yield [entries[i][0], entries[i][1]];
   }
@@ -48,7 +48,7 @@ export abstract class Objects {
   /**
    * Checks whether the specified objects deep equal.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * const o1 = {a: '55', b: 4, c: false};
    * const o2 = {c: false, a: '55', b: 4};
@@ -106,25 +106,6 @@ export abstract class Objects {
   }
 
   /**
-   * Deserializes a JSON string.
-   *
-   * **Example:**
-   * ```typescript
-   * Objects.deserialize("{}"); // {}
-   * Objects.deserialize('{"a":true}'); // {a: true}
-   * Objects.deserialize('{"a":2,"b":"abc"}'); // {a: 2, b: "abc"}
-   * ```
-   *
-   * @param {String} json Contains some JSON string.
-   * @return {T} a JavaScript value equivalent to the JSON string.
-   *
-   * @since v1.5.5
-   */
-  public static deserialize<T>(json: string): T {
-    return JsonSerializer.deserialize(json);
-  }
-
-  /**
    * Gets the object entries.
    *
    * @param {Object} obj Contains some object.
@@ -140,7 +121,7 @@ export abstract class Objects {
   /**
    * Checks whether the two specified objects strictly equal.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * const obj1 = {
    *   a: 'string',
@@ -157,6 +138,27 @@ export abstract class Objects {
    */
   public static equals(a: object, b: object): boolean {
     return a === b;
+  }
+
+  /**
+   * Deserializes a JSON string i. e. parses it as an object.
+   *
+   * **Usage Examples:**
+   * ```typescript
+   * Objects.fromJson("{}"); // {}
+   * Objects.fromJson('{"a":true}'); // {a: true}
+   * Objects.fromJson('{"a":2,"b":"abc"}'); // {a: 2, b: "abc"}
+   * ```
+   *
+   * @param {String} json Contains some JSON string.
+   * @return {T} a JavaScript value equivalent to the JSON string.
+   *
+   * @since v1.5.10
+   *
+   * @see `JsonSerializer.deserialize()`
+   */
+  public static fromJson<T>(json: string): T {
+    return JsonSerializer.deserialize(json);
   }
 
   /**
@@ -187,7 +189,7 @@ export abstract class Objects {
    * Gets the object type of JavaScript built-in types such as `String`,
    * `RegExp`, `Number`, `Date`, etc.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Objects.getType("abc"); // "[object String]"
    * Objects.getType(new Date()); // "[object Date]"
@@ -300,7 +302,7 @@ export abstract class Objects {
    * @return {Boolean} whether the given object is null.
    */
   public static isNull<T extends object>(
-    obj?: T | null | undefined): obj is null | undefined;
+    obj?: T | null): obj is null;
   /**
    * Checks whether the given object is null.
    *
@@ -308,7 +310,7 @@ export abstract class Objects {
    * @return {Boolean} whether the given object is null.
    */
   public static isNull<T extends Object>(
-    obj?: T | null | undefined): obj is null | undefined;
+    obj?: T | null): obj is null;
   /**
    * Checks whether the given object is null.
    *
@@ -316,8 +318,8 @@ export abstract class Objects {
    * @return {Boolean} whether the given object is null.
    */
   public static isNull<T extends object | Object>(
-      obj?: T | null | undefined): obj is null | undefined {
-    return Utils.isNullOrUndefined(obj);
+      obj?: T | null): obj is null {
+    return Utils.isNull(obj);
   }
 
   /**
@@ -352,28 +354,6 @@ export abstract class Objects {
       }
     }
     return false;
-  }
-
-  /**
-   * Checks whether the specified object has no property `null` or `undefined`.
-   *
-   * @param {Object} obj Contains some object.
-   * @return {Boolean} whether the specified object has no property `null`
-   * or `undefined`.
-   */
-  public static noNilProps<T extends object>(obj: T): boolean {
-    const values = Object.values(obj);
-    let i = 0; const length = values.length;
-    while (i < length) {
-      const value = values[i];
-      if (Utils.isNullOrUndefined(value)) {
-        return false;
-      }
-
-      i++;
-    }
-
-    return true;
   }
 
   /**
@@ -418,25 +398,6 @@ export abstract class Objects {
   }
 
   /**
-   * Serializes the specified value i. e. converts it to a JSON string.
-   *
-   * **Example:**
-   * ```typescript
-   * Objects.serialize({}); // "{}"
-   * Objects.serialize({a: true}); // "{"a":true}"
-   * Objects.serialize({a: 2, b: "abc"}); // "{"a":2,"b":"abc"}"
-   * ```
-   *
-   * @param {String} value Contains some value.
-   * @return {String} a JSON string.
-   *
-   * @since v1.5.5
-   */
-  public static serialize<T>(value: T): string {
-    return JsonSerializer.serialize(value);
-  }
-
-  /**
    * Makes the specified object iterable.
    *
    * @param {Object} obj Contains some object.
@@ -451,6 +412,27 @@ export abstract class Objects {
         yield* Object.entries(obj);
       },
     };
+  }
+
+  /**
+   * Serializes the specified object i. e. converts it to a JSON string.
+   *
+   * **Usage Examples:**
+   * ```typescript
+   * Objects.toJson({}); // "{}"
+   * Objects.toJson({a: true}); // "{"a":true}"
+   * Objects.toJson({a: 2, b: "abc"}); // "{"a":2,"b":"abc"}"
+   * ```
+   *
+   * @param {Object} obj Contains some object.
+   * @return {String} the JSON string.
+   *
+   * @since v1.5.10
+   *
+   * @see `JsonSerializer.serialize()`
+   */
+  public static toJson<TObject extends object>(obj?: TObject): string {
+    return JsonSerializer.serialize(obj);
   }
 
   /**
@@ -481,7 +463,7 @@ export abstract class Objects {
   /**
    * Gets the string representation of the specified object.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Objects.toString(); // "[object Undefined]"
    * Objects.toString({}); // "[object Object]"

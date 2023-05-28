@@ -148,6 +148,15 @@ describe('Strings', () => {
     expect(Strings.countMatches('💖😀💖😀💖😀💖', '💖')).toEqual(4);
   });
 
+  test('Strings.decapitalize()', () => {
+    expect(Strings.decapitalize('')).toEqual('');
+    expect(Strings.decapitalize('abc')).toEqual('abc');
+    expect(Strings.decapitalize('a')).toEqual('a');
+    expect(Strings.decapitalize('A')).toEqual('a');
+    expect(Strings.decapitalize('Abc')).toEqual('abc');
+    expect(Strings.decapitalize('ABC')).toEqual('aBC');
+  });
+
   test('Strings.decode()', () => {
     expect(Strings.decode('27Hbstuz')).toEqual('۱۲۳');
     expect(Strings.decode('2aMgaXMgMyBpbiBBcmFiaWM='))
@@ -777,7 +786,7 @@ describe('Strings', () => {
     expect(Strings.toCamelCase(' abc  de ')).toEqual('abcDe');
     expect(Strings.toCamelCase('\n\t\r\fabc\n\t  de\n ')).toEqual('abcDe');
     expect(Strings.toCamelCase('Abc')).toEqual('abc');
-    expect(Strings.toCamelCase('Abc dEF')).toEqual('abcDEF');
+    expect(Strings.toCamelCase('Abc dEF')).toEqual('abcDef');
   });
 
   test('Strings.toCharArray()', () => {
@@ -785,6 +794,24 @@ describe('Strings', () => {
     expect(Strings.toCharArray('I 💖 U')).toEqual(['I', ' ', '💖', ' ', 'U']);
     expect(Strings.toCharArray('🐑🐑🐑')).toEqual(['🐑', '🐑', '🐑']);
     expect(Strings.toCharArray('abc')).toEqual(['a', 'b', 'c']);
+  });
+
+  test('Strings.toConstantCase()', () => {
+    expect(Strings.toConstantCase('')).toEqual('');
+    expect(Strings.toConstantCase(' ')).toEqual('');
+    expect(Strings.toConstantCase('  ')).toEqual('');
+    expect(Strings.toConstantCase('\t\t\r\n\f')).toEqual('');
+    expect(Strings.toConstantCase('\tabc\n\n\t')).toEqual('ABC');
+    expect(Strings.toConstantCase('a')).toEqual('A');
+    expect(Strings.toConstantCase('A')).toEqual('A');
+    expect(Strings.toConstantCase('\nA\t')).toEqual('A');
+    expect(Strings.toConstantCase('  abc  de  ')).toEqual('ABC_DE');
+    expect(Strings.toConstantCase('  abc de ')).toEqual('ABC_DE');
+    expect(Strings.toConstantCase(' abc  de  ')).toEqual('ABC_DE');
+    expect(Strings.toConstantCase(' abc  de ')).toEqual('ABC_DE');
+    expect(Strings.toConstantCase('\n\t\r\fabc\n\t  de\n ')).toEqual('ABC_DE');
+    expect(Strings.toConstantCase('Abc')).toEqual('ABC');
+    expect(Strings.toConstantCase('Abc dEF')).toEqual('ABC_DEF');
   });
 
   test('Strings.toKebabCase()', () => {
@@ -820,8 +847,11 @@ describe('Strings', () => {
     expect(Strings.toPascalCase(' abc  de ')).toEqual('AbcDe');
     expect(Strings.toPascalCase('\n\t\r\fabc\n\t  de\n ')).toEqual('AbcDe');
     expect(Strings.toPascalCase('Abc')).toEqual('Abc');
-    expect(Strings.toPascalCase('Abc dEF')).toEqual('AbcDEF');
-    expect(Strings.toPascalCase('\r\t\f\n\nAbc \n\tdEf\t\f')).toEqual('AbcDEf');
+    expect(Strings.toPascalCase('Abc dEF')).toEqual('AbcDef');
+    expect(Strings.toPascalCase('\r\t\f\n\nAbc \n\tdEf\t\f')).toEqual('AbcDef');
+    expect(Strings.toPascalCase(' \nAbc ----\n\tdEf\t\f')).toEqual('AbcDef');
+    expect(Strings.toPascalCase(' \nAbc_\n\tdEf\t\f')).toEqual('AbcDef');
+    expect(Strings.toPascalCase(' \nAbc_---_\n\tdEf\t\f')).toEqual('AbcDef');
   });
 
   test('Strings.toSnakeCase()', () => {

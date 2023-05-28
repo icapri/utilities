@@ -80,7 +80,11 @@ export abstract class Dates {
    */
   public static readonly SECS_IN_YEAR: number = 31556952e3 as const;
 
-  /** @private */
+  /**
+   * @constructor
+   *
+   * @private
+   */
   private constructor() {
     throw new Error('Cannot create an instance of an abstract class.');
   }
@@ -221,7 +225,7 @@ export abstract class Dates {
   /**
    * Gets the start of the day i. e. the midnight date.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * const date = new Date("2023-05-06T11:59:04.623Z");
    * const midnight = Dates.atStartOfDay(date); // "2023-05-06T00:00:00.000Z"
@@ -509,7 +513,7 @@ export abstract class Dates {
    * Checks whether the specified string is a valid ISO 8601 date string
    * which has the format `YYYY-MM-DDTHH:mm:ss.sssZ`.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Dates.isISOString('2023-11-11T23:15:22.999Z'); // true
    * Dates.isISOString('2023-13-11T23:15:22.999Z'); // false
@@ -646,7 +650,7 @@ export abstract class Dates {
    * Parses an ISO 8601 date string (`YYYY-MM-DDTHH:mm:ss.sssZ`) as a date
    * object.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * Dates.parseISO('2023'); // Date: "2023-01-01T00:00:00.000Z"
    * Dates.parseISO('2023-05'); // Date: "2023-05-01T00:00:00.000Z"
@@ -783,7 +787,7 @@ export abstract class Dates {
    * Converts a Universal Coordinated Time (UTC) date object to a local
    * date object.
    *
-   * **Example:**
+   * **Usage Examples:**
    * ```typescript
    * // some utc date
    * const date = new Date(); // "2023-05-06T12:10:12.191Z" (MESZ)
