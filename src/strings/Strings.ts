@@ -2366,32 +2366,7 @@ export abstract class Strings {
    * @since v1.5.10
    */
   public static toConstantCase(str: string): string {
-    const length = str.length;
-    if (length === 0 || Strings.isWhitespace(str)) {
-      return Strings.EMPTY;
-    }
-
-    let index = 0, constantCase = Strings.EMPTY;
-    while (index < length) {
-      const char = str.charAt(index);
-      const charUpper = char.toUpperCase();
-      if (Chars.isWhitespace(char)) {
-        index++;
-        continue;
-      }
-
-      const isPrevSpace = Chars.isWhitespace(str.charAt(index - 1));
-      const empty = constantCase.length === 0;
-      if (isPrevSpace && !empty) {
-        constantCase += '_'.concat(charUpper);
-      } else {
-        constantCase += charUpper;
-      }
-
-      index++;
-    }
-
-    return Strings.trim(constantCase);
+    return Strings.__toCase(str, 'constant');
   }
 
   /**
@@ -2408,34 +2383,7 @@ export abstract class Strings {
    * @return {String} the specified string converted to kebab-case.
    */
   public static toKebabCase(str: string): string {
-    const length = str.length;
-    if (length === 0 || Strings.isWhitespace(str)) {
-      return Strings.EMPTY;
-    }
-
-    let index = 0; // the index of the char
-    let kebabCase = Strings.EMPTY;
-
-    while (index < length) {
-      const char = str.charAt(index);
-      const charLower = char.toLowerCase();
-      if (Chars.isWhitespace(char)) {
-        index++;
-        continue;
-      }
-
-      const isPrevSpace = Chars.isWhitespace(str.charAt(index - 1));
-      const empty = kebabCase.length === 0;
-      if (isPrevSpace && !empty) {
-        kebabCase += '-'.concat(charLower);
-      } else {
-        kebabCase += charLower;
-      }
-
-      index++;
-    }
-
-    return Strings.trim(kebabCase);
+    return Strings.__toCase(str, 'kebab');
   }
 
   /**
@@ -2487,34 +2435,7 @@ export abstract class Strings {
    * @since v1.5.0
    */
   public static toSnakeCase(str: string): string {
-    const length = str.length;
-    if (length === 0 || Strings.isWhitespace(str)) {
-      return Strings.EMPTY;
-    }
-
-    let index = 0; // the index of the char
-    let snakeCase = Strings.EMPTY;
-
-    while (index < length) {
-      const char = str.charAt(index);
-      const charLower = char.toLowerCase();
-      if (Chars.isWhitespace(char)) {
-        index++;
-        continue;
-      }
-
-      const isPrevSpace = Chars.isWhitespace(str.charAt(index - 1));
-      const empty = snakeCase.length === 0;
-      if (isPrevSpace && !empty) {
-        snakeCase += '_'.concat(charLower);
-      } else {
-        snakeCase += charLower;
-      }
-
-      index++;
-    }
-
-    return Strings.trim(snakeCase);
+    return Strings.__toCase(str, 'snake');
   }
 
   /**
@@ -2652,5 +2573,39 @@ export abstract class Strings {
 
     const rest = lowerRest ? str.slice(1).toLowerCase() : str.slice(1);
     return str.charAt(0).toUpperCase() + rest;
+  }
+
+  // eslint-disable-next-line valid-jsdoc
+  /**
+   * @private
+   *
+   * @since v1.5.11
+   */
+  private static __toCase(
+      str: string,
+      type: 'constant' | 'kebab' | 'snake',
+  ): string {
+    const length = str.length;
+    if (length === 0 || Strings.isWhitespace(str)) {
+      return Strings.EMPTY;
+    }
+    let i = 0, s = Strings.EMPTY, r, c;
+    while (i < length) {
+      c = str.charAt(i);
+      r = type === 'constant' ? c.toUpperCase() : c.toLowerCase();
+      if (Chars.isWhitespace(c)) {
+        i++;
+        continue;
+      }
+      const isPrevSpace = Chars.isWhitespace(str.charAt(i - 1));
+      if (isPrevSpace && s.length !== 0) {
+        const connector = type === 'constant' || type === 'snake' ? '_' : '-';
+        s += connector.concat(r);
+      } else {
+        s += r;
+      }
+      i++;
+    }
+    return Strings.trim(s);
   }
 }
