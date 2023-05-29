@@ -24,7 +24,6 @@ export abstract class Numbers {
     if (abs < 0) {
       abs *= -1;
     }
-
     return abs;
   }
 

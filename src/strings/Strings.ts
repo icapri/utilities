@@ -181,8 +181,7 @@ export abstract class Strings {
       return Strings.EMPTY;
     }
 
-    const end = l - 1;
-    const r = str.substring(0, end);
+    const end = l - 1, r = str.substring(0, end);
     if (str.charAt(end) === Chars.LF) {
       if (r.charAt(end - 1) === Chars.CR) {
         return r.substring(0, end - 1);
@@ -355,11 +354,8 @@ export abstract class Strings {
    * in the specified string.
    */
   public static countMatches(str: string, substring: string): number {
-    let r = 0;
-    const l = str.length;
-    const sl = substring.length;
-    let i = 0;
-
+    let i = 0, r = 0;
+    const l = str.length, sl = substring.length;
     if (l === 0 || sl === 0 || sl > l) {
       return r;
     }
@@ -418,14 +414,15 @@ export abstract class Strings {
    * @since v1.5.0
    */
   public static decode(base64: string): string {
-    const esc = base64.replace(/[^A-Za-z0-9+/]/g, ''); // escape non-Base64 char
-    const l = esc.length; const length = (l * 3 + 1) >> 2;
-    const bytes = new Uint8Array(length);
-    let mod3; let mod4; let u24 = 0; let i = 0; let j = 0;
+    const esc = base64.replace(/[^A-Za-z0-9+/]/g, ''), // escape non-Base64 char
+      l = esc.length,
+      length = (l * 3 + 1) >> 2,
+      bytes = new Uint8Array(length);
+    let mod3, mod4, u24 = 0, i = 0, j = 0, c, u6;
     while (i < l) {
       mod4 = i & 3;
-      const c = esc.charCodeAt(i);
-      const u6 = c > 64 && c < 91 ? c - 65 : c > 96 && c < 123 ? c - 71 :
+      c = esc.charCodeAt(i);
+      u6 = c > 64 && c < 91 ? c - 65 : c > 96 && c < 123 ? c - 71 :
         c > 47 && c < 58 ? c + 4 : c === 43 ? 62 : c === 47 ? 63 : 0;
       u24 |= u6 << (6 * (3 - mod4));
       if (mod4 === 3 || l - i === 1) {
@@ -480,7 +477,6 @@ export abstract class Strings {
     if (diffIndex === Strings.NOT_FOUND) {
       return Strings.EMPTY;
     }
-
     if (str1.length > str2.length) {
       return str1.substring(diffIndex);
     } else {
@@ -507,9 +503,10 @@ export abstract class Strings {
    * @since v1.5.0
    */
   public static encode(str: string, lineBreak: boolean = false): string {
-    let mod3 = 2; let encoded = Strings.EMPTY;
-    const bytes: Uint8Array = Strings.toBytesArray(str);
-    const l = bytes.length; let u24 = 0; let i = 0;
+    let i = 0, mod3 = 2, encoded = '', u24 = 0;
+    const bytes: Uint8Array = Strings.toBytesArray(str), l = bytes.length;
+    const $ = (u6: number) => u6 < 26 ? u6 + 65 : u6 < 52 ? u6 + 71 :
+      u6 < 62 ? u6 - 4 : u6 === 62 ? 43 : u6 === 63 ? 47 : 65;
     while (i < l) {
       mod3 = i % 3;
       if (lineBreak && i > 0 && ((i * 4) / 3) % 76 === 0) {
@@ -518,8 +515,6 @@ export abstract class Strings {
 
       u24 |= bytes[i] << ((16 >>> mod3) & 24);
       if (mod3 === 2 || bytes.length - i === 1) {
-        const $ = (u6: number) => u6 < 26 ? u6 + 65 : u6 < 52 ? u6 + 71 :
-          u6 < 62 ? u6 - 4 : u6 === 62 ? 43 : u6 === 63 ? 47 : 65;
         encoded += String.fromCodePoint(
             $((u24 >>> 18) & 63), $((u24 >>> 12) & 63),
             $((u24 >>> 6) & 63), $(u24 & 63),
@@ -528,7 +523,6 @@ export abstract class Strings {
       }
       i++;
     }
-
     const e = mod3 === 2 ? '' : mod3 === 1 ? '=' : '==';
     return encoded.substring(0, encoded.length - 2 + mod3).concat(e);
   }
@@ -559,7 +553,6 @@ export abstract class Strings {
     if (ignoreCase) {
       return str.toLowerCase().endsWith(substring.toLowerCase());
     }
-
     return str.endsWith(substring);
   }
 
@@ -582,15 +575,13 @@ export abstract class Strings {
    */
   public static endsWithAny(str: string, ...substrings: string[]): boolean {
     if (Arrays.isNotEmpty(substrings)) {
-      let i = 0;
-      let j = substrings.length - 1;
+      let i = 0, j = substrings.length - 1;
       while (i <= j) {
         if (str.endsWith(substrings[i++]) || str.endsWith(substrings[j--])) {
           return true;
         }
       }
     }
-
     return false;
   }
 
@@ -637,14 +628,12 @@ export abstract class Strings {
       return false;
     }
 
-    let i = 0;
-    let j = substrings.length - 1;
+    let i = 0, j = substrings.length - 1;
     while (i <= j) {
       if (str.endsWith(substrings[i++]) || str.endsWith(substrings[j--])) {
         return false;
       }
     }
-
     return true;
   }
 
@@ -672,8 +661,8 @@ export abstract class Strings {
    * @return {Boolean} whether the specified strings equal.
    */
   public static equals<T extends string | String>(a: T, b: T): boolean {
-    const value1 = Strings.isStringObject(a) ? a.valueOf() : a;
-    const value2 = Strings.isStringObject(b) ? b.valueOf() : b;
+    const value1 = Strings.isStringObject(a) ? a.valueOf() : a,
+      value2 = Strings.isStringObject(b) ? b.valueOf() : b;
     return value1 === value2;
   }
 
@@ -710,7 +699,6 @@ export abstract class Strings {
         l--;
       }
     }
-
     return true;
   }
 
@@ -732,8 +720,7 @@ export abstract class Strings {
    */
   public static equalsAny(str: string, ...substrings: string[]): boolean {
     if (substrings.length > 0) {
-      let i = 0;
-      let j = substrings.length - 1;
+      let i = 0, j = substrings.length - 1;
       while (i <= j) {
         if (str === substrings[i++] || str === substrings[j--]) {
           return true;
@@ -767,8 +754,7 @@ export abstract class Strings {
   ): boolean {
     const lowerStr = str.toLowerCase();
     if (substrings.length > 0) {
-      let i = 0;
-      let j = substrings.length - 1;
+      let i = 0, j = substrings.length - 1;
       while (i <= j) {
         if (lowerStr === substrings[i++].toLowerCase() ||
           lowerStr === substrings[j--].toLowerCase()) {
@@ -776,7 +762,6 @@ export abstract class Strings {
         }
       }
     }
-
     return false;
   }
 
@@ -799,16 +784,14 @@ export abstract class Strings {
     if (length === 0) {
       return binaryStr;
     }
-
-    const bytesArray = Uint8Array.from({length}, (_, index) =>
-      binaryStr.charCodeAt(index),
-    );
-    const ccs = new Uint16Array(bytesArray.buffer);
+    const ccs = new Uint16Array(
+        Uint8Array
+            .from({length}, (_, i) => binaryStr.charCodeAt(i))
+            .buffer);
     let r = Strings.EMPTY;
     ccs.forEach((char) => {
       r += String.fromCharCode(char);
     });
-
     return r;
   }
 
@@ -821,10 +804,8 @@ export abstract class Strings {
    * @since v1.5.0
    */
   public static fromBytesArray(bytes: Uint8Array): string {
-    let s = Strings.EMPTY;
-    let b;
+    let i = 0, s = Strings.EMPTY, b;
     const l = bytes.length;
-    let i = 0;
     for (; i < l; i++) {
       b = bytes[i];
       s += String.fromCodePoint(
@@ -845,7 +826,6 @@ export abstract class Strings {
           ((b - 192) << 6) + bytes[++i] - 128 : b,
       );
     }
-
     return s;
   }
 
@@ -888,9 +868,10 @@ export abstract class Strings {
    * @return {Number} the hash code.
    */
   public static hashCode(str: string): number {
-    let hash = 0; let i; let charCode; const length = str.length;
-    for (i = 0; i < length; i++) {
-      charCode = str.charCodeAt(i);
+    let i = 0, hash = 0, charCode;
+    const length = str.length;
+    for (; i < length;) {
+      charCode = str.charCodeAt(i++);
       hash = (hash << 5) - hash + charCode;
       // convert the hash to a 32-bit integer
       hash |= 0;
@@ -918,14 +899,14 @@ export abstract class Strings {
   public static hasWhitespace(str: string): boolean {
     if (Strings.isNotEmpty(str)) {
       const l = str.length;
+      let c;
       if (l === 1) {
-        const c = str.charAt(0);
+        c = str.charAt(0);
         if (Chars.isWhitespace(c)) {
           return true;
         }
       }
-      let i = 0;
-      let j = l - 1;
+      let i = 0, j = l - 1;
       while (i <= j) {
         if (Chars.isWhitespace(str.charAt(i)) ||
         Chars.isWhitespace(str.charAt(j))) {
@@ -935,7 +916,6 @@ export abstract class Strings {
         j--;
       }
     }
-
     return false;
   }
 
@@ -958,8 +938,7 @@ export abstract class Strings {
    * string, -1 is returned.
    */
   public static indexOf(str: string, substring: string): number {
-    const m = str.length;
-    const n = substring.length;
+    const m = str.length, n = substring.length;
     if (n === 0) {
       return 0;
     }
@@ -999,15 +978,14 @@ export abstract class Strings {
   public static indexOfAny(str: string, ...substrings: string[]): number {
     const l = substrings.length;
     if (l > 0) {
-      let i = 0;
+      let i = 0, idx;
       while (i < l) {
-        const index = Strings.indexOf(str, substrings[i++]);
-        if (index >= 0) {
-          return index;
+        idx = Strings.indexOf(str, substrings[i++]);
+        if (idx >= 0) {
+          return idx;
         }
       }
     }
-
     return Strings.NOT_FOUND;
   }
 
@@ -1032,20 +1010,16 @@ export abstract class Strings {
   public static indexOfDifference(str1: string, str2: string): number {
     if (str1 !== str2) {
       let i = 0;
-      const l1 = str1.length;
-      const l2 = str2.length;
-
+      const l1 = str1.length, l2 = str2.length;
       for (; i < l1 && i < l2; ++i) {
         if (str1.charAt(i) !== str2.charAt(i)) {
           break;
         }
       }
-
       if (i < l2 || i < l1) {
         return i;
       }
     }
-
     return Strings.NOT_FOUND;
   }
 
@@ -1117,20 +1091,18 @@ export abstract class Strings {
    * @since v1.4.1
    */
   public static isAlpha(str: string): boolean {
-    let i = 0;
-    let j = str.length - 1;
+    let i = 0, j = str.length - 1, ci, cj;
     if (j < 0) {
       return false;
     }
     while (i <= j) {
-      const ci = str.charCodeAt(i++);
-      const cj = str.charCodeAt(j--);
+      ci = str.charCodeAt(i++);
+      cj = str.charCodeAt(j--);
       if ((!(ci > 64 && ci < 91) && !(ci > 96 && ci < 123)) ||
         (!(cj > 64 && cj < 91) && !(cj > 96 && cj < 123))) {
         return false;
       }
     }
-
     return true;
   }
 
@@ -1155,9 +1127,10 @@ export abstract class Strings {
    * @since v1.4.1
    */
   public static isAlphanumeric(str: string): boolean {
-    let i = 0;
-    let j = str.length - 1;
-    if (j < 0) return false;
+    let i = 0, j = str.length - 1;
+    if (j < 0) {
+      return false;
+    }
     while (i <= j) {
       const ci = str.charCodeAt(i++);
       const cj = str.charCodeAt(j--);
@@ -1171,7 +1144,6 @@ export abstract class Strings {
         return false;
       }
     }
-
     return true;
   }
 
@@ -1192,9 +1164,8 @@ export abstract class Strings {
    * @since v1.4.1
    */
   public static isAnyBlank(...strings: string[]): boolean {
-    let j = strings.length - 1;
+    let i = 0, j = strings.length - 1;
     if (j >= 0) {
-      let i = 0;
       while (i <= j) {
         if (Strings.isBlank(strings[i]) || Strings.isBlank(strings[j])) {
           return true;
@@ -1280,16 +1251,14 @@ export abstract class Strings {
    * string are lowercase.
    */
   public static isLowerCase(str: string): boolean {
-    let i = 0;
-    let j = str.length - 1;
+    let i = 0, j = str.length - 1, ci, cj;
     while (i <= j) {
-      const ci = str.charAt(i++);
-      const cj = str.charAt(j--);
+      ci = str.charAt(i++);
+      cj = str.charAt(j--);
       if (ci !== ci.toLowerCase() || cj !== cj.toLowerCase()) {
         return false;
       }
     }
-
     return true;
   }
 
@@ -1317,27 +1286,23 @@ export abstract class Strings {
       return false;
     }
 
-    let i = 0;
-    let j = str.length - 1;
-    let hasLowerChar = false;
-    let hasUpperChar = false;
+    let i = 0, j = str.length - 1, hasLower = false, hasUpper = false, ci, cj;
     while (i <= j) {
-      const ci = str.charAt(i++);
-      const cj = str.charAt(j--);
+      ci = str.charAt(i++);
+      cj = str.charAt(j--);
       if (Chars.isLowerCase(ci) || Chars.isLowerCase(cj)) {
-        hasLowerChar = true;
+        hasLower = true;
       }
 
       if (Chars.isUpperCase(ci) || Chars.isUpperCase(cj)) {
-        hasUpperChar = true;
+        hasUpper = true;
       }
 
-      if (hasLowerChar && hasUpperChar) {
+      if (hasLower && hasUpper) {
         return true;
       }
     }
-
-    return hasLowerChar && hasUpperChar;
+    return hasLower && hasUpper;
   }
 
   /**
@@ -1461,13 +1426,12 @@ export abstract class Strings {
    * @since v1.4.2
    */
   public static isNumeric(str: string): boolean {
-    let j = str.length - 1;
+    let i = 0, j = str.length - 1;
     if (j < 0) {
       return false;
     }
 
     if (Number.isNaN(str) || Number.isNaN(parseFloat(str))) {
-      let i = 0;
       while (i <= j) {
         if (!Chars.isDigit(str.charAt(i)) || !Chars.isDigit(str.charAt(j))) {
           return false;
@@ -1476,7 +1440,6 @@ export abstract class Strings {
         j--;
       }
     }
-
     return true;
   }
 
@@ -1550,13 +1513,10 @@ export abstract class Strings {
     if (l === 0 || index < 0 || index >= l) {
       return false;
     }
-
-    const c = str.charCodeAt(index);
-    const cpp = str.charCodeAt(index + 1);
+    const c = str.charCodeAt(index), cpp = str.charCodeAt(index + 1);
     if (Number.isNaN(c) || Number.isNaN(cpp)) {
       return false;
     }
-
     return 0xd800 <= c && c <= 0xdbff && 0xdc00 <= cpp && cpp <= 0xdfff;
   }
 
@@ -1577,16 +1537,14 @@ export abstract class Strings {
    * string are upper case.
    */
   public static isUpperCase(str: string): boolean {
-    let i = 0;
-    let j = str.length - 1;
+    let i = 0, j = str.length - 1, ci, cj;
     while (i <= j) {
-      const ci = str.charAt(i++);
-      const cj = str.charAt(j--);
+      ci = str.charAt(i++);
+      cj = str.charAt(j--);
       if (ci !== ci.toUpperCase() || cj !== cj.toUpperCase()) {
         return false;
       }
     }
-
     return true;
   }
 
@@ -1627,16 +1585,13 @@ export abstract class Strings {
       }
     }
 
-    let i = 0;
-    let j = l - 1;
-
+    let i = 0, j = l - 1;
     while (i <= j) {
       if (!Chars.isWhitespace(str.charAt(i++)) ||
         !Chars.isWhitespace(str.charAt(j--))) {
         return false;
       }
     }
-
     return true;
   }
 
@@ -1665,11 +1620,10 @@ export abstract class Strings {
       return str + otherStrs[0];
     }
 
-    let i = 0; let res = str;
+    let i = 0, res = str;
     while (i < arrLen) {
       res += otherStrs[i++];
     }
-
     return res;
   }
 
@@ -1691,8 +1645,7 @@ export abstract class Strings {
    * found in the specified string.
    */
   public static lastIndexOf(str: string, substring: string): number {
-    const m = str.length;
-    const n = substring.length;
+    const m = str.length, n = substring.length;
     if (n === 0) {
       return 0;
     }
@@ -1754,7 +1707,6 @@ export abstract class Strings {
     if (str.length <= length) {
       return str;
     }
-
     return str.substring(0, length);
   }
 
@@ -1782,18 +1734,14 @@ export abstract class Strings {
     }
 
     if (l === 2) {
-      const str0 = strings[0];
-      const str1 = strings[1];
+      const str0 = strings[0], str1 = strings[1];
       return str0.length > str1.length ? str0 : str1;
     }
 
-    let i = 0;
-    let j = l - 1;
-    let r = Strings.EMPTY;
-
+    let i = 0, j = l - 1, r = Strings.EMPTY, si, sj;
     while (i <= j) {
-      const si = strings[i++];
-      const sj = strings[j--];
+      si = strings[i++];
+      sj = strings[j--];
       if (si.length > r.length) {
         r = si;
       }
@@ -1801,7 +1749,6 @@ export abstract class Strings {
         r = sj;
       }
     }
-
     return r;
   }
 
@@ -1842,16 +1789,14 @@ export abstract class Strings {
       return Strings.EMPTY;
     }
 
-    let i = 0; let r = Strings.EMPTY;
+    let i = 0, r = Strings.EMPTY, c;
     for (; i < l; i++) {
-      const c = str.charAt(i);
+      c = str.charAt(i);
       if (Chars.isWhitespace(c) && Chars.isWhitespace(str.charAt(i + 1))) {
         continue;
       }
-
       r += c;
     }
-
     return r.trim();
   }
 
@@ -1901,7 +1846,6 @@ export abstract class Strings {
       Strings.startsWith(str, prefix, ignoreCase)) {
       return str;
     }
-
     return prefix.concat(str);
   }
 
@@ -1947,19 +1891,16 @@ export abstract class Strings {
    * @return {String} the string without the specified substring occurrences.
    */
   public static remove(str: string, substring: string): string {
-    const l = str.length;
-    const sl = substring.length;
+    const l = str.length, sl = substring.length;
     if (l === 0 || sl === 0 ||
         Strings.indexOf(str, substring) === Strings.NOT_FOUND) {
       return str;
     }
 
-    let r = Strings.EMPTY;
+    let i = 0, r = Strings.EMPTY;
     if (sl <= l) {
-      let i = 0;
       while (i < l) {
-        const ci = str.charAt(i);
-        const c0 = substring.charAt(0);
+        const ci = str.charAt(i), c0 = substring.charAt(0);
         if (ci === c0 && sl <= l - i &&
             str.substring(i, i + sl) === substring) {
           i += sl - 1;
@@ -1969,7 +1910,6 @@ export abstract class Strings {
         i++;
       }
     }
-
     return r;
   }
 
@@ -1989,17 +1929,13 @@ export abstract class Strings {
    * @return {String} a string.
    */
   public static removeEnd(str: string, substring: string): string {
-    const l = str.length;
-    const sl = substring.length;
-
+    const l = str.length, sl = substring.length;
     if (l === 0 || sl === 0) {
       return str;
     }
-
     if (str.endsWith(substring)) {
       return str.substring(0, l - sl);
     }
-
     return str;
   }
 
@@ -2021,15 +1957,13 @@ export abstract class Strings {
    * @return {String} a string.
    */
   public static removeEndIgnoreCase(str: string, substring: string): string {
-    const strLen = str.length; const sqLen = substring.length;
+    const strLen = str.length, sqLen = substring.length;
     if (strLen === 0 || sqLen === 0) {
       return str;
     }
-
     if (Strings.endsWithIgnoreCase(str, substring)) {
       return str.substring(0, strLen - sqLen);
     }
-
     return str;
   }
 
@@ -2058,16 +1992,13 @@ export abstract class Strings {
       return Strings.EMPTY;
     }
 
-    let res = Strings.EMPTY;
-    let i = 0;
-
+    let i = 0, c, res = Strings.EMPTY;
     while (i < len) {
-      const c = str.charAt(i++);
+      c = str.charAt(i++);
       if (!Chars.isWhitespace(c)) {
         res += c;
       }
     }
-
     return res;
   }
 
@@ -2091,22 +2022,16 @@ export abstract class Strings {
     if (Strings.isEmpty(str) || !Numbers.isInteger(times) || times < 0) {
       return Strings.EMPTY;
     }
-
     if (times === 1) {
       return str;
     }
-
     if (times === 2) {
       return str + str;
     }
-
-    let res = str;
-    let i = 0;
-
+    let res = str, i = 0;
     while (++i < times) {
       res += str;
     }
-
     return res;
   }
 
@@ -2160,7 +2085,6 @@ export abstract class Strings {
     if (ignoreCase) {
       return str.toLowerCase().startsWith(sequence.toLowerCase(), position);
     }
-
     return str.startsWith(sequence, position);
   }
 
@@ -2195,7 +2119,6 @@ export abstract class Strings {
         }
       }
     }
-
     return false;
   }
 
@@ -2237,13 +2160,10 @@ export abstract class Strings {
    * @since v1.5.0
    */
   public static toBinary(str: string): string {
-    const length = str.length;
-    if (length === 0 || Strings.isBinary(str)) return str;
-    const charCodeUnits = Uint16Array.from(
-        {length},
-        (_, index) => str.charCodeAt(index),
-    );
-    const ccs = new Uint8Array(charCodeUnits.buffer);
+    const length = str.length, charCodeUnits = Uint16Array.from(
+          {length},
+          (_, index) => str.charCodeAt(index),
+      ), ccs = new Uint8Array(charCodeUnits.buffer);
     let bin = '';
     ccs.forEach((c) => {
       bin += String.fromCharCode(c);
@@ -2261,16 +2181,12 @@ export abstract class Strings {
    */
   public static toBytesArray(str: string): Uint8Array {
     const strLength = str.length;
-    let arrayLength = 0;
-    let i = 0;
-    let p: number;
-
+    let arrayLength = 0, i = 0, p: number;
     for (; i < strLength; i++) {
       p = str.codePointAt(i) as number;
       if (p >= 0x10000) {
         i++;
       }
-
       arrayLength += p < 0x80 ? 1 : p < 0x800 ? 2 :
       p < 0x10000 ? 3 : p < 0x200000 ? 4 : p < 0x4000000 ? 5 : 6;
     }
@@ -2312,7 +2228,6 @@ export abstract class Strings {
       }
       pi++;
     }
-
     return bytes;
   }
 
@@ -2366,7 +2281,7 @@ export abstract class Strings {
    * @since v1.5.10
    */
   public static toConstantCase(str: string): string {
-    return Strings.__toCase(str, 'constant');
+    return Strings.__toCase(str, '_', true);
   }
 
   /**
@@ -2383,7 +2298,7 @@ export abstract class Strings {
    * @return {String} the specified string converted to kebab-case.
    */
   public static toKebabCase(str: string): string {
-    return Strings.__toCase(str, 'kebab');
+    return Strings.__toCase(str, '-');
   }
 
   /**
@@ -2405,7 +2320,6 @@ export abstract class Strings {
     if (length === 0) {
       return Strings.EMPTY;
     }
-
     let i = 0, c, p, r = '';
     while (i < length) {
       c = str.charAt(i);
@@ -2435,7 +2349,7 @@ export abstract class Strings {
    * @since v1.5.0
    */
   public static toSnakeCase(str: string): string {
-    return Strings.__toCase(str, 'snake');
+    return Strings.__toCase(str, '_');
   }
 
   /**
@@ -2459,26 +2373,21 @@ export abstract class Strings {
     if (str.length === 0) {
       return str;
     }
-
-    let i = 0;
-    let r = Strings.EMPTY;
-
+    let i = 0, r = Strings.EMPTY, c, s, p;
     while (i < str.length) {
-      const c = str.charAt(i);
-      const s = Chars.isWhitespace(c);
+      c = str.charAt(i);
+      s = Chars.isWhitespace(c);
       if (i === 0) {
         r += s ? c : c.toUpperCase();
       }
-
       if (i > 0) {
         if (!s) {
-          const p = Chars.isWhitespace(str.charAt(i - 1));
+          p = Chars.isWhitespace(str.charAt(i - 1));
           r += p ? c.toUpperCase() : c.toLowerCase();
         } else {
           r += c;
         }
       }
-
       i++;
     }
     return r;
@@ -2507,30 +2416,23 @@ export abstract class Strings {
     if (l === 0) {
       return str;
     }
-
     if (Strings.isWhitespace(str)) {
       return Strings.EMPTY;
     }
-
-    let i = 0;
-    let j = l - 1;
-
+    let i = 0, j = l - 1, si, sj;
     while (i <= j) {
-      const si = Chars.isWhitespace(str.charAt(i));
-      const sj = Chars.isWhitespace(str.charAt(j));
+      si = Chars.isWhitespace(str.charAt(i));
+      sj = Chars.isWhitespace(str.charAt(j));
       if (!si && !sj) {
         return str.substring(i, j + 1);
       }
-
       if (si) {
         i++;
       }
-
       if (sj) {
         j--;
       }
     }
-
     return str;
   }
 
@@ -2570,7 +2472,6 @@ export abstract class Strings {
     if (Strings.isWhitespace(str)) {
       return str;
     }
-
     const rest = lowerRest ? str.slice(1).toLowerCase() : str.slice(1);
     return str.charAt(0).toUpperCase() + rest;
   }
@@ -2581,31 +2482,20 @@ export abstract class Strings {
    *
    * @since v1.5.11
    */
-  private static __toCase(
-      str: string,
-      type: 'constant' | 'kebab' | 'snake',
-  ): string {
-    const length = str.length;
-    if (length === 0 || Strings.isWhitespace(str)) {
-      return Strings.EMPTY;
-    }
-    let i = 0, s = Strings.EMPTY, r, c;
-    while (i < length) {
+  private static __toCase(str: string, conn: string, upper = false): string {
+    let i = 0, r = '', c, n;
+    for (; i < str.length; i++) {
       c = str.charAt(i);
-      r = type === 'constant' ? c.toUpperCase() : c.toLowerCase();
-      if (Chars.isWhitespace(c)) {
-        i++;
-        continue;
-      }
-      const isPrevSpace = Chars.isWhitespace(str.charAt(i - 1));
-      if (isPrevSpace && s.length !== 0) {
-        const connector = type === 'constant' || type === 'snake' ? '_' : '-';
-        s += connector.concat(r);
+      if (Chars.isWhitespace(c) || c === '-' || c === '_') {
+        n = str.charAt(i + 1);
+        if (r.length !== 0 && n !== '' && n !== '-' && n !== '_' &&
+          Chars.isWhitespace(n) === false) {
+          r += conn;
+        }
       } else {
-        s += r;
+        r += upper ? c.toUpperCase() : c.toLowerCase();
       }
-      i++;
     }
-    return Strings.trim(s);
+    return r;
   }
 }

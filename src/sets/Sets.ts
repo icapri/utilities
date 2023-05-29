@@ -63,12 +63,10 @@ export abstract class Sets {
   public static toMap<T>(value: Set<T>): Map<number, T> {
     let i = 0;
     const map = new Map<number, T>();
-
     value.forEach((item) => {
       map.set(i, item);
       i++;
     });
-
     return map;
   }
 }

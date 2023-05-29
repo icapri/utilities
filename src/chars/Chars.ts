@@ -107,7 +107,9 @@ export abstract class Chars {
    * @since v1.4.1
    */
   public static isAlpha(char: string): boolean {
-    if (char.length !== 1) return false;
+    if (char.length !== 1) {
+      return false;
+    }
     return Chars.isAlphaLower(char) || Chars.isAlphaUpper(char);
   }
 
@@ -130,7 +132,9 @@ export abstract class Chars {
    * @since v1.4.1
    */
   public static isAlphaLower(char: string): boolean {
-    if (char.length !== 1) return false;
+    if (char.length !== 1) {
+      return false;
+    }
     const charCode = char.charCodeAt(0);
     return charCode > 96 && charCode < 123;
   }
@@ -154,7 +158,9 @@ export abstract class Chars {
    * @since v1.4.1
    */
   public static isAlphaUpper(char: string): boolean {
-    if (char.length !== 1) return false;
+    if (char.length !== 1) {
+      return false;
+    }
     const charCode = char.charCodeAt(0);
     return charCode > 64 && charCode < 91;
   }

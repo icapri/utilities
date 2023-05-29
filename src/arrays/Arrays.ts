@@ -75,17 +75,16 @@ export abstract class Arrays {
    * @since v1.5.0
    */
   public static contains<T>(array: T[] | readonly T[], item: T): boolean {
-    let j = array.length - 1;
+    let i = 0, j = array.length - 1;
     if (j > -1) {
-      let i = 0;
       while (i <= j) {
         if (array[i] === item || array[j] === item) {
           return true;
         }
-        i++; j--;
+        i++;
+        j--;
       }
     }
-
     return false;
   }
 
@@ -112,14 +111,13 @@ export abstract class Arrays {
       array: T[] | readonly T[],
       ...items: T[]
   ): boolean {
-    let j = array.length - 1;
+    let i = 0, j = array.length - 1;
     if (j > -1) {
-      let i = 0;
       while (i <= j) {
-        let m = 0; let n = items.length - 1;
+        let m = 0; let n = items.length - 1, mi, ni;
         while (m <= n) {
-          const mi = items[m++];
-          const ni = items[n--];
+          mi = items[m++];
+          ni = items[n--];
           if (array[i] === mi || array[i] === ni ||
               array[j] === mi || array[j] === ni) {
             return true;
@@ -129,7 +127,6 @@ export abstract class Arrays {
         j--;
       }
     }
-
     return false;
   }
 
@@ -367,11 +364,12 @@ export abstract class Arrays {
    */
   public static intersperse<T>(array: T[], separator: T): T[] {
     const result: T[] = [];
-    for (let i = 0; i < array.length; i++) {
+    let i = 0;
+    for (; i < array.length;) {
       if (i !== 0) {
         result.push(separator);
       }
-      result.push(array[i]);
+      result.push(array[i++]);
     }
     return result;
   }
@@ -493,7 +491,6 @@ export abstract class Arrays {
         }
       }
     }
-
     return true;
   }
 
@@ -651,11 +648,8 @@ export abstract class Arrays {
     if (length < 2) {
       return array;
     }
-
-    const pivot = array[Math.floor(Math.random() * length)];
-    const l: T[] = [];
-    const r: T[] = [];
-    const e: T[] = [];
+    const pivot = array[Math.floor(Math.random() * length)],
+      l: T[] = [], r: T[] = [], e: T[] = [];
     array.reduce((acc, item) => {
       if (item < pivot) {
         l.push(item);
@@ -666,7 +660,6 @@ export abstract class Arrays {
       }
       return acc;
     }, []);
-
     return [
       ...Arrays.sort<any>(l),
       ...e,

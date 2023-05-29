@@ -5,6 +5,8 @@
 </p>
 <p align="center"><i>A modern framework intended for conversion, formatting, parsing, validation, and more.</i></p>
 
+[![NPM Version](https://img.shields.io/npm/v/utilitates?color=33cd56&logo=npm)](https://www.npmjs.com/package/utilitates)
+
 ## Description
 
 This library contains hundreds of utility methods such as converters, formatters, parsers, validators, etc. necessary for dealing with built-in JavaScript types such as `Array`, `Date`, `Map`, `Number`, `Object`, `Set` and `String`. The names of the abstract classes provided by this library are simply the plural form of the afore-mentioned types i. e. `Dates`, `Maps`, `Numbers`, `Objects`, `Sets` and `Strings`. These abstract classes are only composed of static members (utility methods). The motivation to build this library comes from the fact that often it becomes necessary to install several libraries e. g. one library for validations, another one for dealing with dates, another one for conversions, etc. This sometimes leads to serious performance issues on applications/libraries. `utilitates` does not depend on other libraries, it has its own implementation of each and every utility provided. This enables the developers of this library to continuously refactor and improve the code inside it.
@@ -140,7 +142,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v1.5.11
+Latest stable: v1.5.12
 
 ## License
 

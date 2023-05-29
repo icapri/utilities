@@ -387,10 +387,7 @@ export abstract class JsonSerializer {
    */
   private static __deserializeString(): string | Date {
     // parse a string value
-    let hex;
-    let string = '';
-    let uffff;
-    let iso = '';
+    let hex, string = '', uffff, iso = '';
     // look for " and \ characters
     if (JsonSerializer.__char === '"') {
       while (JsonSerializer.__next()) {
@@ -428,7 +425,6 @@ export abstract class JsonSerializer {
         }
       }
     }
-
     throw new SyntaxError('Cannot parse string "' + String(string) + '".');
   }
 
@@ -444,8 +440,7 @@ export abstract class JsonSerializer {
    * @since v1.5.5
    */
   private static __iter(holder: any, key: string): any {
-    let k;
-    let v;
+    let k, v;
     const value = (holder as any)[key];
     if (value && typeof value === 'object') {
       for (k in value) {

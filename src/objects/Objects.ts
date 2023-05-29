@@ -242,9 +242,8 @@ export abstract class Objects {
   public static isEmpty<T extends object | Object>(
       obj: T | Record<string, never>,
   ): obj is Record<string, never> {
-    const noProps = Object.getOwnPropertyNames(obj).length === 0;
-    const noSymbs = Object.getOwnPropertySymbols(obj).length === 0;
-    return noProps && noSymbs;
+    return Object.getOwnPropertyNames(obj).length === 0 &&
+      Object.getOwnPropertySymbols(obj).length === 0;
   }
 
   /**
@@ -374,7 +373,6 @@ export abstract class Objects {
         result[key] = value;
       }
     });
-
     return result;
   }
 

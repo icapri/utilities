@@ -284,8 +284,8 @@ export abstract class Dates {
    * is zeroed.
    */
   public static dateOnly(date: string | number | Date): Date {
-    const dateObj = Dates.tryParse(date);
-    const msFromDayStart = dateObj.getTime() % Dates.MS_IN_DAY;
+    const dateObj = Dates.tryParse(date),
+      msFromDayStart = dateObj.getTime() % Dates.MS_IN_DAY;
     return new Date(dateObj.getTime() - msFromDayStart);
   }
 
@@ -301,9 +301,9 @@ export abstract class Dates {
    */
   public static daysDifference(
       date: string | number | Date, other: string | number | Date): number {
-    const dateObj = Dates.tryParse(date);
-    const otherObj = Dates.tryParse(other);
-    const timeDiff = Dates.timeDifference(dateObj, otherObj);
+    const dateObj = Dates.tryParse(date),
+      otherObj = Dates.tryParse(other),
+      timeDiff = Dates.timeDifference(dateObj, otherObj);
     return Math.ceil(timeDiff / Dates.MS_IN_DAY);
   }
 
@@ -319,7 +319,6 @@ export abstract class Dates {
     if (month < 1 || month > 12 || year < 0 || year > 9999) {
       return -1;
     }
-
     return new Date(year, month, 0).getDate();
   }
 
@@ -337,14 +336,11 @@ export abstract class Dates {
       b: string | number | Date,
       ignoreTime: boolean = false,
   ): boolean {
-    const aObj = Dates.tryParse(a);
-    const bObj = Dates.tryParse(b);
+    const aObj = Dates.tryParse(a), bObj = Dates.tryParse(b);
     if (ignoreTime) {
-      const x = Dates.dateOnly(a);
-      const y = Dates.dateOnly(b);
+      const x = Dates.dateOnly(a), y = Dates.dateOnly(b);
       return x.getTime() === y.getTime();
     }
-
     return aObj.getTime() === bObj.getTime();
   }
 
@@ -379,9 +375,9 @@ export abstract class Dates {
    */
   public static hoursDifference(
       date: string | number | Date, other: string | number | Date): number {
-    const dateObj = Dates.tryParse(date);
-    const otherObj = Dates.tryParse(other);
-    const msDifference = Numbers.abs(dateObj.getTime() - otherObj.getTime());
+    const dateObj = Dates.tryParse(date),
+      otherObj = Dates.tryParse(other),
+      msDifference = Numbers.abs(dateObj.getTime() - otherObj.getTime());
     return msDifference / Dates.MS_IN_HOUR;
   }
 
@@ -400,13 +396,10 @@ export abstract class Dates {
       ignoreTime: boolean = false,
   ): boolean {
     if (ignoreTime) {
-      const x = Dates.dateOnly(date);
-      const y = Dates.dateOnly(other);
+      const x = Dates.dateOnly(date), y = Dates.dateOnly(other);
       return x.getTime() > y.getTime();
     }
-
-    const dateObj = Dates.tryParse(date);
-    const otherObj = Dates.tryParse(other);
+    const dateObj = Dates.tryParse(date), otherObj = Dates.tryParse(other);
     return dateObj.getTime() > otherObj.getTime();
   }
 
@@ -425,13 +418,11 @@ export abstract class Dates {
       ignoreTime: boolean = false,
   ): boolean {
     if (ignoreTime) {
-      const x = Dates.dateOnly(date);
-      const y = Dates.dateOnly(other);
+      const x = Dates.dateOnly(date), y = Dates.dateOnly(other);
       return x.getTime() < y.getTime();
     }
 
-    const dateObj = Dates.tryParse(date);
-    const otherObj = Dates.tryParse(other);
+    const dateObj = Dates.tryParse(date), otherObj = Dates.tryParse(other);
     return dateObj.getTime() < otherObj.getTime();
   }
 
@@ -505,7 +496,6 @@ export abstract class Dates {
     if (ignoreTime) {
       return Dates.isAfter(Dates.dateOnly(date), now);
     }
-
     return Dates.isAfter(date, now);
   }
 
@@ -533,13 +523,13 @@ export abstract class Dates {
       (iso.charAt(16) === ':') &&
       (iso.charAt(19) === '.') &&
       (iso.charAt(23) === 'Z')) {
-      const year = +iso.substring(0, 4);
-      const month = +iso.substring(5, 7);
-      const day = +iso.substring(8, 10);
-      const hour = +iso.substring(11, 13);
-      const minutes = +iso.substring(14, 16);
-      const seconds = +iso.substring(17, 19);
-      const milliseconds = +iso.substring(20, 23);
+      const year = +iso.substring(0, 4),
+        month = +iso.substring(5, 7),
+        day = +iso.substring(8, 10),
+        hour = +iso.substring(11, 13),
+        minutes = +iso.substring(14, 16),
+        seconds = +iso.substring(17, 19),
+        milliseconds = +iso.substring(20, 23);
       if (Numbers.isNatural(year) &&
         Numbers.isNatural(month) &&
         Numbers.isNatural(day) &&
@@ -586,8 +576,7 @@ export abstract class Dates {
    */
   public static millisecondsDifference(
       date: string | number | Date, other: string | number | Date): number {
-    const dateObj = Dates.tryParse(date);
-    const otherObj = Dates.tryParse(other);
+    const dateObj = Dates.tryParse(date), otherObj = Dates.tryParse(other);
     return Numbers.abs(dateObj.getTime() - otherObj.getTime());
   }
 
@@ -613,8 +602,7 @@ export abstract class Dates {
    */
   public static monthsDifference(
       date: string | number | Date, other: string | number | Date): number {
-    const dateObj = Dates.tryParse(date);
-    const otherObj = Dates.tryParse(other);
+    const dateObj = Dates.tryParse(date), otherObj = Dates.tryParse(other);
     let months;
     months = (otherObj.getFullYear() - dateObj.getFullYear()) * 12;
     months -= dateObj.getMonth();
@@ -626,8 +614,7 @@ export abstract class Dates {
    * Gets the local date and time now.
    */
   public static get now(): Date {
-    const dateNow = new Date();
-    const offset = Dates.getTimezoneOffset(dateNow);
+    const dateNow = new Date(), offset = Dates.getTimezoneOffset(dateNow);
     return new Date(dateNow.valueOf() - offset);
   }
 
@@ -642,7 +629,6 @@ export abstract class Dates {
     if (Dates.isDate(value) && Dates.isValid(value)) {
       return value;
     }
-
     return Dates.from(value);
   }
 
@@ -666,17 +652,21 @@ export abstract class Dates {
    * ISO 8601 date string; otherwise `null`.
    */
   public static parseISO(str?: string): Date | null {
-    if (!Strings.isString(str) || str.length === 0) return null;
-    const iso = str.trim(); const len = iso.length;
-    if (Strings.isEmpty(iso)) return null;
+    if (!Strings.isString(str) || str.length === 0) {
+      return null;
+    }
+    const iso = str.trim(), len = iso.length;
+    if (Strings.isEmpty(iso)) {
+      return null;
+    }
     if (len <= 24) {
-      const s1 = iso.charAt(4);
-      const s2 = iso.charAt(7);
-      const s3 = iso.charAt(10);
-      const s4 = iso.charAt(13);
-      const s5 = iso.charAt(16);
-      const s6 = iso.charAt(19);
-      const s7 = iso.charAt(23);
+      const s1 = iso.charAt(4),
+        s2 = iso.charAt(7),
+        s3 = iso.charAt(10),
+        s4 = iso.charAt(13),
+        s5 = iso.charAt(16),
+        s6 = iso.charAt(19),
+        s7 = iso.charAt(23);
 
       if (
         (s1 !== '-' && s1 !== '') ||
@@ -691,21 +681,23 @@ export abstract class Dates {
       }
 
       const yStr = iso.substring(0, 4);
-      if (Strings.isEmpty(yStr)) return null;
-      const MStr = iso.substring(5, 7);
-      const dStr = iso.substring(8, 10);
-      const hStr = iso.substring(11, 13);
-      const mStr = iso.substring(14, 16);
-      const sStr = iso.substring(17, 19);
-      const msStr = iso.substring(20, 23);
+      if (Strings.isEmpty(yStr)) {
+        return null;
+      }
+      const MStr = iso.substring(5, 7),
+        dStr = iso.substring(8, 10),
+        hStr = iso.substring(11, 13),
+        mStr = iso.substring(14, 16),
+        sStr = iso.substring(17, 19),
+        msStr = iso.substring(20, 23);
 
-      const year = +yStr;
-      const month = Strings.isEmpty(MStr) ? 1 : +MStr;
-      const day = Strings.isEmpty(dStr) ? 1 : +dStr;
-      const hour = Strings.isEmpty(hStr) ? 0 : +hStr;
-      const minutes = Strings.isEmpty(mStr) ? 0 : +mStr;
-      const seconds = Strings.isEmpty(sStr) ? 0 : +sStr;
-      const milliseconds = Strings.isEmpty(msStr) ? 0 : +msStr;
+      const year = +yStr,
+        month = Strings.isEmpty(MStr) ? 1 : +MStr,
+        day = Strings.isEmpty(dStr) ? 1 : +dStr,
+        hour = Strings.isEmpty(hStr) ? 0 : +hStr,
+        minutes = Strings.isEmpty(mStr) ? 0 : +mStr,
+        seconds = Strings.isEmpty(sStr) ? 0 : +sStr,
+        milliseconds = Strings.isEmpty(msStr) ? 0 : +msStr;
       if (!Numbers.isNatural(year) ||
         !Numbers.isNatural(month) ||
         !Numbers.isNatural(day) ||
@@ -733,15 +725,14 @@ export abstract class Dates {
         const daysOfMonth = Dates.daysOfMonth(month, year);
         if (day > 0 && day <= daysOfMonth) {
           const date = new Date(
-              year,
-              month - 1,
-              day,
-              hour,
-              minutes,
-              seconds,
-              milliseconds,
-          );
-          const offset = Dates.getTimezoneOffset(date);
+                year,
+                month - 1,
+                day,
+                hour,
+                minutes,
+                seconds,
+                milliseconds,
+            ), offset = Dates.getTimezoneOffset(date);
           return new Date(date.valueOf() - offset);
         }
       }
@@ -762,7 +753,6 @@ export abstract class Dates {
     if (days === 0) {
       return dateObj;
     }
-
     dateObj.setDate(dateObj.getDate() - days);
     return dateObj;
   }
@@ -778,8 +768,7 @@ export abstract class Dates {
       date: string | number | Date,
       other: string | number | Date,
   ): number {
-    const dateObj = Dates.tryParse(date);
-    const otherObj = Dates.tryParse(other);
+    const dateObj = Dates.tryParse(date), otherObj = Dates.tryParse(other);
     return Numbers.abs(otherObj.getTime() - dateObj.getTime());
   }
 
@@ -799,11 +788,11 @@ export abstract class Dates {
    * @return {Date} a date object representing the local date.
    */
   public static toLocalDate(date: string | number | Date): Date {
-    const dateObj = Dates.tryParse(date);
-    const offsetInMs = dateObj.getTimezoneOffset() * Dates.MS_IN_MINUTE;
-    const localDate = new Date(dateObj.getTime() + offsetInMs);
-    const offset = dateObj.getTimezoneOffset() / 60;
-    const hours = dateObj.getHours();
+    const dateObj = Dates.tryParse(date),
+      offsetInMs = dateObj.getTimezoneOffset() * Dates.MS_IN_MINUTE,
+      localDate = new Date(dateObj.getTime() + offsetInMs),
+      offset = dateObj.getTimezoneOffset() / 60,
+      hours = dateObj.getHours();
     localDate.setHours(hours - offset);
     return localDate;
   }
@@ -856,7 +845,6 @@ export abstract class Dates {
         }
       }
     }
-
     return null;
   }
 
@@ -886,7 +874,6 @@ export abstract class Dates {
     if (date === null) {
       throw new TypeError(`Cannot parse date: "${String(value)}"`);
     }
-
     return date;
   }
 
