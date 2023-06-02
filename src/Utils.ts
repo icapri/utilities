@@ -28,17 +28,21 @@ export abstract class Utils {
   }
 
   /**
-   * Checks whether the specified value is a `Blob` instance.
-   *
-   * @param {*} value Contains some value.
-   * @return {Boolean} whether the specified value is a `Blob` instance.
-   *
-   * @since v1.5.6
+   * Gets the global object.
    */
-  public static isBlob(value?: any): value is Blob {
-    return Objects.getType(value) === '[object Blob]';
+  public static get globalScope(): typeof globalThis |
+    (Window & typeof globalThis) {
+    if (Objects.isObject(window) && window.window === window) {
+      return window;
+    }
+    if (Objects.isObject(self) && self.self === self) {
+      return self;
+    }
+    if (Objects.isObject(global) && global.global === global) {
+      return global;
+    }
+    throw new Error('Noop!');
   }
-
 
   /**
    * Checks whether the given value is of boolean type.
@@ -69,7 +73,7 @@ export abstract class Utils {
    * @since v1.5.6
    */
   public static isError(value?: any): value is Error {
-    return Objects.getType(value) === '[object Error]';
+    return Objects.toString(value) === '[object Error]';
   }
 
   /**
@@ -102,7 +106,7 @@ export abstract class Utils {
    * @since v1.5.6
    */
   public static isFile(value?: any): value is File {
-    return Objects.getType(value) === '[object File]';
+    return Objects.toString(value) === '[object File]';
   }
 
   /**
@@ -204,7 +208,7 @@ export abstract class Utils {
    * @since v1.5.6
    */
   public static isPromise(value?: any): value is Promise<any> {
-    return Objects.getType(value) === '[object Promise]';
+    return Objects.toString(value) === '[object Promise]';
   }
 
   /**
@@ -215,7 +219,7 @@ export abstract class Utils {
    */
   public static isRegExp(value?: any): value is RegExp {
     return Objects.isObject(value) &&
-      Objects.getType(value) === '[object RegExp]';
+      Objects.toString(value) === '[object RegExp]';
   }
 
   /**

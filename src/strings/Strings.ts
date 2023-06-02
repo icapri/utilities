@@ -1483,7 +1483,7 @@ export abstract class Strings {
    * @return {Boolean} whether the specified value is a string object.
    */
   public static isStringObject(str?: any): str is String {
-    return Objects.isObject(str) && Objects.getType(str) === '[object String]';
+    return Objects.isObject(str) && Objects.toString(str) === '[object String]';
   }
 
   /**

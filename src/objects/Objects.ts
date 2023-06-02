@@ -186,23 +186,6 @@ export abstract class Objects {
   }
 
   /**
-   * Gets the object type of JavaScript built-in types such as `String`,
-   * `RegExp`, `Number`, `Date`, etc.
-   *
-   * **Usage Examples:**
-   * ```typescript
-   * Objects.getType("abc"); // "[object String]"
-   * Objects.getType(new Date()); // "[object Date]"
-   * ```
-   *
-   * @param {Object} obj Contains some object.
-   * @return {String} the object type.
-   */
-  public static getType<T extends object>(obj?: T): string {
-    return Object.prototype.toString.call(obj);
-  }
-
-  /**
    * Checks whether the given object has a property with the given name.
    *
    * @param {Object} obj Contains some object.
@@ -343,12 +326,12 @@ export abstract class Objects {
       value?: any,
   ): value is Record<string | number | symbol, any> {
     if (Objects.isObject(value) &&
-      Objects.getType(value) === '[object Object]') {
+      Objects.toString(value) === '[object Object]') {
       const Ctor = value.constructor;
       if (Utils.isFunction(Ctor)) {
         const proto = Ctor.prototype;
         return Objects.isObject(proto) &&
-          Objects.getType(proto) === '[object Object]' &&
+          Objects.toString(proto) === '[object Object]' &&
           proto.hasOwnProperty('isPrototypeOf');
       }
     }

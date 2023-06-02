@@ -2,6 +2,7 @@
  * utilitates - The Public API
  */
 export {Arrays} from './arrays/Arrays';
+export {Blobs} from './blobs/Blobs';
 export {Chars} from './chars/Chars';
 export {Dates} from './dates/Dates';
 export {Maps} from './maps/Maps';

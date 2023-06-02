@@ -3,13 +3,13 @@
   <img src="/docs/logo.png" alt="Utilitates Logo" width="120px" height="115px"/>
   <h2 align="center">Utility Framework</h1>
 </p>
-<p align="center"><i>A modern framework intended for conversion, formatting, parsing, validation, and more.</i></p>
+<p align="center"><i>A modern framework for conversion, formatting, parsing, validation, and more.</i></p>
 
 [![NPM Version](https://img.shields.io/npm/v/utilitates?color=33cd56&logo=npm)](https://www.npmjs.com/package/utilitates)
 
 ## Description
 
-This library contains hundreds of utility methods such as converters, formatters, parsers, validators, etc. necessary for dealing with built-in JavaScript types such as `Array`, `Date`, `Map`, `Number`, `Object`, `Set` and `String`. The names of the abstract classes provided by this library are simply the plural form of the afore-mentioned types i. e. `Dates`, `Maps`, `Numbers`, `Objects`, `Sets` and `Strings`. These abstract classes are only composed of static members (utility methods). The motivation to build this library comes from the fact that often it becomes necessary to install several libraries e. g. one library for validations, another one for dealing with dates, another one for conversions, etc. This sometimes leads to serious performance issues on applications/libraries. `utilitates` does not depend on other libraries, it has its own implementation of each and every utility provided. This enables the developers of this library to continuously refactor and improve the code inside it.
+This library contains hundreds of utility methods such as converters, formatters, parsers, validators, etc. necessary for dealing with built-in JavaScript types such as `Array`, `Blob`, `Date`, `Map`, `Number`, `Object`, `Set` and `String`. The names of the abstract classes provided by this library are simply the plural form of the afore-mentioned types i. e. `Arrays`, `Blobs`, `Dates`, `Maps`, `Numbers`, `Objects`, `Sets` and `Strings`. These abstract classes are only composed of static members (utility methods). The motivation to build this library comes from the fact that often it becomes necessary to install several libraries e. g. one library for validations, another one for dealing with dates, another one for conversions, etc. This sometimes leads to serious performance issues on applications/libraries. `utilitates` does not depend on other libraries, it has its own implementation of each and every utility provided. This enables the developers of this library to continuously refactor and improve the code inside it.
 
 ## Installation
 
@@ -42,6 +42,14 @@ Arrays.isNotEmpty(["a", "b", "c"]); // true
 Arrays.isEmpty([]); // true
 Arrays.has(["a", "b", "c"], "a"); // true
 Arrays.last(["a", "b", "c"]); // "c"
+
+// Blobs examples:
+await Blobs.fromObjectURL('some/url');
+Blobs.isBlob(new Blob());
+await Blobs.toBase64(blob);
+Blobs.toFile(blob);
+await Blobs.toImageData(blob);
+await Blobs.toObjectURL(blob);
 
 // Chars examples:
 Chars.isAlpha('E'); // true
@@ -142,7 +150,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v1.5.12
+Latest stable: v1.6.1
 
 ## License
 

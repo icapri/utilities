@@ -381,7 +381,7 @@ export abstract class Arrays {
    * @return {Boolean} whether the given value is an array.
    */
   public static isArray(value?: any | any[]): value is any[] {
-    return Objects.getType(value) === '[object Array]';
+    return Objects.toString(value) === '[object Array]';
   }
 
   /**
@@ -398,7 +398,7 @@ export abstract class Arrays {
    */
   public static isArrayBuffer(value?: any): boolean {
     return Utils.isNotNil(value) &&
-      Objects.getType(value) === '[object ArrayBuffer]';
+      Objects.toString(value) === '[object ArrayBuffer]';
   }
 
   /**
@@ -550,7 +550,7 @@ export abstract class Arrays {
       '[object Uint8ClampedArray]',
       '[object Uint16Array]',
       '[object Uint32Array]',
-    ].includes(Objects.getType(value));
+    ].includes(Objects.toString(value));
   }
 
   /**

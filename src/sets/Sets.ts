@@ -50,7 +50,7 @@ export abstract class Sets {
    * @return {Boolean} whether the given value is of type `WeakSet`.
    */
   public static isWeakSet(value?: any): value is WeakSet<any> {
-    return Objects.getType(value) === '[object WeakSet]';
+    return Objects.toString(value) === '[object WeakSet]';
   }
 
   /**

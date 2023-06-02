@@ -111,7 +111,7 @@ export abstract class Numbers {
    */
   public static isNumberObject(value?: any): value is Number {
     return Objects.isObject(value) &&
-      Objects.getType(value) === '[object Number]';
+      Objects.toString(value) === '[object Number]';
   }
 
   /**
@@ -139,6 +139,18 @@ export abstract class Numbers {
       }
     }
     return num > 1;
+  }
+
+  /**
+   * Pads the specified number.
+   *
+   * @param {Number} num Contains some number.
+   * @return {String} a string.
+   *
+   * @since v1.5.13
+   */
+  public static pad(num: number): string {
+    return num < 10 ? '0' + num.toString(10) : num.toString(10);
   }
 
   /**

@@ -50,7 +50,7 @@ export abstract class Maps {
    * @return {Boolean} whether the specified value is of type `WeakMap`.
    */
   public static isWeakMap(value?: any): value is WeakMap<any, any> {
-    return Objects.getType(value) === '[object WeakMap]';
+    return Objects.toString(value) === '[object WeakMap]';
   }
 
   /**
