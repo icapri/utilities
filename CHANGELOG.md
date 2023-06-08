@@ -7,3 +7,9 @@
 
 ### Removed
 * The static method `Objects.getType()` as it exists as `Objects.toString()`.
+
+* ## `v1.6.2` - 2023-06-08
+### Added
+* Method overloadings for all the `Dates` methods where for arguments an union type like
+`Date | number | string` is used.
+* Improved inline documentation for all the `Dates` utility methods.

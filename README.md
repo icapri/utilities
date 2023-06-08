@@ -26,6 +26,7 @@ This library is simply composed of abstract classes which can be used as follows
 ```typescript
 import {
   Arrays,
+  Blobs,
   Dates,
   Maps,
   Numbers,
@@ -150,7 +151,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v1.6.1
+Latest stable: v1.6.2
 
 ## License
 

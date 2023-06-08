@@ -1193,7 +1193,7 @@ export abstract class Strings {
    * one byte.
    */
   public static isBinary(str: string): boolean {
-    return !/[^\u0000-\u00ff]/.test(str);
+    return /[^\u0000-\u00ff]/.test(str) === false;
   }
 
   /**
