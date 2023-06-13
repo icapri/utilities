@@ -21,21 +21,6 @@ describe('Strings', () => {
         'Lorem ipsum');
   });
 
-  test('Strings.at()', () => {
-    expect(Strings.at('', 0)).toEqual('');
-    expect(Strings.at('', -1)).toEqual('');
-    expect(Strings.at('', -0)).toEqual('');
-    expect(Strings.at(' ', 0)).toEqual(' ');
-    expect(Strings.at('abc', -23)).toEqual('');
-    expect(Strings.at('abc', 3)).toEqual('');
-    expect(Strings.at('abcde', 4)).toEqual('e');
-    expect(Strings.at('\\\r', 0)).toEqual('\\');
-    expect(Strings.at('\\\r', 1)).toEqual('\r');
-    expect(Strings.at('\\\r\t', 2)).toEqual('\t');
-    expect(Strings.at('\n\t\f\n', 2)).toEqual('\f');
-    expect(Strings.at('\t\f\n', 2)).toEqual('\n');
-  });
-
   test('Strings.chomp()', () => {
     expect(Strings.chomp('')).toEqual('');
     expect(Strings.chomp('\n')).toEqual('');
@@ -342,15 +327,6 @@ describe('Strings', () => {
     expect(Strings.hasWhitespace('Lorem\f')).toEqual(true);
   });
 
-  test('Strings.indexOf()', () => {
-    expect(Strings.indexOf('', '')).toEqual(0);
-    expect(Strings.indexOf('abc', '')).toEqual(0);
-    expect(Strings.indexOf('Lorem', 'em')).toEqual(3);
-    expect(Strings.indexOf('Lorem', 'am')).toEqual(-1);
-    expect(Strings.indexOf('Lorem', 'rem')).toEqual(2);
-    expect(Strings.indexOf('abcde', 'de')).toEqual(3);
-  });
-
   test('Strings.indexOfAny()', () => {
     expect(Strings.indexOfAny('Lorem')).toEqual(-1);
     expect(Strings.indexOfAny('Lorem', '')).toEqual(0);
@@ -648,13 +624,6 @@ describe('Strings', () => {
         'Johndoe', 'John', 'jsdcdscsdcd')).toEqual('jsdcdscsdcd');
   });
 
-  test('Strings.lowerCase()', () => {
-    expect(Strings.lowerCase('JOHNDOE')).toEqual('johndoe');
-    expect(Strings.lowerCase('')).toEqual('');
-    expect(Strings.lowerCase('123')).toEqual('123');
-    expect(Strings.lowerCase('A123BC')).toEqual('a123bc');
-  });
-
   test('Strings.normalize()', () => {
     expect(Strings.normalize('')).toEqual(Strings.EMPTY);
     expect(Strings.normalize('  Bye    -  bye   ! ')).toEqual('Bye - bye !');
@@ -757,13 +726,6 @@ describe('Strings', () => {
     expect(Strings.startsWithAny('abc', 'C')).toEqual(false);
     expect(Strings.startsWithAny('abc', 'C', 'z', 'a')).toEqual(true);
     expect(Strings.startsWithAny('abc def', ...['C', 'z', 'a'])).toEqual(true);
-  });
-
-  test('Strings.strip()', () => {
-    expect(Strings.strip('')).toEqual('');
-    expect(Strings.strip(' ')).toEqual('');
-    expect(Strings.strip('  John ')).toEqual('John');
-    expect(Strings.strip('\nJohn Doe\t\r\f')).toEqual('John Doe');
   });
 
   test('Strings.toBinary()', () => {
@@ -885,18 +847,6 @@ describe('Strings', () => {
         '\t\nLorem  Ipsum\tDolor\nSit');
     expect(Strings.toTitleCase('\nabC')).toEqual('\nAbc');
     expect(Strings.toTitleCase('ab\t\f\t\nc')).toEqual('Ab\t\f\t\nC');
-  });
-
-  test('Strings.trim()', () => {
-    expect(Strings.trim('')).toEqual('');
-    expect(Strings.trim(' ')).toEqual('');
-    expect(Strings.trim('  ')).toEqual('');
-    expect(Strings.trim('\t\t\r\n\f')).toEqual('');
-    expect(Strings.trim('\tabc\n\n\t')).toEqual('abc');
-    expect(Strings.trim('  abc  de  ')).toEqual('abc  de');
-    expect(Strings.trim('  abc de ')).toEqual('abc de');
-    expect(Strings.trim(' abc  de  ')).toEqual('abc  de');
-    expect(Strings.trim(' abc  de ')).toEqual('abc  de');
   });
 
   test('Strings.upperFirst()', () => {

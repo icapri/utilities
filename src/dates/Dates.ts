@@ -1351,7 +1351,9 @@ export abstract class Dates {
    * @return {Boolean} whether the given date is in the future.
    */
   public static isFuture(
-      date: string | number | Date, ignoreTime: boolean = false): boolean {
+      date: string | number | Date,
+      ignoreTime: boolean = false,
+  ): boolean {
     const now = Dates.now;
     if (ignoreTime) {
       return Dates.isAfter(Dates.dateOnly(date), now);

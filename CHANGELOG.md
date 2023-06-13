@@ -13,3 +13,7 @@
 * Method overloadings for all the `Dates` methods where for arguments an union type like
 `Date | number | string` is used.
 * Improved inline documentation for all the `Dates` utility methods.
+
+* ## `v1.6.3` - 2023-06-13
+### Removed
+* `Strings` methods which exist in `String` (no reinvention of the wheel).

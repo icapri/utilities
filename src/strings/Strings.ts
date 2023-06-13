@@ -96,30 +96,6 @@ export abstract class Strings {
   }
 
   /**
-   * Gets the character at the specified index in the specified string.
-   *
-   * **Usage Examples:**
-   * ```typescript
-   * Strings.at("", 0); // ""
-   * Strings.at(" ", 0); // " "
-   * Strings.at("abc", 1); // "b"
-   * ```
-   *
-   * @param {String} str Contains some string.
-   * @param {Number} index Contains the index of the character.
-   * @return {String} the character at the specified index in the specified
-   * string.
-   */
-  public static at(str: string, index: number): string {
-    const l = str.length;
-    if (l > 0 && Numbers.isNatural(index) && index < l) {
-      return str.charAt(index);
-    }
-
-    return Strings.EMPTY;
-  }
-
-  /**
    * Removes a newline from the end of the specified string if there
    * is such one.
    *
@@ -245,9 +221,9 @@ export abstract class Strings {
   ): boolean {
     if (ignoreCase) {
       const subLow = substring.toLowerCase();
-      return Strings.indexOf(str.toLowerCase(), subLow) !== Strings.NOT_FOUND;
+      return str.toLowerCase().indexOf(subLow) !== Strings.NOT_FOUND;
     }
-    return Strings.indexOf(str, substring) !== Strings.NOT_FOUND;
+    return str.indexOf(substring) !== Strings.NOT_FOUND;
   }
 
   /**
@@ -920,44 +896,6 @@ export abstract class Strings {
   }
 
   /**
-   * Gets the index of the specified substring in the specified string. If
-   * the specified substring is not contained in it, -1 is returned.
-   *
-   * **Usage Examples:**
-   * ```typescript
-   * Strings.indexOf("", ""); // 0
-   * Strings.indexOf("abc", ""); // 0
-   * Strings.indexOf("abc", "d"); // -1
-   * Strings.indexOf("abcde", "de"); // 3
-   * ```
-   *
-   * @param {String} str Contains some string.
-   * @param {String} substring Contains some substring.
-   * @return {Number} the index of the specified substring in the specified
-   * string. If the specified substring is not contained in the specified
-   * string, -1 is returned.
-   */
-  public static indexOf(str: string, substring: string): number {
-    const m = str.length, n = substring.length;
-    if (n === 0) {
-      return 0;
-    }
-    if (n <= m) {
-      let i = 0;
-      while (i < m) {
-        if (str.charAt(i) === substring.charAt(0) && n <= m - i &&
-          str.substring(i, i + n) === substring) {
-          return i;
-        }
-
-        i++;
-      }
-    }
-
-    return Strings.NOT_FOUND;
-  }
-
-  /**
    * Gets the first index of any of the specified substrings in the
    * specified string.
    *
@@ -980,7 +918,7 @@ export abstract class Strings {
     if (l > 0) {
       let i = 0, idx;
       while (i < l) {
-        idx = Strings.indexOf(str, substrings[i++]);
+        idx = str.indexOf(substrings[i++]);
         if (idx >= 0) {
           return idx;
         }
@@ -1042,7 +980,7 @@ export abstract class Strings {
    * string.
    */
   public static indexOfIgnoreCase(str: string, sequence: string): number {
-    return Strings.indexOf(str.toLowerCase(), sequence.toLowerCase());
+    return str.toLowerCase().indexOf(sequence.toLowerCase());
   }
 
   /**
@@ -1753,23 +1691,6 @@ export abstract class Strings {
   }
 
   /**
-   * Converts the specified string to upper case.
-   *
-   * **Usage Examples:**
-   * ```typescript
-   * Strings.toLowerCase(""); // ""
-   * Strings.toLowerCase("abc"); // "abc"
-   * Strings.toLowerCase("AbC"); // "abc"
-   * ```
-   *
-   * @param {String} str Contains some string.
-   * @return {String} the string converted to upper case.
-   */
-  public static lowerCase(str: string): string {
-    return str.toLowerCase();
-  }
-
-  /**
    * Normalizes the string white spaces i. e. if there are more than one
    * consecutive white space, only one of them remains.
    *
@@ -1893,14 +1814,15 @@ export abstract class Strings {
   public static remove(str: string, substring: string): string {
     const l = str.length, sl = substring.length;
     if (l === 0 || sl === 0 ||
-        Strings.indexOf(str, substring) === Strings.NOT_FOUND) {
+      str.indexOf(substring) === Strings.NOT_FOUND) {
       return str;
     }
 
-    let i = 0, r = Strings.EMPTY;
+    const c0 = substring.charAt(0);
+    let i = 0, r = Strings.EMPTY, ci;
     if (sl <= l) {
       while (i < l) {
-        const ci = str.charAt(i), c0 = substring.charAt(0);
+        ci = str.charAt(i);
         if (ci === c0 && sl <= l - i &&
             str.substring(i, i + sl) === substring) {
           i += sl - 1;
@@ -2114,33 +2036,12 @@ export abstract class Strings {
     const l = substrings.length;
     if (l > 0) {
       while (i < l) {
-        if (Strings.indexOf(str, substrings[i++]) === 0) {
+        if (str.indexOf(substrings[i++]) === 0) {
           return true;
         }
       }
     }
     return false;
-  }
-
-  /**
-   * Removes the white spaces from the beginning and from the end of the
-   * specified string.
-   *
-   * **Usage Examples:**
-   * ```typescript
-   * Strings.strip(""); // ""
-   * Strings.strip(" "); // ""
-   * Strings.strip("  abc "); // "abc"
-   * Strings.strip("\nabc def\t\r\f"); // "abc def"
-   * ```
-   *
-   * @param {String} str Contains some string.
-   * @return {String} the trimmed string.
-   *
-   * @see `Strings.trim()`
-   */
-  public static strip(str: string): string {
-    return Strings.trim(str);
   }
 
   /**
@@ -2391,66 +2292,6 @@ export abstract class Strings {
       i++;
     }
     return r;
-  }
-
-  /**
-   * Removes the whitespaces both from the beginning and from the
-   * end of the specified string.
-   *
-   * **Usage Examples:**
-   * ```typescript
-   * Strings.trim(""); // ""
-   * Strings.trim(" "); // ""
-   * Strings.trim(" abc "); // "abc"
-   * Strings.trim("\nabc\t"); // "abc"
-   * Strings.trim(" abc  ab       d \n\t\f"); // "abc  ab       d"
-   * ```
-   *
-   * @param {String} str Contains some string.
-   * @return {String} the trimmed string.
-   *
-   * @see `Strings.strip()`
-   */
-  public static trim(str: string): string {
-    const l = str.length;
-    if (l === 0) {
-      return str;
-    }
-    if (Strings.isWhitespace(str)) {
-      return Strings.EMPTY;
-    }
-    let i = 0, j = l - 1, si, sj;
-    while (i <= j) {
-      si = Chars.isWhitespace(str.charAt(i));
-      sj = Chars.isWhitespace(str.charAt(j));
-      if (!si && !sj) {
-        return str.substring(i, j + 1);
-      }
-      if (si) {
-        i++;
-      }
-      if (sj) {
-        j--;
-      }
-    }
-    return str;
-  }
-
-  /**
-   * Converts the specified string to uppercase.
-   *
-   * **Usage Examples:**
-   * ```typescript
-   * Strings.upperCase(""); // ""
-   * Strings.upperCase("ABC"); // "ABC"
-   * Strings.upperCase("abC"); // "ABC"
-   * ```
-   *
-   * @param {String} str Contains some string.
-   * @return {String} the string converted to upper case.
-   */
-  public static upperCase(str: string): string {
-    return str.toUpperCase();
   }
 
   /**
