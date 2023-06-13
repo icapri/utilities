@@ -641,30 +641,15 @@ export abstract class Arrays {
    * Sorts the specified array.
    *
    * @param {Array} array Contains some array.
+   * @param {String} order Contains the sorting order. Possible values are
+   * `asc` (ascending order) and `desc` (descending order). Defaults to `desc`.
    * @return {Array} the sorted array.
    */
-  public static sort<T>(array: T[]): T[] {
-    const length = array.length;
-    if (length < 2) {
-      return array;
+  public static sort<T>(array: T[], order: 'asc' | 'desc' = 'desc'): T[] {
+    if (order !== 'asc' && order !== 'desc') {
+      throw new TypeError(`Unknown sorting order "${order}".`);
     }
-    const pivot = array[Math.floor(Math.random() * length)],
-      l: T[] = [], r: T[] = [], e: T[] = [];
-    array.reduce((acc, item) => {
-      if (item < pivot) {
-        l.push(item);
-      } else if (item > pivot) {
-        r.push(item);
-      } else {
-        e.push(item);
-      }
-      return acc;
-    }, []);
-    return [
-      ...Arrays.sort<any>(l),
-      ...e,
-      ...Arrays.sort<any>(r),
-    ];
+    return order === 'asc' ? Arrays.__sortAsc(array) : Arrays.__sortDesc(array);
   }
 
   /**
@@ -716,5 +701,41 @@ export abstract class Arrays {
    */
   public static unique<T>(array: T[] | readonly T[]): T[] | readonly T[] {
     return [...new Set(array)];
+  }
+
+  /* eslint-disable-next-line require-jsdoc */
+  private static __sortAsc<T>(arr: T[]): T[] {
+    if (arr.length < 2) {
+      return arr;
+    }
+    let i = 1, e;
+    const l = [], p = arr[0], r = [];
+    for (; i < arr.length; i++) {
+      e = arr[i];
+      if (e < p) {
+        l.push(e);
+      } else {
+        r.push(e);
+      }
+    }
+    return [...Arrays.__sortAsc(l), p, ...Arrays.__sortAsc(r)];
+  }
+
+  /* eslint-disable-next-line require-jsdoc */
+  private static __sortDesc<T>(array: T[]): T[] {
+    if (array.length < 2) {
+      return array;
+    }
+    let i = 1, e;
+    const l = [], p = array[0], r = [];
+    for (; i < array.length; i++) {
+      e = array[i];
+      if (e >= p) {
+        l.push(e);
+      } else {
+        r.push(e);
+      }
+    }
+    return [...Arrays.__sortDesc(l), p, ...Arrays.__sortDesc(r)];
   }
 }

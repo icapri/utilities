@@ -159,7 +159,13 @@ describe('Arrays', () => {
 
   test('Arrays.sort()', () => {
     const array = [7, 1, 6, 3, 5, 8, 2, 9, 4];
-    expect(Arrays.sort(array)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    expect(Arrays.sort(array, 'asc')).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    expect(Arrays.sort(array)).toEqual([9, 8, 7, 6, 5, 4, 3, 2, 1]);
+    const arr = ['alpha', 'beta', 'gamma'];
+    expect(Arrays.sort(arr, 'asc')).toEqual(arr);
+    expect(Arrays.sort(arr)).toEqual(['gamma', 'beta', 'alpha']);
+    expect(() => Arrays.sort([], 'abc' as any))
+        .toThrowError(/Unknown sorting order/);
   });
 
   test('Arrays.sum()', () => {

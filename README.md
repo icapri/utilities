@@ -1,11 +1,18 @@
 <p align="center">
   <br>
   <img src="/docs/logo.png" alt="Utilitates Logo" width="120px" height="115px"/>
-  <h2 align="center">Utility Framework</h1>
+  <h2 align="center">Utility Framework Core</h1>
 </p>
 <p align="center"><i>A modern framework for conversion, formatting, parsing, validation, and more.</i></p>
 
-[![NPM Version](https://img.shields.io/npm/v/utilitates?color=33cd56&logo=npm)](https://www.npmjs.com/package/utilitates)
+<p>
+  <a href="https://www.npmjs.com/package/utilitates">
+    <img src="https://img.shields.io/npm/v/utilitates?color=33cd56&logo=npm&label=Version">
+  </a>
+  <a href="https://github.com/icapri/utilities/blob/main/LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-purple.svg">
+  </a>
+</p>
 
 ## Description
 
@@ -151,7 +158,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v1.6.2
+Latest stable: v1.6.4
 
 ## License
 
