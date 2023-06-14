@@ -23,6 +23,7 @@ describe('Arrays', () => {
   });
 
   test('Arrays.containsAny()', () => {
+    expect(Arrays.containsAny([])).toEqual(false);
     expect(Arrays.containsAny([], 'a')).toEqual(false);
     expect(Arrays.containsAny([''], '')).toEqual(true);
     expect(Arrays.containsAny(
@@ -36,6 +37,23 @@ describe('Arrays', () => {
         .toEqual(true);
     expect(Arrays.containsAny(['🐑', '🐑', '🐑', '😀', '💖'], 'a', 'b'))
         .toEqual(false);
+  });
+
+  test('Arrays.containsNone()', () => {
+    expect(Arrays.containsNone([])).toEqual(true);
+    expect(Arrays.containsNone([], 'a')).toEqual(true);
+    expect(Arrays.containsNone([''], '')).toEqual(false);
+    expect(Arrays.containsNone(
+        ['a', 1, false, Symbol.iterator], Symbol.iterator),
+    ).toEqual(false);
+    expect(Arrays.containsNone(['🐑', '🐑', '🐑', '😀', '💖'], '🐑')).toEqual(false);
+    expect(Arrays.containsNone(
+        ['a', 1, false, Symbol.iterator], 'c', Symbol.iterator),
+    ).toEqual(false);
+    expect(Arrays.containsNone(['🐑', '🐑', '🐑', '😀', '💖'], '🐑', '💖'))
+        .toEqual(false);
+    expect(Arrays.containsNone(['🐑', '🐑', '🐑', '😀', '💖'], 'a', 'b'))
+        .toEqual(true);
   });
 
   test('Arrays.each()', () => {
@@ -119,6 +137,15 @@ describe('Arrays', () => {
     expect(Arrays.isNotEmpty([null])).toEqual(true);
   });
 
+  test('Arrays.isSorted()', () => {
+    expect(Arrays.isSorted([])).toEqual(true);
+    expect(Arrays.isSorted([9, 8, 7, 6, 5, 4])).toEqual(false);
+    expect(Arrays.isSorted([4, 1, 8, 3, 9, 7])).toEqual(false);
+    expect(Arrays.isSorted([1, 2, 3, 4, 5, 6, 7, 8, 9])).toEqual(true);
+    const array: readonly number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    expect(Arrays.isSorted(array)).toEqual(true);
+  });
+
   test('Arrays.isTypedArray()', () => {
     expect(Arrays.isTypedArray([])).toEqual(false);
     expect(Arrays.isTypedArray([null])).toEqual(false);
@@ -138,6 +165,14 @@ describe('Arrays', () => {
   test('Arrays.last()', () => {
     expect(Arrays.last([])).toEqual(null);
     expect(Arrays.last(['a', 'b'])).toEqual('b');
+  });
+
+  test('Arrays.removeAll()', () => {
+    expect(Arrays.removeAll([], 0)).toEqual([]);
+    expect(Arrays.removeAll([0], 0)).toEqual([]);
+    expect(Arrays.removeAll([1, 2, 3], 1, 2, 3)).toEqual([]);
+    expect(Arrays.removeAll(['a', 'b', 'c', 'd', 'e'], 'b', 'd'))
+        .toEqual(['a', 'c', 'e']);
   });
 
   test('Arrays.removeAt()', () => {
@@ -166,6 +201,17 @@ describe('Arrays', () => {
     expect(Arrays.sort(arr)).toEqual(['gamma', 'beta', 'alpha']);
     expect(() => Arrays.sort([], 'abc' as any))
         .toThrowError(/Unknown sorting order/);
+  });
+
+  test('Arrays.subarray()', () => {
+    expect(Arrays.subarray([], 0)).toEqual([]);
+    expect(Arrays.subarray([1, 2, 3], 0)).toEqual([1, 2, 3]);
+    expect(Arrays.subarray([1, 2, 3], 1)).toEqual([2, 3]);
+    const array: readonly number[] = [1, 2, 3];
+    expect(Arrays.subarray(array, 1)).toEqual([2, 3]);
+    expect(Arrays.subarray([1, 2, 3, 4], 1, 3)).toEqual([2, 3]);
+    expect(Arrays.subarray([1, 2, 3, 4], 0, 15)).toEqual([1, 2, 3, 4]);
+    expect(Arrays.subarray([1, 2, 3, 4], -1000)).toEqual([1, 2, 3, 4]);
   });
 
   test('Arrays.sum()', () => {

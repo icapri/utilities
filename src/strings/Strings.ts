@@ -1812,25 +1812,16 @@ export abstract class Strings {
    * @return {String} the string without the specified substring occurrences.
    */
   public static remove(str: string, substring: string): string {
-    const l = str.length, sl = substring.length;
-    if (l === 0 || sl === 0 ||
-      str.indexOf(substring) === Strings.NOT_FOUND) {
-      return str;
-    }
-
-    const c0 = substring.charAt(0);
-    let i = 0, r = Strings.EMPTY, ci;
-    if (sl <= l) {
-      while (i < l) {
-        ci = str.charAt(i);
-        if (ci === c0 && sl <= l - i &&
-            str.substring(i, i + sl) === substring) {
-          i += sl - 1;
-        } else {
-          r += ci;
-        }
-        i++;
+    if (substring.length === 0) return str;
+    let i = 0, r = '';
+    const m = str.length, n = substring.length;
+    while (i < m) {
+      if (str.substring(i, i + n) === substring) {
+        i += n - 1;
+      } else {
+        r += str.charAt(i);
       }
+      i++;
     }
     return r;
   }

@@ -100,7 +100,7 @@ export abstract class Arrays {
    * ```
    *
    * @param {Array} array Contains some array.
-   * @param {Array} items Contains the items to be checked whether it exists
+   * @param {Array} items Contains the items to be checked whether they exist
    * in the given array.
    * @return {Boolean} whether the specified array contains either of the
    * specified items.
@@ -128,6 +128,47 @@ export abstract class Arrays {
       }
     }
     return false;
+  }
+
+  /**
+   * Checks whether the specified array contains none of the specified items.
+   *
+   * **Usage Examples:**
+   * ```typescript
+   * Arrays.containsNone([], "a"); // true
+   * Arrays.containsNone(["a", "b", "c"], "g", "c", "i"); // true
+   * Arrays.containsNone(["a", "b", "c"], "d", "e"); // true
+   * ```
+   *
+   * @param {Array} array Contains some array.
+   * @param {Array} items Contains the items to be checked whether they exist
+   * in the given array.
+   * @return {Boolean} whether the specified array contains none of the
+   * specified items.
+   *
+   * @since v1.6.5
+   */
+  public static containsNone<T>(
+      array: T[] | readonly T[],
+      ...items: T[]
+  ): boolean {
+    let i = 0, j = array.length - 1;
+    if (j > -1) {
+      while (i <= j) {
+        let m = 0; let n = items.length - 1, mi, ni;
+        while (m <= n) {
+          mi = items[m++];
+          ni = items[n--];
+          if (array[i] === mi || array[i] === ni ||
+            array[j] === mi || array[j] === ni) {
+            return false;
+          }
+        }
+        i++;
+        j--;
+      }
+    }
+    return true;
   }
 
   /**
@@ -519,6 +560,61 @@ export abstract class Arrays {
   }
 
   /**
+   * Checks whether the specified array is sorted.
+   *
+   * **Usage Examples:**
+   * ```typescript
+   * Arrays.isSorted([]); // true
+   * Arrays.isSorted([1, 2, 3, 4]); // true
+   * Arrays.isSorted([6, 1, 9, 4, 2]); // false
+   * Arrays.isSorted([9, 8, 7, 6, 5, 4]); // false
+   * ```
+   *
+   * @param {Array} array Contains some array.
+   * @return {Boolean} whether the specified array is sorted.
+   */
+  public static isSorted<T>(array: T[]): boolean;
+  /**
+   * Checks whether the specified array is sorted.
+   *
+   * **Usage Examples:**
+   * ```typescript
+   * Arrays.isSorted([]); // true
+   * Arrays.isSorted([1, 2, 3, 4]); // true
+   * Arrays.isSorted([6, 1, 9, 4, 2]); // false
+   * Arrays.isSorted([9, 8, 7, 6, 5, 4]); // false
+   * ```
+   *
+   * @param {Array} array Contains some array.
+   * @return {Boolean} whether the specified array is sorted.
+   */
+  public static isSorted<T>(array: readonly T[]): boolean
+  /**
+   * Checks whether the specified array is sorted.
+   *
+   * **Usage Examples:**
+   * ```typescript
+   * Arrays.isSorted([]); // true
+   * Arrays.isSorted([1, 2, 3, 4]); // true
+   * Arrays.isSorted([6, 1, 9, 4, 2]); // false
+   * Arrays.isSorted([9, 8, 7, 6, 5, 4]); // false
+   * ```
+   *
+   * @param {Array} array Contains some array.
+   * @return {Boolean} whether the specified array is sorted.
+   */
+  public static isSorted<T>(array: T[] | readonly T[]): boolean {
+    let i = 0;
+    const l = array.length;
+    for (; i < l - 1; i++) {
+      if (array[i] > array[i + 1]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
    * Checks whether the specified value is a typed array.
    *
    * **Usage Examples:**
@@ -595,6 +691,35 @@ export abstract class Arrays {
   }
 
   /**
+   * Removes the specified items from the given array.
+   *
+   * ```typescript
+   * Arrays.removeAll([], 0); // []
+   * Arrays.removeAll([0], 0); // []
+   * Arrays.removeAll([1, 2, 3], 2, 3); // [1]
+   * Arrays.removeAll([1, 2, 3], 1, 2, 3); // []
+   * ```
+   *
+   * @param {Array} array Contains some array.
+   * @param {Array} items Contains the array items to be removed.
+   * @return {Array} an array.
+   */
+  public static removeAll<T>(array: T[], ...items: T[]): T[] {
+    if (Arrays.isEmpty(array) || Arrays.isEmpty(items)) {
+      return array;
+    }
+    let i = 0, e;
+    const r: T[] = [];
+    for (; i < array.length; i++) {
+      e = array[i];
+      if (items.indexOf(e) === -1) {
+        r.push(e);
+      }
+    }
+    return r;
+  }
+
+  /**
    * Removes the array item at the specified index and returns an array copy.
    *
    * **Usage Examples:**
@@ -638,6 +763,24 @@ export abstract class Arrays {
   }
 
   /**
+   * Shuffles the specified array.
+   *
+   * @param {Array} array Contains some array.
+   * @return {Array} an array.
+   */
+  public static shuffle<T>(array: T[]): T[] {
+    const copy = Arrays.clone(array);
+    let i = copy.length - 1, r, tmp;
+    for (; i > 0; i--) {
+      r = Math.floor(Math.random() * (i + 1));
+      tmp = copy[i];
+      copy[i] = copy[r];
+      copy[r] = tmp;
+    }
+    return copy;
+  }
+
+  /**
    * Sorts the specified array.
    *
    * @param {Array} array Contains some array.
@@ -650,6 +793,94 @@ export abstract class Arrays {
       throw new TypeError(`Unknown sorting order "${order}".`);
     }
     return order === 'asc' ? Arrays.__sortAsc(array) : Arrays.__sortDesc(array);
+  }
+
+  /**
+   * Generates a subarray with items from the given start index to the given
+   * end index of the items of the specified array.
+   *
+   * **Usage Examples:**
+   * ```typescript
+   * Arrays.subarray([], 0); // []
+   * Arrays.subarray([1, 2, 3], 0); // [1, 2, 3]
+   * Arrays.subarray([1, 2, 3], 1); // [2, 3]
+   * Arrays.subarray([1, 2, 3, 4], 1, 3); // [2, 3]
+   * ```
+   *
+   * @param {Array} array Contains some array.
+   * @param {Number} start Contains the index of the first subarray item.
+   * @param {Number} end Contains the index next to the last index of the
+   * subarray. If not specified, the length of the given array is considered.
+   * Defaults to `array.length`.
+   * @return {Array} a subarray.
+   */
+  public static subarray<T>(array: T[], start: number, end?: number): T[];
+  /**
+   * Generates a subarray with items from the given start index to the given
+   * end index of the items of the specified array.
+   *
+   * **Usage Examples:**
+   * ```typescript
+   * Arrays.subarray([], 0); // []
+   * Arrays.subarray([1, 2, 3], 0); // [1, 2, 3]
+   * Arrays.subarray([1, 2, 3], 1); // [2, 3]
+   * Arrays.subarray([1, 2, 3, 4], 1, 3); // [2, 3]
+   * ```
+   *
+   * @param {Array} array Contains some array.
+   * @param {Number} start Contains the index of the first subarray item.
+   * @param {Number} end Contains the index next to the last index of the
+   * subarray. If not specified, the length of the given array is considered.
+   * Defaults to `array.length`.
+   * @return {Array} a subarray.
+   */
+  public static subarray<T>(
+      array: readonly T[],
+      start: number,
+      end?: number,
+  ): T[];
+  /**
+   * Generates a subarray with items from the given start index to the given
+   * end index of the items of the specified array.
+   *
+   * **Usage Examples:**
+   * ```typescript
+   * Arrays.subarray([], 0); // []
+   * Arrays.subarray([1, 2, 3], 0); // [1, 2, 3]
+   * Arrays.subarray([1, 2, 3], 1); // [2, 3]
+   * Arrays.subarray([1, 2, 3, 4], 1, 3); // [2, 3]
+   * ```
+   *
+   * @param {Array} array Contains some array.
+   * @param {Number} start Contains the index of the first subarray item.
+   * @param {Number} end Contains the index next to the last index of the
+   * subarray. If not specified, the length of the given array is considered.
+   * Defaults to `array.length`.
+   * @return {Array} a subarray.
+   */
+  public static subarray<T>(
+      array: T[] | readonly T[],
+      start: number,
+      end?: number,
+  ): T[] | readonly T[] {
+    const l = array.length;
+    if (l === 0) {
+      return array;
+    }
+    if (start < 0) {
+      start = 0;
+    }
+    if (Utils.isUndefined(end) || end > l) {
+      end = l;
+    }
+    if (start === 0 && end === l) {
+      return array;
+    }
+    const r: T[] = []; let i = start;
+    for (; i < end; i++) {
+      r.push(array[i]);
+    }
+    return r;
   }
 
   /**
