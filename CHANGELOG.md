@@ -29,3 +29,7 @@
 ## `v1.6.6` - 2023-06-18
 ### Changed
 * `Dates` method overloads and documentation was improved.
+
+## `v1.6.7` - 2023-06-18
+### Added
+* Added the methods `isFormData()` and `isPromiseLike()` to `Utils`.

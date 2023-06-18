@@ -110,6 +110,25 @@ export abstract class Utils {
   }
 
   /**
+   * Checks whether the specified value is a `FormData` object.
+   *
+   * **Usage Examples:**
+   * ```typescript
+   * const formData = new FormData();
+   * formData.append('a', 'abc');
+   * Utils.isFormData(formData); // true
+   * ```
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is a `FormData` object.
+   *
+   * @since v1.6.7
+   */
+  public static isFormData(value?: any): value is FormData {
+    return Objects.toString(value) === '[object FormData]';
+  }
+
+  /**
    * Checks whether the given value is a function.
    *
    * @param {*} value Contains some value.
@@ -196,7 +215,15 @@ export abstract class Utils {
     | string
     | symbol
     | undefined {
-    return value !== Object(value);
+    const type = typeof value;
+    return Utils.isNull(value) || [
+      'string',
+      'number',
+      'bigint',
+      'boolean',
+      'symbol',
+      'undefined',
+    ].includes(type);
   }
 
   /**
@@ -209,6 +236,18 @@ export abstract class Utils {
    */
   public static isPromise(value?: any): value is Promise<any> {
     return Objects.toString(value) === '[object Promise]';
+  }
+
+  /**
+   * Checks whether the specified value is a `PromiseLike<T>` object.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is a `PromiseLike<T>` object.
+   *
+   * @since v1.6.7
+   */
+  public static isPromiseLike(value?: any): value is PromiseLike<any> {
+    return value && Utils.isFunction(value.then);
   }
 
   /**
