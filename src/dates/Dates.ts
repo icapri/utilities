@@ -101,8 +101,8 @@ export abstract class Dates {
   /**
    * Adds the specified number of days to the given date.
    *
-   * @param {Number} date Contains the milliseconds between midnight, January 1,
-   * 1970 UTC and the specified date.
+   * @param {Number} date Contains the milliseconds from midnight, January 1,
+   * 1970 UTC.
    * @param {Number} days Contains the number of days to add to the specified
    * date.
    * @return {Date} a date object.
@@ -119,11 +119,21 @@ export abstract class Dates {
   public static addDays(date: string, days: number): Date;
   /**
    * Adds the specified number of days to the specified date object, an ISO 8601
-   * date string or the milliseconds between midnight, January 1, 1970 UTC and
-   * the specified date.
+   * date string or the milliseconds from midnight, January 1, 1970 UTC.
    *
    * @param {Date} date Contains a date object, an ISO 8601 date string or the
-   * milliseconds between midnight, January 1, 1970 UTC and the specified date.
+   * milliseconds from midnight, January 1, 1970 UTC.
+   * @param {Number} days Contains the number of days to add to the specified
+   * date.
+   * @return {Date} a date object.
+   */
+  public static addDays(date: Date | number | string, days: number): Date;
+  /**
+   * Adds the specified number of days to the specified date object, an ISO 8601
+   * date string or the milliseconds from midnight, January 1, 1970 UTC.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string or the
+   * milliseconds from midnight, January 1, 1970 UTC.
    * @param {Number} days Contains the number of days to add to the specified
    * date.
    * @return {Date} a date object.
@@ -152,8 +162,8 @@ export abstract class Dates {
   /**
    * Adds the specified number of milliseconds to the given date.
    *
-   * @param {Number} date Contains the milliseconds between midnight, January 1,
-   * 1970 UTC and the specified date.
+   * @param {Number} date Contains the milliseconds from midnight, January 1,
+   * 1970 UTC.
    * @param {number} ms Contains the number of milliseconds to add to the
    * specified date.
    * @return {Date} a date object.
@@ -172,20 +182,33 @@ export abstract class Dates {
    * Adds the specified number of milliseconds to the specified date object.
    *
    * @param {Date} date Contains a date object, an ISO 8601 date string or the
-   * milliseconds between midnight, January 1, 1970 UTC and the specified date.
+   * milliseconds from midnight, January 1, 1970 UTC.
    * @param {Number} ms Contains the number of milliseconds to add to the
    * specified date.
    * @return {Date} a date object.
    */
   public static addMilliseconds(
-      date: Date | number | string, ms: number,
+      date: Date | number | string,
+      ms: number,
+  ): Date
+  /**
+   * Adds the specified number of milliseconds to the specified date object.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string or the
+   * milliseconds from midnight, January 1, 1970 UTC.
+   * @param {Number} ms Contains the number of milliseconds to add to the
+   * specified date.
+   * @return {Date} a date object.
+   */
+  public static addMilliseconds(
+      date: Date | number | string,
+      ms: number,
   ): Date {
     Dates.nonNegative(ms);
     const dateObj = Dates.tryParse(date);
     if (ms === 0) {
       return dateObj;
     }
-
     return new Date(dateObj.getTime() + ms);
   }
 
@@ -201,8 +224,8 @@ export abstract class Dates {
   /**
    * Adds the specified number of minutes to the given date.
    *
-   * @param {Number} date Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
    * @param {Number} minutes Contains the number of minutes to add
    * to the specified date.
    * @return {Date} a date object.
@@ -221,22 +244,35 @@ export abstract class Dates {
    * Adds the specified number of minutes to the given date.
    *
    * @param {Date} date Contains a date object, an ISO 8601 date
-   * string or the milliseconds between midnight, January 1, 1970 UTC
-   * and the specified date.
+   * string or the milliseconds from midnight, January 1, 1970 UTC.
    * @param {Number} minutes Contains the number of minutes to add
    * to the specified date.
    * @return {Date} a date object.
    */
   public static addMinutes(
-      date: Date | number | string, minutes: number,
+      date: Date | number | string,
+      minutes: number,
+  ): Date;
+  /**
+   * Adds the specified number of minutes to the given date.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date
+   * string or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {Number} minutes Contains the number of minutes to add
+   * to the specified date.
+   * @return {Date} a date object.
+   */
+  public static addMinutes(
+      date: Date | number | string,
+      minutes: number,
   ): Date {
     Dates.nonNegative(minutes);
     const dateObj = Dates.tryParse(date);
     if (minutes === 0) {
       return dateObj;
     }
-
-    return new Date(dateObj.getTime() + minutes * Dates.MS_IN_MINUTE);
+    dateObj.setMinutes(dateObj.getMinutes() + minutes);
+    return dateObj;
   }
 
   /**
@@ -251,8 +287,8 @@ export abstract class Dates {
   /**
    * Adds the specified number of months to the given date.
    *
-   * @param {Number} date Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
    * @param {Number} months Contains the number of months to add to the
    * specified date.
    * @return {Date} a date object.
@@ -271,8 +307,17 @@ export abstract class Dates {
    * Adds the specified number of months to the given date.
    *
    * @param {Date} date Contains a date object, an ISO 8601 date string
-   * or the milliseconds between midnight, January 1, 1970 UTC and the
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {Number} months Contains the number of months to add to the
    * specified date.
+   * @return {Date} a date object.
+   */
+  public static addMonths(date: Date | number | string, months: number): Date;
+  /**
+   * Adds the specified number of months to the given date.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
    * @param {Number} months Contains the number of months to add to the
    * specified date.
    * @return {Date} a date object.
@@ -283,8 +328,8 @@ export abstract class Dates {
     if (months === 0) {
       return dateObj;
     }
-
-    return new Date(dateObj.setMonth(dateObj.getMonth() + months));
+    dateObj.setMonth(dateObj.getMonth() + months);
+    return dateObj;
   }
 
   /**
@@ -299,8 +344,8 @@ export abstract class Dates {
   /**
    * Adds the specified number of seconds to the given date.
    *
-   * @param {Number} date Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
    * @param {Number} seconds Contains the number of seconds to add to
    * the specified date.
    * @return {Date} a date object.
@@ -319,8 +364,20 @@ export abstract class Dates {
    * Adds the specified number of seconds to the given date object.
    *
    * @param {Date} date Contains a date object, an ISO 8601 date string
-   * or the milliseconds between midnight, January 1, 1970 UTC and the
-   * specified date.
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {Number} seconds Contains the number of seconds to add to
+   * the specified date.
+   * @return {Date} a date object.
+   */
+  public static addSeconds(
+      date: Date | number | string,
+      seconds: number,
+  ): Date;
+  /**
+   * Adds the specified number of seconds to the given date object.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
    * @param {Number} seconds Contains the number of seconds to add to
    * the specified date.
    * @return {Date} a date object.
@@ -334,7 +391,6 @@ export abstract class Dates {
     if (seconds === 0) {
       return dateObj;
     }
-
     dateObj.setSeconds(dateObj.getSeconds() + seconds);
     return dateObj;
   }
@@ -351,8 +407,8 @@ export abstract class Dates {
   /**
    * Adds the specified number of weeks to the given date.
    *
-   * @param {Number} date Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
    * @param {Number} weeks Contains the number of weeks to add to the
    * specified date.
    * @return {Date} a date object.
@@ -371,8 +427,17 @@ export abstract class Dates {
    * Adds the specified number of weeks to the given date.
    *
    * @param {Date} date Contains a date object, an ISO 8601 date string
-   * or the milliseconds between midnight, January 1, 1970 UTC and the
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {Number} weeks Contains the number of weeks to add to the
    * specified date.
+   * @return {Date} a date object.
+   */
+  public static addWeeks(date: Date | number | string, weeks: number): Date;
+  /**
+   * Adds the specified number of weeks to the given date.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
    * @param {Number} weeks Contains the number of weeks to add to the
    * specified date.
    * @return {Date} a date object.
@@ -383,7 +448,6 @@ export abstract class Dates {
     if (weeks === 0) {
       return dateObj;
     }
-
     dateObj.setDate(dateObj.getDate() + (weeks * 7));
     return dateObj;
   }
@@ -400,8 +464,8 @@ export abstract class Dates {
   /**
    * Adds the specified number of years to the given date.
    *
-   * @param {Number} date Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
    * @param {Number} years Contains the number of years to add to the
    * specified date.
    * @return {Date} a date object.
@@ -420,8 +484,17 @@ export abstract class Dates {
    * Adds the specified number of years to the given date object.
    *
    * @param {Date} date Contains a date object, an ISO 8601 date string
-   * or the milliseconds between midnight, January 1, 1970 UTC and the
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {Number} years Contains the number of years to add to the
    * specified date.
+   * @return {Date} a date object.
+   */
+  public static addYears(date: Date | number | string, years: number): Date;
+  /**
+   * Adds the specified number of years to the given date object.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
    * @param {Number} years Contains the number of years to add to the
    * specified date.
    * @return {Date} a date object.
@@ -432,7 +505,6 @@ export abstract class Dates {
     if (years === 0) {
       return dateObj;
     }
-
     dateObj.setFullYear(dateObj.getFullYear() + years);
     return dateObj;
   }
@@ -460,9 +532,9 @@ export abstract class Dates {
    * const midnight = Dates.atStartOfDay(date); // "2023-05-06T00:00:00.000Z"
    * ```
    *
-   * @param {Number} date Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date. If this is not defined
-   * the midnight date of the current date is used.
+   * @param {Number} date Contains the milliseconds from midnight, January 1,
+   * 1970 UTC. If this is not defined the midnight date of the current date
+   * is used.
    * @return {Date} a date object.
    */
   public static atStartOfDay(date?: number): Date;
@@ -490,9 +562,23 @@ export abstract class Dates {
    * ```
    *
    * @param {Date} date Contains a date object, an ISO 8601 date string
-   * or the milliseconds between midnight, January 1, 1970 UTC and the
-   * specified date. If this is not defined the midnight date of the current
-   * date is used.
+   * or the milliseconds from midnight, January 1, 1970 UTC. If this is not
+   * defined the midnight date of the current date is used.
+   * @return {Date} a date object.
+   */
+  public static atStartOfDay(date?: string | number | Date): Date;
+  /**
+   * Gets the start of the day i. e. the midnight date.
+   *
+   * **Usage Examples:**
+   * ```typescript
+   * const date = new Date("2023-05-06T11:59:04.623Z");
+   * const midnight = Dates.atStartOfDay(date); // "2023-05-06T00:00:00.000Z"
+   * ```
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC. If this is not
+   * defined the midnight date of the current date is used.
    * @return {Date} a date object.
    */
   public static atStartOfDay(date?: string | number | Date): Date {
@@ -500,7 +586,6 @@ export abstract class Dates {
       const dateObj = Dates.tryParse(date);
       return Dates.dateOnly(dateObj);
     }
-
     return Dates.dateOnly(Dates.now);
   }
 
@@ -547,8 +632,8 @@ export abstract class Dates {
   /**
    * Gets the date part of the date object i. e. the time is zeroed.
    *
-   * @param {Number} date Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
    * @return {Date} only the date part of the date object i. e. the time
    * is zeroed.
    */
@@ -600,8 +685,8 @@ export abstract class Dates {
    * method.
    *
    * @param {Date} date Contains a date object.
-   * @param {Number} other Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
    * @return {Number} the days difference between the two dates.
    */
   public static daysDifference(date: Date, other: number): number;
@@ -622,8 +707,8 @@ export abstract class Dates {
    * _Note:_ The time of the day object is not taken into account from this
    * method.
    *
-   * @param {Number} date Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
    * @param {Date} other Contains a date object.
    * @return {Number} the days difference between the two dates.
    */
@@ -634,10 +719,10 @@ export abstract class Dates {
    * _Note:_ The time of the day object is not taken into account from this
    * method.
    *
-   * @param {Number} date Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
-   * @param {Number} other Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
    * @return {Number} the days difference between the two dates.
    */
   public static daysDifference(date: number, other: number): number;
@@ -647,8 +732,8 @@ export abstract class Dates {
    * _Note:_ The time of the day object is not taken into account from this
    * method.
    *
-   * @param {Number} date Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
    * @param {String} other Contains an ISO 8601 date string.
    * @return {Number} the days difference between the two dates.
    */
@@ -671,8 +756,8 @@ export abstract class Dates {
    * method.
    *
    * @param {String} date Contains an ISO 8601 date string.
-   * @param {Number} other Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
    * @return {Number} the days difference between the two dates.
    */
   public static daysDifference(date: string, other: number): number;
@@ -694,11 +779,25 @@ export abstract class Dates {
    * method.
    *
    * @param {Date} date Contains a date object, an ISO 8601 date string
-   * or the milliseconds between midnight, January 1, 1970 UTC and the
-   * specified date.
+   * or the milliseconds from midnight, January 1, 1970 UTC.
    * @param {Date} other Contains a date object, an ISO 8601 date string
-   * or the milliseconds between midnight, January 1, 1970 UTC and the
-   * specified date.
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @return {Number} the days difference between the two dates.
+   */
+  public static daysDifference(
+      date: Date | number | string,
+      other: Date | number | string,
+  ): number;
+  /**
+   * Gets the days difference between the two dates.
+   *
+   * _Note:_ The time of the day object is not taken into account from this
+   * method.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {Date} other Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
    * @return {Number} the days difference between the two dates.
    */
   public static daysDifference(
@@ -740,8 +839,8 @@ export abstract class Dates {
    * Checks whether the two date objects are equal.
    *
    * @param {Date} a Contains a date object.
-   * @param {Number} b Contains the milliseconds between midnight, January 1,
-   * 1970 UTC and the specified date.
+   * @param {Number} b Contains the milliseconds from midnight, January 1,
+   * 1970 UTC.
    * @param {Boolean} ignoreTime Contains whether to ignore the time part
    * of both date objects during the comparison.
    * @return {Boolean} whether the two date objects are equal.
@@ -760,8 +859,8 @@ export abstract class Dates {
   /**
    * Checks whether the two date objects are equal.
    *
-   * @param {Number} a Contains the milliseconds between midnight, January 1,
-   * 1970 UTC and the specified date.
+   * @param {Number} a Contains the milliseconds from midnight, January 1,
+   * 1970 UTC.
    * @param {Date} b Contains a date object.
    * @param {Boolean} ignoreTime Contains whether to ignore the time part
    * of both date objects during the comparison.
@@ -771,10 +870,10 @@ export abstract class Dates {
   /**
    * Checks whether the two date objects are equal.
    *
-   * @param {Number} a Contains the milliseconds between midnight, January 1,
-   * 1970 UTC and the specified date.
-   * @param {Number} b Contains the milliseconds between midnight, January 1,
-   * 1970 UTC and the specified date.
+   * @param {Number} a Contains the milliseconds from midnight, January 1,
+   * 1970 UTC.
+   * @param {Number} b Contains the milliseconds from midnight, January 1,
+   * 1970 UTC.
    * @param {Boolean} ignoreTime Contains whether to ignore the time part
    * of both date objects during the comparison.
    * @return {Boolean} whether the two date objects are equal.
@@ -783,8 +882,8 @@ export abstract class Dates {
   /**
    * Checks whether the two date objects are equal.
    *
-   * @param {Number} a Contains the milliseconds between midnight, January 1,
-   * 1970 UTC and the specified date.
+   * @param {Number} a Contains the milliseconds from midnight, January 1,
+   * 1970 UTC.
    * @param {String} b Contains an ISO 8601 date string.
    * @param {Boolean} ignoreTime Contains whether to ignore the time part
    * of both date objects during the comparison.
@@ -805,8 +904,8 @@ export abstract class Dates {
    * Checks whether the two date objects are equal.
    *
    * @param {String} a Contains an ISO 8601 date string.
-   * @param {Number} b Contains the milliseconds between midnight, January 1,
-   * 1970 UTC and the specified date.
+   * @param {Number} b Contains the milliseconds from midnight, January 1,
+   * 1970 UTC.
    * @param {Boolean} ignoreTime Contains whether to ignore the time part
    * of both date objects during the comparison.
    * @return {Boolean} whether the two date objects are equal.
@@ -826,11 +925,9 @@ export abstract class Dates {
    * Checks whether the two date objects are equal.
    *
    * @param {Date} a Contains a date object, an ISO 8601 date string
-   * or the milliseconds between midnight, January 1, 1970 UTC and the
-   * specified date.
+   * or the milliseconds from midnight, January 1, 1970 UTC.
    * @param {Date} b Contains a date object, an ISO 8601 date string
-   * or the milliseconds between midnight, January 1, 1970 UTC and the
-   * specified date.
+   * or the milliseconds from midnight, January 1, 1970 UTC.
    * @param {Boolean} ignoreTime Contains whether to ignore the time part
    * of both date objects during the comparison.
    * @return {Boolean} whether the two date objects are equal.
@@ -844,11 +941,9 @@ export abstract class Dates {
    * Checks whether the two date objects are equal.
    *
    * @param {Date} a Contains a date object, an ISO 8601 date string
-   * or the milliseconds between midnight, January 1, 1970 UTC and the
-   * specified date.
+   * or the milliseconds from midnight, January 1, 1970 UTC.
    * @param {Date} b Contains a date object, an ISO 8601 date string
-   * or the milliseconds between midnight, January 1, 1970 UTC and the
-   * specified date.
+   * or the milliseconds from midnight, January 1, 1970 UTC.
    * @param {Boolean} ignoreTime Contains whether to ignore the time part
    * of both date objects during the comparison.
    * @return {Boolean} whether the two date objects are equal.
@@ -863,7 +958,6 @@ export abstract class Dates {
       const x = Dates.dateOnly(a), y = Dates.dateOnly(b);
       return x.getTime() === y.getTime();
     }
-
     return aObj.getTime() === bObj.getTime();
   }
 
@@ -905,16 +999,28 @@ export abstract class Dates {
    * @return {Number} the number of ms between midnight, January 1, 1970
    * Universal Coordinated Time a. k. a. GMT and the given date.
    */
+  public static getUTC(date: Date | number | string): number;
+  /**
+   * Returns the number of ms between midnight, January 1, 1970 Universal
+   * Coordinated Time a. k. a. GMT and the given date.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds between midnight, January 1, 1970 UTC and the
+   * specified date.
+   * @return {Number} the number of ms between midnight, January 1, 1970
+   * Universal Coordinated Time a. k. a. GMT and the given date.
+   */
   public static getUTC(date: Date | number | string): number {
     const dateObj = Dates.tryParse(date);
-    const yy = dateObj.getFullYear();
-    const MM = dateObj.getMonth();
-    const dd = dateObj.getDate();
-    const hh = dateObj.getHours();
-    const mm = dateObj.getMinutes();
-    const ss = dateObj.getSeconds();
-    const ms = dateObj.getMilliseconds();
-    return Date.UTC(yy, MM, dd, hh, mm, ss, ms);
+    return Date.UTC(
+        dateObj.getFullYear(),
+        dateObj.getMonth(),
+        dateObj.getDate(),
+        dateObj.getHours(),
+        dateObj.getMinutes(),
+        dateObj.getSeconds(),
+        dateObj.getMilliseconds(),
+    );
   }
 
   /**
@@ -924,8 +1030,103 @@ export abstract class Dates {
    * @param {Date} other Contains some other date object.
    * @return {Number} the difference in hours between the two specified dates.
    */
+  public static hoursDifference(date: Date, other: Date): number;
+  /**
+   * Gets the difference in hours between the two specified dates.
+   *
+   * @param {Date} date Contains some date object.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @return {Number} the difference in hours between the two specified dates.
+   */
+  public static hoursDifference(date: Date, other: number): number;
+  /**
+   * Gets the difference in hours between the two specified dates.
+   *
+   * @param {Date} date Contains some date object.
+   * @param {String} other Contains an ISO 8601 date string.
+   * @return {Number} the difference in hours between the two specified dates.
+   */
+  public static hoursDifference(date: Date, other: string): number;
+  /**
+   * Gets the difference in hours between the two specified dates.
+   *
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @param {Date} other Contains some date object.
+   * @return {Number} the difference in hours between the two specified dates.
+   */
+  public static hoursDifference(date: number, other: Date): number;
+  /**
+   * Gets the difference in hours between the two specified dates.
+   *
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @return {Number} the difference in hours between the two specified dates.
+   */
+  public static hoursDifference(date: number, other: number): number;
+  /**
+   * Gets the difference in hours between the two specified dates.
+   *
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @param {String} other Contains an ISO 8601 date string.
+   * @return {Number} the difference in hours between the two specified dates.
+   */
+  public static hoursDifference(date: number, other: string): number;
+  /**
+   * Gets the difference in hours between the two specified dates.
+   *
+   * @param {String} date Contains an ISO 8601 date string.
+   * @param {Date} other Contains some date object.
+   * @return {Number} the difference in hours between the two specified dates.
+   */
+  public static hoursDifference(date: string, other: Date): number;
+  /**
+   * Gets the difference in hours between the two specified dates.
+   *
+   * @param {String} date Contains an ISO 8601 date string.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @return {Number} the difference in hours between the two specified dates.
+   */
+  public static hoursDifference(date: string, other: number): number;
+  /**
+   * Gets the difference in hours between the two specified dates.
+   *
+   * @param {String} date Contains an ISO 8601 date string.
+   * @param {String} other Contains an ISO 8601 date string.
+   * @return {Number} the difference in hours between the two specified dates.
+   */
+  public static hoursDifference(date: string, other: string): number;
+  /**
+   * Gets the difference in hours between the two specified dates.
+   *
+   * @param {String} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {String} other Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @return {Number} the difference in hours between the two specified dates.
+   */
   public static hoursDifference(
-      date: string | number | Date, other: string | number | Date): number {
+      date: Date | number | string,
+      other: Date | number | string,
+  ): number;
+  /**
+   * Gets the difference in hours between the two specified dates.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {Date} other Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @return {Number} the difference in hours between the two specified dates.
+   */
+  public static hoursDifference(
+      date: Date | number | string,
+      other: Date | number | string,
+  ): number {
     const dateObj = Dates.tryParse(date),
       otherObj = Dates.tryParse(other),
       msDifference = Numbers.abs(dateObj.getTime() - otherObj.getTime());
@@ -950,8 +1151,8 @@ export abstract class Dates {
    * Checks whether the first date is after the second one.
    *
    * @param {Date} date Contains a date object.
-   * @param {Number} other Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
    * @param {Boolean} ignoreTime Contains whether to ignore the time part
    * of both date objects during the comparison.
    * @return {Boolean} whether the first date is after the second one.
@@ -978,8 +1179,8 @@ export abstract class Dates {
   /**
    * Checks whether the first date is after the second one.
    *
-   * @param {Number} date Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
    * @param {Date} other Contains a date object.
    * @param {Boolean} ignoreTime Contains whether to ignore the time part
    * of both date objects during the comparison.
@@ -993,10 +1194,10 @@ export abstract class Dates {
   /**
    * Checks whether the first date is after the second one.
    *
-   * @param {Number} date Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
-   * @param {Number} other Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
    * @param {Boolean} ignoreTime Contains whether to ignore the time part
    * of both date objects during the comparison.
    * @return {Boolean} whether the first date is after the second one.
@@ -1009,8 +1210,8 @@ export abstract class Dates {
   /**
    * Checks whether the first date is after the second one.
    *
-   * @param {Number} date Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
    * @param {String} other Contains an ISO 8601 date string.
    * @param {Boolean} ignoreTime Contains whether to ignore the time part
    * of both date objects during the comparison.
@@ -1039,8 +1240,8 @@ export abstract class Dates {
    * Checks whether the first date is after the second one.
    *
    * @param {String} date Contains an ISO 8601 date string.
-   * @param {Number} other Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
    * @param {Boolean} ignoreTime Contains whether to ignore the time part
    * of both date objects during the comparison.
    * @return {Boolean} whether the first date is after the second one.
@@ -1068,11 +1269,9 @@ export abstract class Dates {
    * Checks whether the first date is after the second one.
    *
    * @param {Date} date Contains a date object, an ISO 8601 date string
-   * or the milliseconds between midnight, January 1, 1970 UTC and the
-   * specified date.
+   * or the milliseconds from midnight, January 1, 1970 UTC.
    * @param {Date} other Contains a date object, an ISO 8601 date string
-   * or the milliseconds between midnight, January 1, 1970 UTC and the
-   * specified date.
+   * or the milliseconds from midnight, January 1, 1970 UTC.
    * @param {Boolean} ignoreTime Contains whether to ignore the time part
    * of both date objects during the comparison.
    * @return {Boolean} whether the first date is after the second one.
@@ -1086,11 +1285,9 @@ export abstract class Dates {
    * Checks whether the first date is after the second one.
    *
    * @param {Date} date Contains a date object, an ISO 8601 date string
-   * or the milliseconds between midnight, January 1, 1970 UTC and the
-   * specified date.
+   * or the milliseconds from midnight, January 1, 1970 UTC.
    * @param {Date} other Contains a date object, an ISO 8601 date string
-   * or the milliseconds between midnight, January 1, 1970 UTC and the
-   * specified date.
+   * or the milliseconds from midnight, January 1, 1970 UTC.
    * @param {Boolean} ignoreTime Contains whether to ignore the time part
    * of both date objects during the comparison.
    * @return {Boolean} whether the first date is after the second one.
@@ -1127,8 +1324,8 @@ export abstract class Dates {
    * Checks whether the first date is before the second one.
    *
    * @param {Date} date Contains a date object.
-   * @param {Number} other Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
    * @param {Boolean} ignoreTime Contains whether to ignore the time part
    * of both date objects during the comparison.
    * @return {Boolean} whether the first date is before the second one.
@@ -1155,8 +1352,8 @@ export abstract class Dates {
   /**
    * Checks whether the first date is before the second one.
    *
-   * @param {Number} date Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
    * @param {Date} other Contains a date object.
    * @param {Boolean} ignoreTime Contains whether to ignore the time part
    * of both date objects during the comparison.
@@ -1170,10 +1367,10 @@ export abstract class Dates {
   /**
    * Checks whether the first date is before the second one.
    *
-   * @param {Number} date Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
-   * @param {Number} other Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
    * @param {Boolean} ignoreTime Contains whether to ignore the time part
    * of both date objects during the comparison.
    * @return {Boolean} whether the first date is before the second one.
@@ -1186,8 +1383,8 @@ export abstract class Dates {
   /**
    * Checks whether the first date is before the second one.
    *
-   * @param {Number} date Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
    * @param {String} other Contains an ISO 8601 date string.
    * @param {Boolean} ignoreTime Contains whether to ignore the time part
    * of both date objects during the comparison.
@@ -1216,8 +1413,8 @@ export abstract class Dates {
    * Checks whether the first date is before the second one.
    *
    * @param {String} date Contains an ISO 8601 date string.
-   * @param {Number} other Contains the milliseconds between midnight,
-   * January 1, 1970 UTC and the specified date.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
    * @param {Boolean} ignoreTime Contains whether to ignore the time part
    * of both date objects during the comparison.
    * @return {Boolean} whether the first date is before the second one.
@@ -1245,11 +1442,9 @@ export abstract class Dates {
    * Checks whether the first date is before the second one.
    *
    * @param {Date} date Contains a date object, an ISO 8601 date string
-   * or the milliseconds between midnight, January 1, 1970 UTC and the
-   * specified date.
+   * or the milliseconds from midnight, January 1, 1970 UTC.
    * @param {Date} other Contains a date object, an ISO 8601 date string
-   * or the milliseconds between midnight, January 1, 1970 UTC and the
-   * specified date.
+   * or the milliseconds from midnight, January 1, 1970 UTC.
    * @param {Boolean} ignoreTime Contains whether to ignore the time part
    * of both date objects during the comparison.
    * @return {Boolean} whether the first date is before the second one.
@@ -1263,11 +1458,9 @@ export abstract class Dates {
    * Checks whether the first date is before the second one.
    *
    * @param {Date} date Contains a date object, an ISO 8601 date string
-   * or the milliseconds between midnight, January 1, 1970 UTC and the
-   * specified date.
+   * or the milliseconds from midnight, January 1, 1970 UTC.
    * @param {Date} other Contains a date object, an ISO 8601 date string
-   * or the milliseconds between midnight, January 1, 1970 UTC and the
-   * specified date.
+   * or the milliseconds from midnight, January 1, 1970 UTC.
    * @param {Boolean} ignoreTime Contains whether to ignore the time part
    * of both date objects during the comparison.
    * @return {Boolean} whether the first date is before the second one.
@@ -1300,9 +1493,9 @@ export abstract class Dates {
    * @return {Boolean} whether the given date is between the given date range.
    */
   public static isBetween(
-      date: string | number | Date,
-      from: string | number | Date,
-      to: string | number | Date,
+      date: Date | number | string,
+      from: Date | number | string,
+      to: Date | number | string,
       incl: '(]' | '()' | '[]' | '[)' = '()',
   ): boolean {
     if (!['()', '[]', '(]', '[)'].includes(incl)) {
@@ -1345,13 +1538,55 @@ export abstract class Dates {
   /**
    * Checks whether the given date is in the future.
    *
-   * @param {Date} date Contains some date object.
+   * @param {Date} date Contains a date object.
+   * @param {Boolean} ignoreTime Contains whether to ignore the time part
+   * of both date objects during the comparison.
+   * @return {Boolean} whether the given date is in the future.
+   */
+  public static isFuture(date: Date, ignoreTime?: boolean): boolean;
+  /**
+   * Checks whether the given date is in the future.
+   *
+   * @param {Date} date Contains the milliseconds from midnight, January 1,
+   * 1970 UTC.
+   * @param {Boolean} ignoreTime Contains whether to ignore the time part
+   * of both date objects during the comparison.
+   * @return {Boolean} whether the given date is in the future.
+   */
+  public static isFuture(date: number, ignoreTime?: boolean): boolean;
+  /**
+   * Checks whether the given date is in the future.
+   *
+   * @param {Date} date Contains an ISO 8601 date string.
+   * @param {Boolean} ignoreTime Contains whether to ignore the time part
+   * of both date objects during the comparison.
+   * @return {Boolean} whether the given date is in the future.
+   */
+  public static isFuture(date: string, ignoreTime?: boolean): boolean;
+  /**
+   * Checks whether the given date is in the future.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
    * @param {Boolean} ignoreTime Contains whether to ignore the time part
    * of both date objects during the comparison.
    * @return {Boolean} whether the given date is in the future.
    */
   public static isFuture(
-      date: string | number | Date,
+      date: Date | number | string,
+      ignoreTime?: boolean,
+  ): boolean;
+  /**
+   * Checks whether the given date is in the future.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {Boolean} ignoreTime Contains whether to ignore the time part
+   * of both date objects during the comparison.
+   * @return {Boolean} whether the given date is in the future.
+   */
+  public static isFuture(
+      date: Date | number | string,
       ignoreTime: boolean = false,
   ): boolean {
     const now = Dates.now;
@@ -1377,21 +1612,20 @@ export abstract class Dates {
    */
   public static isISOString(str?: string): str is string {
     if (typeof str !== 'string' || str.length !== 24) return false;
-    const iso = str;
-    if ((iso.charAt(4) === '-') &&
-      (iso.charAt(7) === '-') &&
-      (iso.charAt(10) === 'T') &&
-      (iso.charAt(13) === ':') &&
-      (iso.charAt(16) === ':') &&
-      (iso.charAt(19) === '.') &&
-      (iso.charAt(23) === 'Z')) {
-      const year = +iso.substring(0, 4),
-        month = +iso.substring(5, 7),
-        day = +iso.substring(8, 10),
-        hour = +iso.substring(11, 13),
-        minutes = +iso.substring(14, 16),
-        seconds = +iso.substring(17, 19),
-        milliseconds = +iso.substring(20, 23);
+    if ((str.charAt(4) === '-') &&
+      (str.charAt(7) === '-') &&
+      (str.charAt(10) === 'T') &&
+      (str.charAt(13) === ':') &&
+      (str.charAt(16) === ':') &&
+      (str.charAt(19) === '.') &&
+      (str.charAt(23) === 'Z')) {
+      const year = +str.substring(0, 4),
+        month = +str.substring(5, 7),
+        day = +str.substring(8, 10),
+        hour = +str.substring(11, 13),
+        minutes = +str.substring(14, 16),
+        seconds = +str.substring(17, 19),
+        milliseconds = +str.substring(20, 23);
       if (Numbers.isNatural(year) &&
         Numbers.isNatural(month) &&
         Numbers.isNatural(day) &&
@@ -1436,8 +1670,111 @@ export abstract class Dates {
    * @return {Number} the difference in milliseconds between the two
    * specified dates.
    */
+  public static millisecondsDifference(date: Date, other: Date): number;
+  /**
+   * Gets the difference in milliseconds between the two specified dates.
+   *
+   * @param {Date} date Contains some date object.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @return {Number} the difference in milliseconds between the two
+   * specified dates.
+   */
+  public static millisecondsDifference(date: Date, other: number): number;
+  /**
+   * Gets the difference in milliseconds between the two specified dates.
+   *
+   * @param {Date} date Contains some date object.
+   * @param {String} other Contains an ISO 8601 date string.
+   * @return {Number} the difference in milliseconds between the two
+   * specified dates.
+   */
+  public static millisecondsDifference(date: Date, other: string): number;
+  /**
+   * Gets the difference in milliseconds between the two specified dates.
+   *
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @param {Date} other Contains some date object.
+   * @return {Number} the difference in milliseconds between the two
+   * specified dates.
+   */
+  public static millisecondsDifference(date: number, other: Date): number;
+  /**
+   * Gets the difference in milliseconds between the two specified dates.
+   *
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @return {Number} the difference in milliseconds between the two
+   * specified dates.
+   */
+  public static millisecondsDifference(date: number, other: number): number;
+  /**
+   * Gets the difference in milliseconds between the two specified dates.
+   *
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @param {String} other Contains an ISO 8601 date string.
+   * @return {Number} the difference in milliseconds between the two
+   * specified dates.
+   */
+  public static millisecondsDifference(date: number, other: string): number;
+  /**
+   * Gets the difference in milliseconds between the two specified dates.
+   *
+   * @param {String} date Contains an ISO 8601 date string.
+   * @param {Date} other Contains some date object.
+   * @return {Number} the difference in milliseconds between the two
+   * specified dates.
+   */
+  public static millisecondsDifference(date: string, other: Date): number;
+  /**
+   * Gets the difference in milliseconds between the two specified dates.
+   *
+   * @param {String} date Contains an ISO 8601 date string.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @return {Number} the difference in milliseconds between the two
+   * specified dates.
+   */
+  public static millisecondsDifference(date: string, other: number): number;
+  /**
+   * Gets the difference in milliseconds between the two specified dates.
+   *
+   * @param {String} date Contains an ISO 8601 date string.
+   * @param {String} other Contains an ISO 8601 date string.
+   * @return {Number} the difference in milliseconds between the two
+   * specified dates.
+   */
+  public static millisecondsDifference(date: string, other: string): number;
+  /**
+   * Gets the difference in milliseconds between the two specified dates.
+   *
+   * @param {String} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {String} other Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @return {Number} the difference in milliseconds between the two
+   * specified dates.
+   */
   public static millisecondsDifference(
-      date: string | number | Date, other: string | number | Date): number {
+      date: Date | number | string,
+      other: Date | number | string,
+  ): number;
+  /**
+   * Gets the difference in milliseconds between the two specified dates.
+   *
+   * @param {Date} date Contains some date object.
+   * @param {Date} other Contains some other date object.
+   * @return {Number} the difference in milliseconds between the two
+   * specified dates.
+   */
+  public static millisecondsDifference(
+      date: Date | number | string,
+      other: Date | number | string,
+  ): number {
     const dateObj = Dates.tryParse(date), otherObj = Dates.tryParse(other);
     return Numbers.abs(dateObj.getTime() - otherObj.getTime());
   }
@@ -1449,8 +1786,110 @@ export abstract class Dates {
    * @param {Date} other Contains some other date object.
    * @return {Number} the difference in minutes between the two specified dates.
    */
+  public static minutesDifference(date: Date, other: Date): number;
+  /**
+   * Gets the difference in minutes between the two specified dates.
+   *
+   * @param {Date} date Contains some date object.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @return {Number} the difference in minutes between the two specified
+   * dates.
+   */
+  public static minutesDifference(date: Date, other: number): number;
+  /**
+   * Gets the difference in minutes between the two specified dates.
+   *
+   * @param {Date} date Contains some date object.
+   * @param {String} other Contains an ISO 8601 date string.
+   * @return {Number} the difference in minutes between the two specified
+   * dates.
+   */
+  public static minutesDifference(date: Date, other: string): number;
+  /**
+   * Gets the difference in minutes between the two specified dates.
+   *
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @param {Date} other Contains some date object.
+   * @return {Number} the difference in minutes between the two specified
+   * dates.
+   */
+  public static minutesDifference(date: number, other: Date): number;
+  /**
+   * Gets the difference in minutes between the two specified dates.
+   *
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @return {Number} the difference in minutes between the two specified
+   * dates.
+   */
+  public static minutesDifference(date: number, other: number): number;
+  /**
+   * Gets the difference in minutes between the two specified dates.
+   *
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @param {String} other Contains an ISO 8601 date string.
+   * @return {Number} the difference in minutes between the two specified
+   * dates.
+   */
+  public static minutesDifference(date: number, other: string): number;
+  /**
+   * Gets the difference in minutes between the two specified dates.
+   *
+   * @param {String} date Contains an ISO 8601 date string.
+   * @param {Date} other Contains some date object.
+   * @return {Number} the difference in minutes between the two specified
+   * dates.
+   */
+  public static minutesDifference(date: string, other: Date): number;
+  /**
+   * Gets the difference in minutes between the two specified dates.
+   *
+   * @param {String} date Contains an ISO 8601 date string.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @return {Number} the difference in minutes between the two specified
+   * dates.
+   */
+  public static minutesDifference(date: string, other: number): number;
+  /**
+   * Gets the difference in minutes between the two specified dates.
+   *
+   * @param {String} date Contains an ISO 8601 date string.
+   * @param {String} other Contains an ISO 8601 date string.
+   * @return {Number} the difference in minutes between the two specified
+   * dates.
+   */
+  public static minutesDifference(date: string, other: string): number;
+  /**
+   * Gets the difference in minutes between the two specified dates.
+   *
+   * @param {String} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {String} other Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @return {Number} the difference in minutes between the two specified
+   * dates.
+   */
   public static minutesDifference(
-      date: string | number | Date, other: string | number | Date): number {
+      date: Date | number | string,
+      other: Date | number | string,
+  ): number;
+  /**
+   * Gets the difference in minutes between the two specified dates.
+   *
+   * @param {Date} date Contains some date object.
+   * @param {Date} other Contains some other date object.
+   * @return {Number} the difference in minutes between the two specified dates.
+   */
+  public static minutesDifference(
+      date: Date | number | string,
+      other: Date | number | string,
+  ): number {
     const msDifference = Dates.millisecondsDifference(date, other);
     return Math.round(((msDifference % Dates.MS_IN_DAY) % 36e5) / 6e4);
   }
@@ -1462,8 +1901,103 @@ export abstract class Dates {
    * @param {Date} other Contains some other date object.
    * @return {Number} the difference in months between the two specified dates.
    */
+  public static monthsDifference(date: Date, other: Date): number;
+  /**
+   * Gets the difference in months between the two specified dates.
+   *
+   * @param {Date} date Contains some date object.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @return {Number} the difference in months between the two specified dates.
+   */
+  public static monthsDifference(date: Date, other: number): number;
+  /**
+   * Gets the difference in months between the two specified dates.
+   *
+   * @param {Date} date Contains some date object.
+   * @param {String} other Contains an ISO 8601 date string.
+   * @return {Number} the difference in months between the two specified dates.
+   */
+  public static monthsDifference(date: Date, other: string): number;
+  /**
+   * Gets the difference in months between the two specified dates.
+   *
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @param {Date} other Contains some date object.
+   * @return {Number} the difference in months between the two specified dates.
+   */
+  public static monthsDifference(date: number, other: Date): number;
+  /**
+   * Gets the difference in months between the two specified dates.
+   *
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @return {Number} the difference in months between the two specified dates.
+   */
+  public static monthsDifference(date: number, other: number): number;
+  /**
+   * Gets the difference in months between the two specified dates.
+   *
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @param {String} other Contains an ISO 8601 date string.
+   * @return {Number} the difference in months between the two specified dates.
+   */
+  public static monthsDifference(date: number, other: string): number;
+  /**
+   * Gets the difference in months between the two specified dates.
+   *
+   * @param {String} date Contains an ISO 8601 date string.
+   * @param {Date} other Contains some date object.
+   * @return {Number} the difference in months between the two specified dates.
+   */
+  public static monthsDifference(date: string, other: Date): number;
+  /**
+   * Gets the difference in months between the two specified dates.
+   *
+   * @param {String} date Contains an ISO 8601 date string.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @return {Number} the difference in months between the two specified dates.
+   */
+  public static monthsDifference(date: string, other: number): number;
+  /**
+   * Gets the difference in months between the two specified dates.
+   *
+   * @param {String} date Contains an ISO 8601 date string.
+   * @param {String} other Contains an ISO 8601 date string.
+   * @return {Number} the difference in months between the two specified dates.
+   */
+  public static monthsDifference(date: string, other: string): number;
+  /**
+   * Gets the difference in months between the two specified dates.
+   *
+   * @param {String} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {String} other Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @return {Number} the difference in months between the two specified dates.
+   */
   public static monthsDifference(
-      date: string | number | Date, other: string | number | Date): number {
+      date: Date | number | string,
+      other: Date | number | string,
+  ): number;
+  /**
+   * Gets the difference in months between the two specified dates.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {Date} other Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @return {Number} the difference in months between the two specified dates.
+   */
+  public static monthsDifference(
+      date: Date | number | string,
+      other: Date | number | string,
+  ): number {
     const dateObj = Dates.tryParse(date), otherObj = Dates.tryParse(other);
     let months;
     months = (otherObj.getFullYear() - dateObj.getFullYear()) * 12;
@@ -1603,13 +2137,48 @@ export abstract class Dates {
   }
 
   /**
-   * Removes the given number of days to the date object.
+   * Removes the given number of days from the specified date.
    *
    * @param {Date} date Contains some date object.
    * @param {Number} days Contains the number of days to remove.
    * @return {Date} a date object.
    */
-  public static removeDays(date: string | number | Date, days: number): Date {
+  public static removeDays(date: Date, days: number): Date;
+  /**
+   * Removes the given number of days from the specified date.
+   *
+   * @param {Date} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @param {Number} days Contains the number of days to remove.
+   * @return {Date} a date object.
+   */
+  public static removeDays(date: number, days: number): Date;
+  /**
+   * Removes the given number of days from the specified date.
+   *
+   * @param {Date} date Contains an ISO 8601 date string.
+   * @param {Number} days Contains the number of days to remove.
+   * @return {Date} a date object.
+   */
+  public static removeDays(date: string, days: number): Date;
+  /**
+   * Removes the given number of days from the specified date.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {Number} days Contains the number of days to remove.
+   * @return {Date} a date object.
+   */
+  public static removeDays(date: Date | number | string, days: number): Date;
+  /**
+   * Removes the given number of days from the specified date.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {Number} days Contains the number of days to remove.
+   * @return {Date} a date object.
+   */
+  public static removeDays(date: Date | number | string, days: number): Date {
     Dates.nonNegative(days);
     const dateObj = Dates.tryParse(date);
     if (days === 0) {
@@ -1626,9 +2195,102 @@ export abstract class Dates {
    * @param {Date} other Contains some other date object.
    * @return {Number} the time difference between the two dates in milliseconds.
    */
+  public static timeDifference(date: Date, other: Date): number;
+  /**
+   * Gets the time difference between the two dates in milliseconds.
+   *
+   * @param {Date} date Contains some date object.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @return {Number} the time difference between the two dates in milliseconds.
+   */
+  public static timeDifference(date: Date, other: number): number;
+  /**
+   * Gets the time difference between the two dates in milliseconds.
+   *
+   * @param {Date} date Contains some date object.
+   * @param {String} other Contains an ISO 8601 date string.
+   * @return {Number} the time difference between the two dates in milliseconds.
+   */
+  public static timeDifference(date: Date, other: string): number;
+  /**
+   * Gets the time difference between the two dates in milliseconds.
+   *
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @param {Date} other Contains some date object.
+   * @return {Number} the time difference between the two dates in milliseconds.
+   */
+  public static timeDifference(date: number, other: Date): number;
+  /**
+   * Gets the time difference between the two dates in milliseconds.
+   *
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @return {Number} the time difference between the two dates in milliseconds.
+   */
+  public static timeDifference(date: number, other: number): number;
+  /**
+   * Gets the time difference between the two dates in milliseconds.
+   *
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @param {String} other Contains an ISO 8601 date string.
+   * @return {Number} the time difference between the two dates in milliseconds.
+   */
+  public static timeDifference(date: number, other: string): number;
+  /**
+   * Gets the time difference between the two dates in milliseconds.
+   *
+   * @param {String} date Contains an ISO 8601 date string.
+   * @param {Date} other Contains some date object.
+   * @return {Number} the time difference between the two dates in milliseconds.
+   */
+  public static timeDifference(date: string, other: Date): number;
+  /**
+   * Gets the time difference between the two dates in milliseconds.
+   *
+   * @param {String} date Contains an ISO 8601 date string.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @return {Number} the time difference between the two dates in milliseconds.
+   */
+  public static timeDifference(date: string, other: number): number;
+  /**
+   * Gets the time difference between the two dates in milliseconds.
+   *
+   * @param {String} date Contains an ISO 8601 date string.
+   * @param {String} other Contains an ISO 8601 date string.
+   * @return {Number} the time difference between the two dates in milliseconds.
+   */
+  public static timeDifference(date: string, other: string): number;
+  /**
+   * Gets the time difference between the two dates in milliseconds.
+   *
+   * @param {String} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {String} other Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @return {Number} the time difference between the two dates in milliseconds.
+   */
   public static timeDifference(
-      date: string | number | Date,
-      other: string | number | Date,
+      date: Date | number | string,
+      other: Date | number | string,
+  ): number;
+  /**
+   * Gets the time difference between the two dates in milliseconds.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {Date} other Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @return {Number} the time difference between the two dates in milliseconds.
+   */
+  public static timeDifference(
+      date: Date | number | string,
+      other: Date | number | string,
   ): number {
     const dateObj = Dates.tryParse(date), otherObj = Dates.tryParse(other);
     return Numbers.abs(otherObj.getTime() - dateObj.getTime());
@@ -1649,7 +2311,74 @@ export abstract class Dates {
    * @param {Date} date Contains some date object.
    * @return {Date} a date object representing the local date.
    */
-  public static toLocalDate(date: string | number | Date): Date {
+  public static toLocalDate(date: Date): Date;
+  /**
+   * Converts a Universal Coordinated Time (UTC) date object to a local
+   * date object.
+   *
+   * **Usage Examples:**
+   * ```typescript
+   * // some utc date
+   * const date = new Date(); // "2023-05-06T12:10:12.191Z" (MESZ)
+   * // assume the local date is UTC/GMT +2 hrs
+   * const localDate = Dates.toLocalDate(date); // "2023-05-06T14:10:12.191Z"
+   * ```
+   *
+   * @param {Date} date Contains the milliseconds from midnight, January 1,
+   * 1970 UTC.
+   * @return {Date} a date object representing the local date.
+   */
+  public static toLocalDate(date: number): Date;
+  /**
+   * Converts a Universal Coordinated Time (UTC) date object to a local
+   * date object.
+   *
+   * **Usage Examples:**
+   * ```typescript
+   * // some utc date
+   * const date = new Date(); // "2023-05-06T12:10:12.191Z" (MESZ)
+   * // assume the local date is UTC/GMT +2 hrs
+   * const localDate = Dates.toLocalDate(date); // "2023-05-06T14:10:12.191Z"
+   * ```
+   *
+   * @param {Date} date Contains an ISO 8601 date string.
+   * @return {Date} a date object representing the local date.
+   */
+  public static toLocalDate(date: string): Date;
+  /**
+   * Converts a Universal Coordinated Time (UTC) date object to a local
+   * date object.
+   *
+   * **Usage Examples:**
+   * ```typescript
+   * // some utc date
+   * const date = new Date(); // "2023-05-06T12:10:12.191Z" (MESZ)
+   * // assume the local date is UTC/GMT +2 hrs
+   * const localDate = Dates.toLocalDate(date); // "2023-05-06T14:10:12.191Z"
+   * ```
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @return {Date} a date object representing the local date.
+   */
+  public static toLocalDate(date: Date | number | string): Date;
+  /**
+   * Converts a Universal Coordinated Time (UTC) date object to a local
+   * date object.
+   *
+   * **Usage Examples:**
+   * ```typescript
+   * // some utc date
+   * const date = new Date(); // "2023-05-06T12:10:12.191Z" (MESZ)
+   * // assume the local date is UTC/GMT +2 hrs
+   * const localDate = Dates.toLocalDate(date); // "2023-05-06T14:10:12.191Z"
+   * ```
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @return {Date} a date object representing the local date.
+   */
+  public static toLocalDate(date: Date | number | string): Date {
     const dateObj = Dates.tryParse(date),
       offsetInMs = dateObj.getTimezoneOffset() * Dates.MS_IN_MINUTE,
       localDate = new Date(dateObj.getTime() + offsetInMs),
@@ -1673,9 +2402,102 @@ export abstract class Dates {
    * @param {Date} other Contains some other date object.
    * @return {Number} the difference in years between the two specified dates.
    */
+  public static yearsDifference(date: Date, other: Date): number;
+  /**
+   * Gets the difference in years between the two specified dates.
+   *
+   * @param {Date} date Contains some date object.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @return {Number} the difference in years between the two specified dates.
+   */
+  public static yearsDifference(date: Date, other: number): number;
+  /**
+   * Gets the difference in years between the two specified dates.
+   *
+   * @param {Date} date Contains some date object.
+   * @param {String} other Contains an ISO 8601 date string.
+   * @return {Number} the difference in years between the two specified dates.
+   */
+  public static yearsDifference(date: Date, other: string): number;
+  /**
+   * Gets the difference in years between the two specified dates.
+   *
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @param {Date} other Contains some date object.
+   * @return {Number} the difference in years between the two specified dates.
+   */
+  public static yearsDifference(date: number, other: Date): number;
+  /**
+   * Gets the difference in years between the two specified dates.
+   *
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @return {Number} the difference in years between the two specified dates.
+   */
+  public static yearsDifference(date: number, other: number): number;
+  /**
+   * Gets the difference in years between the two specified dates.
+   *
+   * @param {Number} date Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @param {String} other Contains an ISO 8601 date string.
+   * @return {Number} the difference in years between the two specified dates.
+   */
+  public static yearsDifference(date: number, other: string): number;
+  /**
+   * Gets the difference in years between the two specified dates.
+   *
+   * @param {String} date Contains an ISO 8601 date string.
+   * @param {Date} other Contains some date object.
+   * @return {Number} the difference in years between the two specified dates.
+   */
+  public static yearsDifference(date: string, other: Date): number;
+  /**
+   * Gets the difference in years between the two specified dates.
+   *
+   * @param {String} date Contains an ISO 8601 date string.
+   * @param {Number} other Contains the milliseconds from midnight,
+   * January 1, 1970 UTC.
+   * @return {Number} the difference in years between the two specified dates.
+   */
+  public static yearsDifference(date: string, other: number): number;
+  /**
+   * Gets the difference in years between the two specified dates.
+   *
+   * @param {String} date Contains an ISO 8601 date string.
+   * @param {String} other Contains an ISO 8601 date string.
+   * @return {Number} the difference in years between the two specified dates.
+   */
+  public static yearsDifference(date: string, other: string): number;
+  /**
+   * Gets the difference in years between the two specified dates.
+   *
+   * @param {String} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {String} other Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @return {Number} the difference in years between the two specified dates.
+   */
   public static yearsDifference(
-      date: string | number | Date,
-      other: string | number | Date,
+      date: Date | number | string,
+      other: Date | number | string,
+  ): number;
+  /**
+   * Gets the difference in years between the two specified dates.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {Date} other Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @return {Number} the difference in years between the two specified dates.
+   */
+  public static yearsDifference(
+      date: Date | number | string,
+      other: Date | number | string,
   ): number {
     return Dates.monthsDifference(date, other) / 12;
   }
@@ -1690,7 +2512,7 @@ export abstract class Dates {
    *
    * @private
    */
-  private static from(value?: string | number | Date): Date | null {
+  private static from(value?: Date | number | string): Date | null {
     if (Dates.isDate(value) && Dates.isValid(value)) {
       return value;
     }
@@ -1731,7 +2553,7 @@ export abstract class Dates {
    *
    * @private
    */
-  private static tryParse(value: string | number | Date): Date {
+  private static tryParse(value: Date | number | string): Date {
     const date = Dates.from(value);
     if (date === null) {
       throw new TypeError(`Cannot parse date: "${String(value)}"`);

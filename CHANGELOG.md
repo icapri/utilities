@@ -25,3 +25,7 @@
 ## `v1.6.5` - 2023-06-15
 ### Added
 * `Arrays.containsNone()`, `Arrays.isSorted()`, `Arrays.removeAll()`, `Arrays.shuffle()`, `Arrays.subarray()`.
+
+## `v1.6.6` - 2023-06-18
+### Changed
+* `Dates` method overloads and documentation was improved.
