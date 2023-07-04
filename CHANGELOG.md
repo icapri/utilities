@@ -33,3 +33,7 @@
 ## `v1.6.7` - 2023-06-18
 ### Added
 * Added the methods `isFormData()` and `isPromiseLike()` to `Utils`.
+
+## `v1.6.8` - 2023-07-04
+### Added
+* Added the method `splice()` to `Strings`.

@@ -709,6 +709,13 @@ describe('Strings', () => {
     expect(Strings.reverse('🤨🤗')).toEqual('🤗🤨');
   });
 
+  test('Strings.splice()', () => {
+    expect(Strings.splice('', 0, 0, 'hijk')).toEqual('hijk');
+    expect(Strings.splice('abcde', 1, 0, 'hijk')).toEqual('ahijkbcde');
+    expect(Strings.splice(
+        'lorem ipsum dolor', 6, 5, 'amet')).toEqual('lorem amet dolor');
+  });
+
   test('Strings.startsWith()', () => {
     expect(Strings.startsWith('', '')).toEqual(true);
     expect(Strings.startsWith('abc', 'ab')).toEqual(true);

@@ -1,7 +1,7 @@
 <p align="center">
   <br>
   <img src="/docs/logo.png" alt="Utilitates Logo" width="120px" height="115px"/>
-  <h2 align="center">Utility Framework Core</h1>
+  <h2 align="center">Utility Framework</h1>
 </p>
 <p align="center"><i>A modern framework for conversion, formatting, parsing, validation, and more.</i></p>
 
@@ -158,7 +158,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v1.6.7
+Latest stable: v1.6.8
 
 ## License
 
