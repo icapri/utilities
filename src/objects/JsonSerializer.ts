@@ -415,7 +415,7 @@ export abstract class JsonSerializer {
               iso += JsonSerializer.__next();
             }
             if (Dates.isISOString(iso) && JsonSerializer.__char === '"') {
-              return Dates.parseISO(iso) as Date;
+              return new Date(iso);
             }
           } else {
             break;

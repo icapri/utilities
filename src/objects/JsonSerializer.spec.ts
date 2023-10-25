@@ -3,7 +3,6 @@
  */
 
 /* eslint-disable no-new-wrappers */
-import {Dates} from '../dates/Dates';
 import {JsonSerializer} from './JsonSerializer';
 
 describe('JsonSerializer', () => {
@@ -19,13 +18,6 @@ describe('JsonSerializer', () => {
       b: false,
       c: null,
       d: undefined,
-    }));
-    expect(JsonSerializer.serialize({
-      date: Dates.parseISO('2023-05-09T23:15:22.123Z'),
-      otp: 12345,
-    })).toEqual(JSON.stringify({
-      date: Dates.parseISO('2023-05-09T23:15:22.123Z'),
-      otp: 12345,
     }));
     expect(JsonSerializer.serialize({
       date: new Date('I am not valid!'),

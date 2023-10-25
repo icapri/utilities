@@ -4,7 +4,7 @@
 export {Arrays} from './arrays/Arrays';
 export {Blobs} from './blobs/Blobs';
 export {Chars} from './chars/Chars';
-export {Dates} from './dates/Dates';
+export {Dates, DateLike} from './dates/Dates';
 export {Maps} from './maps/Maps';
 export {Numbers} from './numbers/Numbers';
 export {JsonSerializer} from './objects/JsonSerializer';

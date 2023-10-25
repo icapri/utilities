@@ -390,7 +390,8 @@ export abstract class Strings {
    * @since v1.5.0
    */
   public static decode(base64: string): string {
-    const esc = base64.replace(/[^A-Za-z0-9+/]/g, ''), // escape non-Base64 char
+    // escape non-Base64 char
+    const esc = base64.replace(/[^A-Za-z0-9+/]/g, Strings.EMPTY),
       l = esc.length,
       length = (l * 3 + 1) >> 2,
       bytes = new Uint8Array(length);
@@ -479,7 +480,7 @@ export abstract class Strings {
    * @since v1.5.0
    */
   public static encode(str: string, lineBreak: boolean = false): string {
-    let i = 0, mod3 = 2, encoded = '', u24 = 0;
+    let i = 0, mod3 = 2, encoded = Strings.EMPTY, u24 = 0;
     const bytes: Uint8Array = Strings.toBytesArray(str), l = bytes.length;
     const $ = (u6: number) => u6 < 26 ? u6 + 65 : u6 < 52 ? u6 + 71 :
       u6 < 62 ? u6 - 4 : u6 === 62 ? 43 : u6 === 63 ? 47 : 65;
@@ -499,7 +500,7 @@ export abstract class Strings {
       }
       i++;
     }
-    const e = mod3 === 2 ? '' : mod3 === 1 ? '=' : '==';
+    const e = mod3 === 2 ? Strings.EMPTY : mod3 === 1 ? '=' : '==';
     return encoded.substring(0, encoded.length - 2 + mod3).concat(e);
   }
 

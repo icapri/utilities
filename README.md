@@ -77,7 +77,6 @@ Chars.isWhitespace('\t'); // true
 // Dates examples:
 Dates.isAfter(Dates.now, "2023-05-11T23:20:12");
 Dates.addDays(Dates.now, 12);
-Dates.parseISO("2023-05-11T23:20");
 Dates.isBetween("2023-05-11", "2023-05-10", "2023-05-12");
 Dates.daysDifference("2023-05-11", "2023-05-10");
 
@@ -158,7 +157,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v1.6.8
+Latest stable: v2.0.1
 
 ## License
 

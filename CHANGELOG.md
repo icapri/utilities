@@ -37,3 +37,7 @@
 ## `v1.6.8` - 2023-07-04
 ### Added
 * Added the method `splice()` to `Strings`.
+
+## `v2.0.1` - 2023-10-25
+### Changed
+* Lots of `Dates` methods were refactored and many bugs were fixed in this change.
