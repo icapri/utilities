@@ -75,10 +75,14 @@ Chars.isUpperCase('Б'); // true
 Chars.isWhitespace('\t'); // true
 
 // Dates examples:
-Dates.isAfter(Dates.now, "2023-05-11T23:20:12");
 Dates.addDays(Dates.now, 12);
+Dates.addYears(new Date('2023-01-01T11:00:22.000Z'), 3);
+Dates.isAfter(Dates.now, "2023-05-11T23:20:12");
 Dates.isBetween("2023-05-11", "2023-05-10", "2023-05-12");
-Dates.daysDifference("2023-05-11", "2023-05-10");
+Dates.isDateObject(new Date()); // true
+Dates.isValid(new Date()); // true
+Dates.daysDifference('2023-10-16T21:50:22.000Z', '2023-10-26T21:50:22.000Z');
+Dates.isISOString('2023-11-11T23:15:22.999Z'); // true
 
 // Maps examples:
 Maps.isEmpty(new Map()); // true
@@ -157,7 +161,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v2.0.1
+Latest stable: v2.0.2
 
 ## License
 

@@ -171,7 +171,7 @@ export abstract class JsonSerializer {
           value
               .map((v) => `${JsonSerializer.serialize(v)}`)
               .join(',').concat(']'));
-    } else if (Dates.isDate(value)) {
+    } else if (Dates.isDateObject(value)) {
       s += Dates.isValid(value) ? `"${value.toISOString()}"` : 'null';
     } else if (Utils.isRegExp(value) ||
       Sets.isSet(value) ||

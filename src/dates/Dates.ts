@@ -254,11 +254,7 @@ export abstract class Dates {
    * @return {Date} a date object.
    */
   public static atStartOfDay(date?: string | number | Date): Date {
-    if (date) {
-      const dateObj = Dates.tryParse(date);
-      return Dates.dateOnly(dateObj);
-    }
-    return Dates.dateOnly(Dates.now);
+    return Dates.dateOnly(date ?? Dates.now);
   }
 
   /**
@@ -300,6 +296,8 @@ export abstract class Dates {
    * midnight, January 1, 1970 UTC or an ISO 8601 date string.
    * @return {Date} only the date part of the date object i. e. the time
    * is zeroed.
+   *
+   * @see `Dates.atStartOfDay()`
    */
   public static dateOnly(date: DateLike): Date {
     const dateObj = Dates.tryParse(date),
@@ -506,14 +504,14 @@ export abstract class Dates {
    *
    * **Example**
    * ```typescript
-   * Dates.isDate(new Date('I am not valid')); // true
-   * Dates.isValid(new Date()); // true
+   * Dates.isDateObject(new Date('I am not valid')); // true
+   * Dates.isDateObject(new Date()); // true
    * ```
    *
    * @param {*} value Contains some value.
    * @return {Boolean} whether the given value is a date object.
    */
-  public static isDate(value?: any): value is Date {
+  public static isDateObject(value?: any): value is Date {
     const proto = Object.prototype.toString.call(value);
     return proto === '[object Date]';
   }
@@ -595,13 +593,14 @@ export abstract class Dates {
   }
 
   /**
-   * Checks whether the given date object is valid.
+   * Checks whether the given value is a date object and is valid i. e.
+   * it represents a valid date.
    *
    * @param {Date} date Contains some date object.
    * @return {Boolean} whether the given value is a valid date object.
    */
   public static isValid(date: Date): boolean {
-    return Dates.isDate(date) && !Number.isNaN(date.valueOf());
+    return Dates.isDateObject(date) && !Number.isNaN(date.valueOf());
   }
 
   /**
@@ -681,17 +680,19 @@ export abstract class Dates {
   public static parse(value?: any): Date | null {
     let ret: Date | null = null;
 
-    if (Dates.isDate(value) && Dates.isValid(value)) {
+    if (Dates.isDateObject(value) && Dates.isValid(value)) {
       ret = value;
-    } else if (Strings.isString(value)) {
-      const date = new Date(Date.parse(value));
-      if (Dates.isDate(value) && Dates.isValid(value)) {
+    } else if (Strings.isString(value) &&
+      Strings.isNotEmpty(value) &&
+      !Strings.hasWhitespace(value)) {
+      const date = new Date(value);
+      if (Dates.isDateObject(date) && Dates.isValid(date)) {
         ret = date;
       }
     } else if (Numbers.isNumber(value) &&
       Numbers.isPositiveInteger(value) && value <= Dates.MAX_ALLOWED_TIME) {
       const date = new Date(value);
-      if (Dates.isDate(value) && Dates.isValid(value)) {
+      if (Dates.isDateObject(value) && Dates.isValid(value)) {
         ret = date;
       }
     }
