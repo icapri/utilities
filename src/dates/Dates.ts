@@ -391,6 +391,28 @@ export abstract class Dates {
   }
 
   /**
+   * Gets the ISO week number of the specified date.
+   *
+   * **Usage Examples:**
+   * ```typescript
+   * Dates.getWeekNumber("2023-05-05T11:13:27.000Z"); // 18
+   * Dates.getWeekNumber("2024-01-01T11:13:27.000Z"); // 1
+   * Dates.getWeekNumber("2023-10-03T11:13:27.000Z"); // 40
+   * ```
+   *
+   * @param {DateLike} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @return {Number} the ISO week number.
+   */
+  public static getWeekNumber(date: DateLike): number {
+    let r: any = Dates.tryParse(date);
+    r = new Date(Date.UTC(r.getFullYear(), r.getMonth(), r.getDate()));
+    r.setUTCDate(r.getUTCDate() + 4 - (r.getUTCDay() || 7));
+    const s: any = new Date(Date.UTC(r.getUTCFullYear(), 0, 1));
+    return Math.ceil((((r - s) / Dates.MS_IN_DAY) + 1) / 7);
+  }
+
+  /**
    * Gets the difference in hours between the two specified dates.
    *
    * @param {Date} date Contains a date object, an ISO 8601 date string

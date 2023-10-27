@@ -109,6 +109,15 @@ describe('Dates', () => {
     expect(Dates.daysOfMonth(-2, 2023)).toEqual(-1);
   });
 
+  test('Dates.getWeekNumber()', () => {
+    expect(Dates.getWeekNumber('2023-01-05T11:13:27.000Z')).toEqual(1);
+    expect(Dates.getWeekNumber('2023-03-06T11:13:27.000Z')).toEqual(10);
+    expect(Dates.getWeekNumber('2023-05-05T11:13:27.000Z')).toEqual(18);
+    expect(Dates.getWeekNumber('2023-10-03T11:13:27.000Z')).toEqual(40);
+    expect(Dates.getWeekNumber('2023-12-12T11:13:27.000Z')).toEqual(50);
+    expect(Dates.getWeekNumber('2024-01-01T11:13:27.000Z')).toEqual(1);
+  });
+
   test('Dates.isISOString()', () => {
     expect(Dates.isISOString('')).toEqual(false);
     expect(Dates.isISOString('sdc')).toEqual(false);

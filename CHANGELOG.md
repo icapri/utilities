@@ -45,3 +45,7 @@
 ## `v2.0.2` - 2023-10-26
 ### Changed
 * Lots of `Dates` methods were tested and some bugs were fixed in this change.
+
+## `v2.0.3` - 2023-10-27
+### Added
+* Added `Dates.getWeekNumber()`.
