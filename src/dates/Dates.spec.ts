@@ -147,4 +147,8 @@ describe('Dates', () => {
     expect(Dates.isISOString('9999-05-09T23:15:22.123Z')).toEqual(true);
     expect(Dates.isISOString('2023-11-11T23:15:22.999Z')).toEqual(true);
   });
+
+  test('Dates.parse()', () => {
+    expect(Dates.parse(1658527200000)).toEqual('2022-07-22T22:00:00.000Z');
+  });
 });

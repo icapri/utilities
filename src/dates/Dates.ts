@@ -714,7 +714,7 @@ export abstract class Dates {
     } else if (Numbers.isNumber(value) &&
       Numbers.isPositiveInteger(value) && value <= Dates.MAX_ALLOWED_TIME) {
       const date = new Date(value);
-      if (Dates.isDateObject(value) && Dates.isValid(value)) {
+      if (Dates.isDateObject(date) && Dates.isValid(date)) {
         ret = date;
       }
     }
