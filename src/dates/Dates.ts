@@ -108,13 +108,10 @@ export abstract class Dates {
   public static addDays(date: DateLike, days: number): Date {
     Dates.nonNegative(days);
     const dateObj = Dates.tryParse(date);
-    if (days === 0) {
-      return dateObj;
+    if (days !== 0) {
+      dateObj.setDate(dateObj.getDate() + days);
     }
-
-    const result = new Date(dateObj);
-    result.setDate(result.getDate() + days);
-    return result;
+    return dateObj;
   }
 
   /**
@@ -122,20 +119,20 @@ export abstract class Dates {
    *
    * @param {Date} date Contains a date object, an ISO 8601 date string or the
    * milliseconds from midnight, January 1, 1970 UTC.
-   * @param {Number} ms Contains the number of milliseconds to add to the
-   * specified date.
+   * @param {Number} milliseconds Contains the number of milliseconds to add
+   * to the specified date.
    * @return {Date} a date object.
    */
   public static addMilliseconds(
       date: DateLike,
-      ms: number,
+      milliseconds: number,
   ): Date {
-    Dates.nonNegative(ms);
+    Dates.nonNegative(milliseconds);
     const dateObj = Dates.tryParse(date);
-    if (ms === 0) {
-      return dateObj;
+    if (milliseconds !== 0) {
+      return new Date(dateObj.getTime() + milliseconds);
     }
-    return new Date(dateObj.getTime() + ms);
+    return dateObj;
   }
 
   /**
@@ -151,13 +148,7 @@ export abstract class Dates {
       date: DateLike,
       minutes: number,
   ): Date {
-    Dates.nonNegative(minutes);
-    const dateObj = Dates.tryParse(date);
-    if (minutes === 0) {
-      return dateObj;
-    }
-    dateObj.setMinutes(dateObj.getMinutes() + minutes);
-    return dateObj;
+    return Dates.addMilliseconds(date, minutes * Dates.MS_IN_MINUTE);
   }
 
   /**
@@ -172,10 +163,9 @@ export abstract class Dates {
   public static addMonths(date: DateLike, months: number): Date {
     Dates.nonNegative(months);
     const dateObj = Dates.tryParse(date);
-    if (months === 0) {
-      return dateObj;
+    if (months !== 0) {
+      dateObj.setMonth(dateObj.getMonth() + months);
     }
-    dateObj.setMonth(dateObj.getMonth() + months);
     return dateObj;
   }
 
@@ -192,13 +182,7 @@ export abstract class Dates {
       date: DateLike,
       seconds: number,
   ): Date {
-    Dates.nonNegative(seconds);
-    const dateObj = Dates.tryParse(date);
-    if (seconds === 0) {
-      return dateObj;
-    }
-    dateObj.setSeconds(dateObj.getSeconds() + seconds);
-    return dateObj;
+    return Dates.addMilliseconds(date, seconds * Dates.MS_IN_SECOND);
   }
 
   /**
@@ -211,13 +195,7 @@ export abstract class Dates {
    * @return {Date} a date object.
    */
   public static addWeeks(date: DateLike, weeks: number): Date {
-    Dates.nonNegative(weeks);
-    const dateObj = Dates.tryParse(date);
-    if (weeks === 0) {
-      return dateObj;
-    }
-    dateObj.setDate(dateObj.getDate() + (weeks * 7));
-    return dateObj;
+    return Dates.addDays(date, weeks * 7);
   }
 
   /**
@@ -230,13 +208,7 @@ export abstract class Dates {
    * @return {Date} a date object.
    */
   public static addYears(date: DateLike, years: number): Date {
-    Dates.nonNegative(years);
-    const dateObj = Dates.tryParse(date);
-    if (years === 0) {
-      return dateObj;
-    }
-    dateObj.setFullYear(dateObj.getFullYear() + years);
-    return dateObj;
+    return Dates.addMonths(date, years * 12);
   }
 
   /**
@@ -278,15 +250,7 @@ export abstract class Dates {
    * * `1`  if `a` is after than `b`.
    */
   public static compare(a: Date, b: Date): number {
-    if (a < b) {
-      return -1;
-    }
-
-    if (a > b) {
-      return 1;
-    }
-
-    return 0;
+    return a < b ? -1 : a > b ? 1 : 0;
   }
 
   /**
@@ -387,7 +351,6 @@ export abstract class Dates {
    * @since `v2.1.1`
    */
   public static firstDayOfWeek(year: number, weekNo: number): Date {
-    // first validate the year and the week
     if (!Numbers.isInteger(year) || year < 0 || year > 9999) {
       throw new Error(`Invalid year "${year}".`);
     }
@@ -397,24 +360,17 @@ export abstract class Dates {
     }
 
     const date = new Date(year, 0, 1), offset = date.getTimezoneOffset();
-    // according to the ISO standard week #1 is the one with the year's
-    // first Thursday so the nearest Thursday is a calculation of the
-    // current date + 4 - current day number
-    // sunday is converted from 0 to 7
     date.setDate(date.getDate() + 4 - (date.getDay() || 7));
-    // 7 days * (week - overlapping first week)
     date.setTime(
         date.getTime() +
         7 * 24 * 60 * 60 * 1000 * (
           weekNo + (year === date.getFullYear() ? -1 : 0)
         ),
     );
-    // daylight savings fix
     date.setTime(
         date.getTime() +
         (date.getTimezoneOffset() - offset) * 60 * 1000,
     );
-    // back to Monday (from Thursday)
     date.setDate(date.getDate() - 3);
     return date;
   }
@@ -814,12 +770,7 @@ export abstract class Dates {
    * @return {Date} a date object.
    */
   public static removeDays(date: DateLike, days: number): Date {
-    Dates.nonNegative(days);
-    const dateObj = Dates.tryParse(date);
-    if (days !== 0) {
-      dateObj.setDate(dateObj.getDate() - days);
-    }
-    return dateObj;
+    return Dates.removeMilliseconds(date, days * Dates.MS_IN_DAY);
   }
 
   /**
@@ -852,12 +803,7 @@ export abstract class Dates {
    * @since `v2.1.1`
    */
   public static removeMinutes(date: DateLike, minutes: number): Date {
-    Dates.nonNegative(minutes);
-    const dateObj = Dates.tryParse(date);
-    if (minutes !== 0) {
-      dateObj.setMinutes(dateObj.getMinutes() - minutes);
-    }
-    return dateObj;
+    return Dates.removeMilliseconds(date, minutes * Dates.MS_IN_MINUTE);
   }
 
   /**
@@ -890,12 +836,7 @@ export abstract class Dates {
    * @since `v2.1.1`
    */
   public static removeSeconds(date: DateLike, seconds: number): Date {
-    Dates.nonNegative(seconds);
-    const dateObj = Dates.tryParse(date);
-    if (seconds !== 0) {
-      dateObj.setSeconds(dateObj.getSeconds() - seconds);
-    }
-    return dateObj;
+    return Dates.removeMilliseconds(date, seconds * Dates.MS_IN_SECOND);
   }
 
   /**

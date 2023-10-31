@@ -60,6 +60,8 @@
 ### Changed
 * A lot of existing `Dates` methods were also refactored.
 
-## `v2.1.2` - 2023-10-31
+## `v2.1.3` - 2023-10-31
 ### Added
 * Added `Dates.weeksDifference()`.
+### Changed
+* A lot of existing `Dates` methods were also refactored.
