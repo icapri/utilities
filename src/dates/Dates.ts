@@ -927,15 +927,15 @@ export abstract class Dates {
   }
 
   /**
-   * Gets the day difference between the two specified dates.
+   * Gets the days difference between the two specified dates.
    *
    * @param {DateLike} date Contains a date object, an ISO 8601 date string
    * or the milliseconds from midnight, January 1, 1970 UTC.
    * @param {DateLike} other Contains a date object, an ISO 8601 date string
    * or the milliseconds from midnight, January 1, 1970 UTC.
-   * @param {Number} round Contains whether to round the number of day
+   * @param {Number} round Contains whether to round the number of days
    * difference.
-   * @return {Number} the day difference.
+   * @return {Number} the days difference.
    */
   public static secondsDifference(
       date: DateLike,
@@ -951,6 +951,28 @@ export abstract class Dates {
    */
   public static get utcNow(): Date {
     return new Date();
+  }
+
+  /**
+   * Gets the weeks difference between the two specified dates.
+   *
+   * @param {DateLike} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {DateLike} other Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {Number} round Contains whether to round the number of weeks
+   * difference.
+   * @return {Number} the weeks difference.
+   *
+   * @since `v2.1.2`
+   */
+  public static weeksDifference(
+      date: DateLike,
+      other: DateLike,
+      round: boolean = false,
+  ): number {
+    const weeks = Dates.daysDifference(date, other) / 7;
+    return round ? Math.round(weeks) : weeks;
   }
 
   /**

@@ -59,3 +59,7 @@
 `Dates.removeSeconds()`, `Dates.removeWeeks()`, `Dates.removeYears()`.
 ### Changed
 * A lot of existing `Dates` methods were also refactored.
+
+## `v2.1.2` - 2023-10-31
+### Added
+* Added `Dates.weeksDifference()`.

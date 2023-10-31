@@ -484,6 +484,24 @@ describe('Dates', () => {
     ).toEqual(720);
   });
 
+  test('Dates.weeksDifference()', () => {
+    const utcNow = Dates.utcNow;
+    expect(Dates.weeksDifference(utcNow, utcNow)).toEqual(0);
+    expect(
+        Dates.weeksDifference(
+            '2022-07-22T22:00:01.000Z',
+            '2022-07-29T22:00:01.000Z',
+        ),
+    ).toEqual(1);
+    expect(
+        Dates.weeksDifference(
+            '2022-07-01T22:00:01.000Z',
+            '2022-07-22T22:10:01.000Z',
+            true,
+        ),
+    ).toEqual(3);
+  });
+
   test('Dates.yearsDifference()', () => {
     const utcNow = Dates.utcNow;
     expect(Dates.yearsDifference(utcNow, utcNow)).toEqual(0);
