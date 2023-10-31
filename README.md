@@ -77,12 +77,27 @@ Chars.isWhitespace('\t'); // true
 // Dates examples:
 Dates.addDays(Dates.now, 12);
 Dates.addYears(new Date('2023-01-01T11:00:22.000Z'), 3);
+Dates.daysDifference(
+  '2023-10-16T21:50:22.000Z',
+  '2023-10-26T21:50:22.000Z',
+);
+Dates.firstDayOfWeek(2023, 44);
+//= Date: "2023-10-29T23:00:00.000Z"
+Dates.getWeek('2023-01-05T11:13:27.000Z'); // 1
 Dates.isAfter(Dates.now, "2023-05-11T23:20:12");
 Dates.isBetween("2023-05-11", "2023-05-10", "2023-05-12");
 Dates.isDateObject(new Date()); // true
 Dates.isValid(new Date()); // true
-Dates.daysDifference('2023-10-16T21:50:22.000Z', '2023-10-26T21:50:22.000Z');
 Dates.isISOString('2023-11-11T23:15:22.999Z'); // true
+Dates.removeMinutes('2022-07-28T22:12:00.000Z', 12);
+//= Date: "2022-07-28T22:00:00.000Z"
+Dates.removeWeeks('2022-07-28T22:00:00.000Z', 1);
+//= Date: "2022-07-21T22:00:00.000Z"
+Dates.weeksDifference(
+  '2022-07-01T22:00:01.000Z',
+  '2022-07-22T22:10:01.000Z',
+  true,
+); // 3
 
 // Maps examples:
 Maps.isEmpty(new Map()); // true
@@ -104,7 +119,8 @@ Numbers.randomInt(1, 8);
 Numbers.toString(123); // "123"
 
 // Objects examples:
-Objects.fromJson('{"a":2,"b":"abc"}'); // {a: 2, b: "abc"}
+Objects.fromJson('{"a":2,"b":"abc"}');
+//= {a: 2, b: "abc"}
 Objects.hasProperty({a: true, b: 'abc'}, 'a'); // true
 Objects.isNotNull({}); // false
 Objects.isObject({}); // true
@@ -123,15 +139,20 @@ Sets.toMap(set);
 
 // Strings examples:
 Strings.isNullOrEmpty(""); // true
-Strings.normalize("  Lorem  ipsum dolor sit "); // "Lorem ipsum dolor sit"
+Strings.normalize("  Lorem  ipsum dolor sit ");
+//= "Lorem ipsum dolor sit"
 Strings.isNumerical("12.34"); // true
 Strings.hasWhitespace("Lorem\t"); // true
 Strings.countMatches("ho ho ho", "ho"); // 3
-Strings.decode("2aMgaXMgMyBpbiBBcmFiaWM="); // "٣ is 3 in Arabic"
-Strings.encode("\u0663 is 3 in Arabic"); // "2aMgaXMgMyBpbiBBcmFiaWM="
+Strings.decode("2aMgaXMgMyBpbiBBcmFiaWM=");
+//= "٣ is 3 in Arabic"
+Strings.encode("\u0663 is 3 in Arabic");
+//= "2aMgaXMgMyBpbiBBcmFiaWM="
 Strings.toTitleCase("jOhN doE"); // John Doe
-Strings.toCharArray("🐑🐑🐑"); // ["🐑", "🐑", "🐑"]
-Strings.repeat("abc", 5); // "abcabcabcabcabc"
+Strings.toCharArray("🐑🐑🐑");
+//= ["🐑", "🐑", "🐑"]
+Strings.repeat("abc", 5);
+//= "abcabcabcabcabc"
 Strings.remove("adefbc", "def"); // "abc"
 Strings.reverse("😃😄😁😆🤣"); // "🤣😆😁😄😃"
 Strings.toCamelCase("\nAbc  def"); // "abcDef"

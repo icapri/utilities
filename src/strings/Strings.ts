@@ -2326,9 +2326,9 @@ export abstract class Strings {
    *
    * **Usage Examples:**
    * ```typescript
-   * Strings.capitalize("john"); // "John"
-   * Strings.capitalize("jOHN"); // "JOHN"
-   * Strings.capitalize("jOHN", true); // "John"
+   * Strings.upperFirst("john"); // "John"
+   * Strings.upperFirst("jOHN"); // "JOHN"
+   * Strings.upperFirst("jOHN", true); // "John"
    * ```
    *
    * @param {String} str Contains some string.
