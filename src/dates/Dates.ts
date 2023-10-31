@@ -290,6 +290,15 @@ export abstract class Dates {
   }
 
   /**
+   * Gets the current week number.
+   *
+   * @since `v2.1.1`
+   */
+  public static get currentWeek(): number {
+    return Dates.getWeek(new Date());
+  }
+
+  /**
    * Gets the date part of the date object i. e. the time is zeroed.
    *
    * @param {*} date Contains some date object, the milliseconds from
@@ -368,6 +377,65 @@ export abstract class Dates {
   }
 
   /**
+   * Gets the first day of the specified week of the specified year.
+   *
+   * @param {Number} year Contains the year number.
+   * @param {Number} weekNo Contains the week number.
+   *
+   * @return {Date} the first day of the specified week of the specified year.
+   *
+   * @since `v2.1.1`
+   */
+  public static firstDayOfWeek(year: number, weekNo: number): Date {
+    // first validate the year and the week
+    if (!Numbers.isInteger(year) || year < 0 || year > 9999) {
+      throw new Error(`Invalid year "${year}".`);
+    }
+
+    if (!Numbers.isInteger(weekNo) || weekNo < 1 || weekNo > 53) {
+      throw new Error(`Invalid week number "${weekNo}".`);
+    }
+
+    const date = new Date(year, 0, 1), offset = date.getTimezoneOffset();
+    // according to the ISO standard week #1 is the one with the year's
+    // first Thursday so the nearest Thursday is a calculation of the
+    // current date + 4 - current day number
+    // sunday is converted from 0 to 7
+    date.setDate(date.getDate() + 4 - (date.getDay() || 7));
+    // 7 days * (week - overlapping first week)
+    date.setTime(
+        date.getTime() +
+        7 * 24 * 60 * 60 * 1000 * (
+          weekNo + (year === date.getFullYear() ? -1 : 0)
+        ),
+    );
+    // daylight savings fix
+    date.setTime(
+        date.getTime() +
+        (date.getTimezoneOffset() - offset) * 60 * 1000,
+    );
+    // back to Monday (from Thursday)
+    date.setDate(date.getDate() - 3);
+    return date;
+  }
+
+  /**
+   * Gets the Standard Time timezone offset.
+   *
+   * @param {DateLike} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @return {Number} the standard timezone offset.
+   *
+   * @since `v2.1.1`
+   */
+  public static getStdTimezoneOffset(date: DateLike): number {
+    const dateObj = Dates.tryParse(date);
+    const jan1st = new Date(dateObj.getFullYear(), 0, 1);
+    const jul1st = new Date(dateObj.getFullYear(), 6, 1);
+    return Math.max(jan1st.getTimezoneOffset(), jul1st.getTimezoneOffset());
+  }
+
+  /**
    * Returns the number of ms between midnight, January 1, 1970 Universal
    * Coordinated Time a. k. a. GMT and the given date.
    *
@@ -395,16 +463,16 @@ export abstract class Dates {
    *
    * **Usage Examples:**
    * ```typescript
-   * Dates.getWeekNumber("2023-05-05T11:13:27.000Z"); // 18
-   * Dates.getWeekNumber("2024-01-01T11:13:27.000Z"); // 1
-   * Dates.getWeekNumber("2023-10-03T11:13:27.000Z"); // 40
+   * Dates.getWeek("2023-05-05T11:13:27.000Z"); // 18
+   * Dates.getWeek("2024-01-01T11:13:27.000Z"); // 1
+   * Dates.getWeek("2023-10-03T11:13:27.000Z"); // 40
    * ```
    *
    * @param {DateLike} date Contains a date object, an ISO 8601 date string
    * or the milliseconds from midnight, January 1, 1970 UTC.
    * @return {Number} the ISO week number.
    */
-  public static getWeekNumber(date: DateLike): number {
+  public static getWeek(date: DateLike): number {
     let r: any = Dates.tryParse(date);
     r = new Date(Date.UTC(r.getFullYear(), r.getMonth(), r.getDate()));
     r.setUTCDate(r.getUTCDate() + 4 - (r.getUTCDay() || 7));
@@ -536,6 +604,22 @@ export abstract class Dates {
   public static isDateObject(value?: any): value is Date {
     const proto = Object.prototype.toString.call(value);
     return proto === '[object Date]';
+  }
+
+  /**
+   * Checks whether the specified date belongs to the Daylight Saving
+   * Time (DST).
+   *
+   * @param {DateLike} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @return {Boolean} whether the specified date belongs to the Daylight
+   * Saving Time (DST).
+   *
+   * @since `v2.1.1`
+   */
+  public static isDST(date: DateLike): boolean {
+    const dateObj = Dates.tryParse(date);
+    return dateObj.getTimezoneOffset() < Dates.getStdTimezoneOffset(dateObj);
   }
 
   /**
@@ -701,7 +785,6 @@ export abstract class Dates {
    */
   public static parse(value?: any): Date | null {
     let ret: Date | null = null;
-
     if (Dates.isDateObject(value) && Dates.isValid(value)) {
       ret = value;
     } else if (Strings.isString(value) &&
@@ -733,11 +816,114 @@ export abstract class Dates {
   public static removeDays(date: DateLike, days: number): Date {
     Dates.nonNegative(days);
     const dateObj = Dates.tryParse(date);
-    if (days === 0) {
-      return dateObj;
+    if (days !== 0) {
+      dateObj.setDate(dateObj.getDate() - days);
     }
-    dateObj.setDate(dateObj.getDate() - days);
     return dateObj;
+  }
+
+  /**
+   * Removes the given number of milliseconds from the specified date.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {Number} milliseconds Contains the number of milliseconds to remove.
+   * @return {Date} a date object.
+   *
+   * @since `v2.1.1`
+   */
+  public static removeMilliseconds(date: DateLike, milliseconds: number): Date {
+    Dates.nonNegative(milliseconds);
+    const dateObj = Dates.tryParse(date);
+    if (milliseconds !== 0) {
+      dateObj.setMilliseconds(dateObj.getMilliseconds() - milliseconds);
+    }
+    return dateObj;
+  }
+
+  /**
+   * Removes the given number of minutes from the specified date.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {Number} minutes Contains the number of minutes to remove.
+   * @return {Date} a date object.
+   *
+   * @since `v2.1.1`
+   */
+  public static removeMinutes(date: DateLike, minutes: number): Date {
+    Dates.nonNegative(minutes);
+    const dateObj = Dates.tryParse(date);
+    if (minutes !== 0) {
+      dateObj.setMinutes(dateObj.getMinutes() - minutes);
+    }
+    return dateObj;
+  }
+
+  /**
+   * Removes the given number of months from the specified date.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {Number} months Contains the number of months to remove.
+   * @return {Date} a date object.
+   *
+   * @since `v2.1.1`
+   */
+  public static removeMonths(date: DateLike, months: number): Date {
+    Dates.nonNegative(months);
+    const dateObj = Dates.tryParse(date);
+    if (months !== 0) {
+      dateObj.setMonth(dateObj.getMonth() - months);
+    }
+    return dateObj;
+  }
+
+  /**
+   * Removes the given number of seconds from the specified date.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {Number} seconds Contains the number of seconds to remove.
+   * @return {Date} a date object.
+   *
+   * @since `v2.1.1`
+   */
+  public static removeSeconds(date: DateLike, seconds: number): Date {
+    Dates.nonNegative(seconds);
+    const dateObj = Dates.tryParse(date);
+    if (seconds !== 0) {
+      dateObj.setSeconds(dateObj.getSeconds() - seconds);
+    }
+    return dateObj;
+  }
+
+  /**
+   * Removes the given number of weeks from the specified date.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {Number} weeks Contains the number of weeks to remove.
+   * @return {Date} a date object.
+   *
+   * @since `v2.1.1`
+   */
+  public static removeWeeks(date: DateLike, weeks: number): Date {
+    return Dates.removeDays(date, weeks * 7);
+  }
+
+  /**
+   * Removes the given number of years from the specified date.
+   *
+   * @param {Date} date Contains a date object, an ISO 8601 date string
+   * or the milliseconds from midnight, January 1, 1970 UTC.
+   * @param {Number} years Contains the number of years to remove.
+   * @return {Date} a date object.
+   *
+   * @since `v2.1.1`
+   */
+  public static removeYears(date: DateLike, years: number): Date {
+    return Dates.removeMonths(date, years * 12);
   }
 
   /**
@@ -756,7 +942,7 @@ export abstract class Dates {
       other: DateLike,
       round: boolean = false,
   ): number {
-    const secs = Dates.millisecondsDifference(date, other) / Dates.MS_IN_MINUTE;
+    const secs = Dates.millisecondsDifference(date, other) / Dates.MS_IN_SECOND;
     return round ? Math.round(secs) : secs;
   }
 

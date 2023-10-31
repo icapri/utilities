@@ -48,6 +48,14 @@
 
 ## `v2.0.4` - 2023-10-27
 ### Added
-* Added `Dates.getWeekNumber()`.
+* Added `Dates.getWeek()`.
 ### Changed
 * A bug related to `Dates.parse()` was fixed.
+
+## `v2.1.1` - 2023-10-31
+### Added
+* Added `Dates.currentWeek`, `Dates.firstDayOfWeek()`, `Dates.getStdTimezoneOffset()`,
+`Dates.isDST()`, `Dates.removeMilliseconds()`, `Dates.removeMinutes()`, `Dates.removeMonths()`,
+`Dates.removeSeconds()`, `Dates.removeWeeks()`, `Dates.removeYears()`.
+### Changed
+* A lot of existing `Dates` methods were also refactored.
