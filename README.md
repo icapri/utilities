@@ -5,14 +5,9 @@
 </p>
 <p align="center"><i>A modern framework for conversion, formatting, parsing, validation, and more.</i></p>
 
-<p>
-  <a href="https://www.npmjs.com/package/utilitates">
-    <img src="https://img.shields.io/npm/v/utilitates?color=33cd56&logo=npm&label=Version">
-  </a>
-  <a href="https://github.com/icapri/utilities/blob/main/LICENSE">
-    <img src="https://img.shields.io/badge/License-MIT-purple.svg">
-  </a>
-</p>
+[![Version](https://img.shields.io/npm/v/utilitates?color=33cd56&logo=npm&label=Version)](https://www.npmjs.com/package/utilitates)
+[![License](https://img.shields.io/badge/License-MIT-purple.svg)](https://github.com/icapri/utilities/blob/main/LICENSE)
+[![Downloads](https://img.shields.io/npm/dm/utilitates.svg)](https://www.npmjs.com/package/utilitates)
 
 ## Description
 
@@ -182,7 +177,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v2.1.3
+Latest stable: v2.1.5
 
 ## License
 
