@@ -216,14 +216,12 @@ export abstract class Utils {
     | symbol
     | undefined {
     const type = typeof value;
-    return Utils.isNull(value) || [
-      'string',
-      'number',
-      'bigint',
-      'boolean',
-      'symbol',
-      'undefined',
-    ].includes(type);
+    return value === null ||
+      type === 'boolean' ||
+      type === 'number' ||
+      type === 'string' ||
+      type === 'symbol' ||
+      type === 'undefined';
   }
 
   /**

@@ -1796,6 +1796,32 @@ export abstract class Strings {
   }
 
   /**
+   * Generates a random string.
+   *
+   * **Usage Examples:**
+   * ```typescript
+   * Strings.random(3, "abc"); // "cbc"
+   * Strings.random(5); // "BZOke"
+   * Strings.random(16); // "nHmFULXkUiIMohzq"
+   * ```
+   *
+   * @param {Number} length Contains the length of the string to be generated.
+   * @param {String} charset Contains the charset. Defaults to "A-Za-z0-9".
+   * @return {String} a random string.
+   */
+  public static random(length: number, charset?: string): string {
+    let r = '';
+    charset ??=
+      '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    const charactersLength = charset.length;
+    let i = 0;
+    for (; i < length; i++) {
+      r += charset.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return r;
+  }
+
+  /**
    * Removes all the string parts in the specified string which match the
    * specified substring.
    *

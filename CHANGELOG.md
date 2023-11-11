@@ -65,3 +65,7 @@
 * Added `Dates.weeksDifference()`.
 ### Changed
 * A lot of existing `Dates` methods were also refactored.
+
+## `v2.1.6` - 2023-11-11
+### Added
+* Added `Strings.random()`.
