@@ -27,6 +27,15 @@ describe('Sets', () => {
     expect(Sets.isSet(set)).toEqual(true);
   });
 
+  test('Sets.isSetIterator()', () => {
+    expect(Sets.isSetIterator()).toEqual(false);
+    expect(Sets.isSetIterator(null)).toEqual(false);
+    expect(Sets.isSetIterator(undefined)).toEqual(false);
+    expect(Sets.isSetIterator(Set)).toEqual(false);
+    const set = new Set();
+    expect(Sets.isSetIterator(set.keys())).toEqual(true);
+  });
+
   test('Sets.isWeakSet()', () => {
     expect(Sets.isWeakSet()).toEqual(false);
     expect(Sets.isWeakSet({})).toEqual(false);

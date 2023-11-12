@@ -18,6 +18,15 @@ describe('Maps', () => {
     expect(Maps.isMap(!1)).toBeFalsy();
   });
 
+  test('Maps.isMapIterator()', () => {
+    expect(Maps.isMapIterator()).toEqual(false);
+    expect(Maps.isMapIterator(null)).toEqual(false);
+    expect(Maps.isMapIterator(undefined)).toEqual(false);
+    expect(Maps.isMapIterator(Map)).toEqual(false);
+    const map = new Map();
+    expect(Maps.isMapIterator(map.keys())).toEqual(true);
+  });
+
   test('Maps.isNotEmpty()', () => {
     const map = new Map();
     expect(Maps.isNotEmpty(map)).toBeFalsy();

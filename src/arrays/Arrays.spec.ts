@@ -132,6 +132,23 @@ describe('Arrays', () => {
     expect(Arrays.isIdentical(['a', 'a', 'a'])).toEqual(true);
   });
 
+  test('Arrays.isIterable()', () => {
+    expect(Arrays.isIterable()).toEqual(false);
+    expect(Arrays.isIterable(undefined)).toEqual(false);
+    expect(Arrays.isIterable(null)).toEqual(false);
+    expect(Arrays.isIterable(true)).toEqual(false);
+    expect(Arrays.isIterable(() => true)).toEqual(false);
+    expect(Arrays.isIterable(() => true)).toEqual(false);
+
+    expect(Arrays.isIterable('abc')).toEqual(true);
+    const map = new Map();
+    const set = new Set();
+    expect(Arrays.isIterable(map)).toEqual(true);
+    expect(Arrays.isIterable(set)).toEqual(true);
+    expect(Arrays.isIterable([])).toEqual(true);
+    expect(Arrays.isIterable(['a', 'b', 'c'])).toEqual(true);
+  });
+
   test('Arrays.isNotEmpty()', () => {
     expect(Arrays.isNotEmpty([])).toEqual(false);
     expect(Arrays.isNotEmpty([null])).toEqual(true);
@@ -217,6 +234,19 @@ describe('Arrays', () => {
   test('Arrays.sum()', () => {
     const array = [1, 2, 3, 4, 5];
     expect(Arrays.sum(array)).toEqual(15);
+  });
+
+  test('Arrays.toArray()', () => {
+    const set = new Set();
+    const iterable1 = set.keys();
+    const map = new Map();
+    const iterable2 = map.values();
+    const iterable3 = map.keys();
+    const iterable4 = map.entries();
+    expect(Arrays.isArray(Arrays.toArray(iterable1))).toBeTruthy();
+    expect(Arrays.isArray(Arrays.toArray(iterable2))).toBeTruthy();
+    expect(Arrays.isArray(Arrays.toArray(iterable3))).toBeTruthy();
+    expect(Arrays.isArray(Arrays.toArray(iterable4))).toBeTruthy();
   });
 
   test('Arrays.unique()', () => {

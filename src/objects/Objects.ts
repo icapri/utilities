@@ -195,7 +195,8 @@ export abstract class Objects {
    */
   public static hasProperty<T extends object>(
       obj: T, key: string | number | symbol): key is keyof T {
-    return Object.prototype.hasOwnProperty.call(obj, key);
+    const hasOwnProperty = Utils.uncurry(Object.prototype.hasOwnProperty);
+    return hasOwnProperty(obj, key);
   }
 
   /**
@@ -458,7 +459,8 @@ export abstract class Objects {
    * @since v1.5.8
    */
   public static toString(obj?: any): string {
-    return Object.prototype.toString.call(obj);
+    const str = Utils.uncurry(Object.prototype.toString);
+    return str(obj);
   }
 }
 

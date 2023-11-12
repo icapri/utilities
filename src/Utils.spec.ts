@@ -14,6 +14,11 @@ describe('Utils', () => {
     expect(Utils.isBoolean([])).toEqual(false);
   });
 
+  test('Utils.isDataView()', () => {
+    const dataView1 = new DataView(new ArrayBuffer(1), 0, 1);
+    expect(Utils.isDataView(dataView1)).toEqual(true);
+  });
+
   test('Utils.isDefined()', () => {
     expect(Utils.isDefined()).toEqual(false);
     expect(Utils.isDefined(undefined)).toEqual(false);
@@ -59,23 +64,6 @@ describe('Utils', () => {
     expect(Utils.isFunction(true)).toEqual(false);
     expect(Utils.isFunction(() => true)).toEqual(true);
     expect(Utils.isFunction(fn)).toEqual(true);
-  });
-
-  test('Utils.isIterable()', () => {
-    expect(Utils.isIterable()).toEqual(false);
-    expect(Utils.isIterable(undefined)).toEqual(false);
-    expect(Utils.isIterable(null)).toEqual(false);
-    expect(Utils.isIterable(true)).toEqual(false);
-    expect(Utils.isIterable(() => true)).toEqual(false);
-    expect(Utils.isIterable(fn)).toEqual(false);
-
-    expect(Utils.isIterable('abc')).toEqual(true);
-    const map = new Map();
-    const set = new Set();
-    expect(Utils.isIterable(map)).toEqual(true);
-    expect(Utils.isIterable(set)).toEqual(true);
-    expect(Utils.isIterable([])).toEqual(true);
-    expect(Utils.isIterable(['a', 'b', 'c'])).toEqual(true);
   });
 
   test('Utils.isNotNil()', () => {
@@ -165,6 +153,19 @@ describe('Utils', () => {
     expect(Utils.isSymbol(Symbol())).toEqual(true);
     expect(Utils.isSymbol(Symbol('abc'))).toEqual(true);
     expect(Utils.isSymbol(Symbol('foobar'))).toEqual(true);
+  });
+
+  test('Utils.isSymbolObject()', () => {
+    expect(Utils.isSymbolObject()).toEqual(false);
+    expect(Utils.isSymbolObject(null)).toEqual(false);
+    expect(Utils.isSymbolObject(undefined)).toEqual(false);
+    expect(Utils.isSymbolObject(Symbol.iterator)).toEqual(false);
+    expect(Utils.isSymbolObject(/a/gm)).toEqual(false);
+    expect(Utils.isSymbolObject(new RegExp('abc', 'g'))).toEqual(false);
+    expect(Utils.isSymbolObject(Symbol())).toEqual(false);
+    expect(Utils.isSymbolObject(Symbol('abc'))).toEqual(false);
+    expect(Utils.isSymbolObject(Symbol('foobar'))).toEqual(false);
+    expect(Utils.isSymbolObject(Object(Symbol('foo')))).toEqual(true);
   });
 
   test('Utils.isTruthy()', () => {

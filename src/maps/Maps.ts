@@ -34,6 +34,18 @@ export abstract class Maps {
   }
 
   /**
+   * Checks whether the specified value is a Map iterator.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is a Map iterator.
+   */
+  public static isMapIterator(
+      value?: any,
+  ): value is IterableIterator<[any, any]> {
+    return Objects.toString(value) === '[object Map Iterator]';
+  }
+
+  /**
    * Checks whether the given map is not empty.
    *
    * @param {Map} map Contains some map.

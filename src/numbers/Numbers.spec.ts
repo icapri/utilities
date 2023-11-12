@@ -14,6 +14,23 @@ describe('Numbers', () => {
     expect(Numbers.compare(11, 5)).toEqual(1);
   });
 
+  test('Numbers.isBigInt()', () => {
+    expect(Numbers.isBigInt()).toEqual(false);
+    expect(Numbers.isBigInt(null)).toEqual(false);
+    expect(Numbers.isBigInt(undefined)).toEqual(false);
+    expect(Numbers.isBigInt(123)).toEqual(false);
+    expect(Numbers.isBigInt(BigInt('1234567'))).toEqual(true);
+    expect(Numbers.isBigInt(Object(BigInt('1234567')))).toEqual(false);
+  });
+
+  test('Numbers.isBigIntObject()', () => {
+    expect(Numbers.isBigIntObject()).toEqual(false);
+    expect(Numbers.isBigIntObject(null)).toEqual(false);
+    expect(Numbers.isBigIntObject(undefined)).toEqual(false);
+    expect(Numbers.isBigIntObject(123)).toEqual(false);
+    expect(Numbers.isBigIntObject(Object(BigInt('1234567')))).toEqual(true);
+  });
+
   test('Numbers.isInteger()', () => {
     expect(Numbers.isInteger(1)).toEqual(true);
     expect(Numbers.isInteger(.9)).toEqual(false);

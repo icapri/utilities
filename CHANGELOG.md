@@ -69,3 +69,8 @@
 ## `v2.1.6` - 2023-11-11
 ### Added
 * Added `Strings.random()`.
+
+## `v3.1.1` - 2023-11-12
+### Added
+* Added lots of other validators, parsers, converters, formatters, etc.
+* Refactored lots of existing methods.

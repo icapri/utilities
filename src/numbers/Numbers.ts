@@ -1,4 +1,5 @@
 import {Objects} from '../objects/Objects';
+import {Utils} from '../Utils';
 
 /**
  * Defines an abstract class with number utilities.
@@ -47,6 +48,29 @@ export abstract class Numbers {
     }
 
     return 0;
+  }
+
+  /**
+   * Checks whether the specified value is a `bigint` primitive.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is a `bigint` primitive.
+   */
+  public static isBigInt(value?: any): value is bigint {
+    return typeof value === 'bigint';
+  }
+
+  /**
+   * Checks whether the specified value is a `BigInt` object.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is a `BigInt` object.
+   */
+  public static isBigIntObject(
+      value?: any,
+  ): value is (typeof BigInt extends undefined ? false : BigInt) {
+    return Utils.isDefined(BigInt) &&
+    Utils.__isPrimitiveWrapperSupported(value, BigInt);
   }
 
   /**

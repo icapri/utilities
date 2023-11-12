@@ -15,8 +15,8 @@ export abstract class Blobs {
    *
    * @since v1.6.1
    */
-  private static readonly URL = Utils.globalScope.URL ||
-    Utils.globalScope.webkitURL;
+  private static readonly URL = Utils.globalThat.URL ||
+    Utils.globalThat.webkitURL;
 
   /**
    * Converts a `File` object to a `Blob` object asynchronously.

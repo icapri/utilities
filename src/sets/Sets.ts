@@ -44,6 +44,16 @@ export abstract class Sets {
   }
 
   /**
+   * Checks whether the specified value is a Set iterator.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is a Set iterator.
+   */
+  public static isSetIterator(value?: any): value is IterableIterator<any> {
+    return Objects.toString(value) === '[object Set Iterator]';
+  }
+
+  /**
    * Checks whether the given value is of type `WeakSet`.
    *
    * @param {*} value Contains some value.

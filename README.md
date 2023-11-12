@@ -160,7 +160,6 @@ Utils.isDefined(false); // true
 Utils.isError(new TypeError('abc')); // true
 Utils.isFile(new File([], "abc")); // true
 Utils.isFunction(() => {}); // true
-Utils.isIterable(new Set()); // true
 Utils.isNullOrUndefined(undefined); // true
 Utils.isPrimitive("abc"); // true
 Utils.isPromise(Promise.resolve()); // true
@@ -177,7 +176,7 @@ Please contact me if you would like to contribute to utilitates.
 
 ## Roadmap
 
-Latest stable: v2.1.6
+Latest stable: v3.1.1
 
 ## License
 

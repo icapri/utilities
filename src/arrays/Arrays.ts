@@ -12,6 +12,37 @@ export abstract class Arrays {
   public static readonly EMPTY: readonly [] = [] as const;
 
   /**
+   * Contains all the possible typed arrays.
+   */
+  private static readonly TYPED_ARRAYS: Array<string> = [
+    'BigInt64Array',
+    'BigUint64Array',
+    'Float32Array',
+    'Float64Array',
+    'Int16Array',
+    'Int32Array',
+    'Int8Array',
+    'Uint16Array',
+    'Uint32Array',
+    'Uint8Array',
+    'Uint8ClampedArray',
+  ];
+
+  /**
+   * Gets the supported typed arrays.
+   */
+  public static get supportedTypedArrays(): Array<string> {
+    const globalThat: any = Utils.globalThat, r = [], s = Arrays.TYPED_ARRAYS;
+    let i = 0;
+    for (; i < s.length; i++) {
+      if (Utils.isFunction(globalThat[s[i]])) {
+        r[r.length] = s[i];
+      }
+    }
+    return r;
+  }
+
+  /**
    * @constructor
    *
    * @private
@@ -443,6 +474,38 @@ export abstract class Arrays {
   }
 
   /**
+   * Checks whether the specified value is an array buffer view.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is an array buffer view.
+   */
+  public static isArrayBufferView(value?: any): boolean {
+    return (Utils.isDefined(ArrayBuffer) &&
+      Utils.isFunction(ArrayBuffer.isView)) ? ArrayBuffer.isView(value) :
+      (Arrays.isTypedArray(value) || Utils.isDataView(value));
+  }
+
+  /**
+   * Checks whether the specified value is of type `BigInt64Array`.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is of type `BigInt64Array`.
+   */
+  public static isBigInt64Array(value?: any): value is BigInt64Array {
+    return Objects.toString(value) === '[object BigInt64Array]';
+  }
+
+  /**
+   * Checks whether the specified value is of type `BigUint64Array`.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is of type `BigUint64Array`.
+   */
+  public static isBigUint64Array(value?: any): value is BigUint64Array {
+    return Objects.toString(value) === '[object BigUint64Array]';
+  }
+
+  /**
    * Checks whether the specified array of numbers is a binary array i. e.
    * whether its values are only `0` and `1`.
    *
@@ -507,6 +570,26 @@ export abstract class Arrays {
   }
 
   /**
+   * Checks whether the specified value is of type `Float32Array`.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is of type `Float32Array`.
+   */
+  public static isFloat32Array(value?: any): value is Float32Array {
+    return Objects.toString(value) === '[object Float32Array]';
+  }
+
+  /**
+   * Checks whether the specified value is of type `Float64Array`.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is of type `Float64Array`.
+   */
+  public static isFloat64Array(value?: any): value is Float64Array {
+    return Objects.toString(value) === '[object Float64Array]';
+  }
+
+  /**
    * Checks whether the specified array is identical i. e. whether
    * all the array items are equal to one another.
    *
@@ -533,6 +616,46 @@ export abstract class Arrays {
       }
     }
     return true;
+  }
+
+  /**
+   * Checks whether the specified value is of type `Int16Array`.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is of type `Int16Array`.
+   */
+  public static isInt16Array(value?: any): value is Int16Array {
+    return Objects.toString(value) === '[object Int16Array]';
+  }
+
+  /**
+   * Checks whether the specified value is of type `Int8Array`.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is of type `Int8Array`.
+   */
+  public static isInt8Array(value?: any): value is Int8Array {
+    return Objects.toString(value) === '[object Int8Array]';
+  }
+
+  /**
+   * Checks whether the specified value is of type `Int32Array`.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is of type `Int32Array`.
+   */
+  public static isInt32Array(value?: any): value is Int32Array {
+    return Objects.toString(value) === '[object Int32Array]';
+  }
+
+  /**
+   * Checks whether the specified value is an iterable object.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is an iterable object.
+   */
+  public static isIterable(value?: any): boolean {
+    return Utils.isNotNil(value) && Utils.isFunction(value[Symbol.iterator]);
   }
 
   /**
@@ -636,17 +759,51 @@ export abstract class Arrays {
    * `Uint16Array`, `Uint16Array`
    */
   public static isTypedArray(value?: any): boolean {
-    return Utils.isNotNil(value) && Numbers.isNumber(value.length) && [
-      '[object Int8Array]',
-      '[object Int16Array]',
-      '[object Int32Array]',
-      '[object Float32Array]',
-      '[object Float64Array]',
-      '[object Uint8Array]',
-      '[object Uint8ClampedArray]',
-      '[object Uint16Array]',
-      '[object Uint32Array]',
-    ].includes(Objects.toString(value));
+    return Utils.isNotNil(value) && Numbers.isNumber(value.length) &&
+      Arrays.supportedTypedArrays
+          .map((typedArray) => `[object ${typedArray}]`)
+          .includes(Objects.toString(value));
+  }
+
+  /**
+   * Checks whether the specified value is of type `Uint16Array`.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is of type `Uint16Array`.
+   */
+  public static isUint16Array(value?: any): value is Uint16Array {
+    return Objects.toString(value) === '[object Uint16Array]';
+  }
+
+  /**
+   * Checks whether the specified value is of type `Uint32Array`.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is of type `Uint32Array`.
+   */
+  public static isUint32Array(value?: any): value is Uint32Array {
+    return Objects.toString(value) === '[object Uint32Array]';
+  }
+
+  /**
+   * Checks whether the specified value is of type `Uint8Array`.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is of type `Uint8Array`.
+   */
+  public static isUint8Array(value?: any): value is Uint8Array {
+    return Objects.toString(value) === '[object Uint8Array]';
+  }
+
+  /**
+   * Checks whether the specified value is of type `Uint8ClampedArray`.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is of type
+   * `Uint8ClampedArray`.
+   */
+  public static isUint8ClampedArray(value?: any): value is Uint8ClampedArray {
+    return Objects.toString(value) === '[object Uint8ClampedArray]';
   }
 
   /**
@@ -908,6 +1065,19 @@ export abstract class Arrays {
         (prev: number, curr: number) => prev + curr,
         0,
     );
+  }
+
+  /**
+   * Converts an iterable object to array.
+   *
+   * @param {Iterable} iterable Contains an iterable.
+   * @return {Array} an array.
+   */
+  public static toArray<T>(iterable: Iterable<T>): T[] {
+    if (Arrays.isIterable(iterable)) {
+      return [...iterable];
+    }
+    throw new TypeError('Non-iterable object.');
   }
 
   /**

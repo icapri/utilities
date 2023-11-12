@@ -1,4 +1,5 @@
 import {Numbers} from '../numbers/Numbers';
+import {Objects} from '../objects/Objects';
 import {Strings} from '../strings/Strings';
 
 type DateLike = Date | number | string;
@@ -558,8 +559,7 @@ export abstract class Dates {
    * @return {Boolean} whether the given value is a date object.
    */
   public static isDateObject(value?: any): value is Date {
-    const proto = Object.prototype.toString.call(value);
-    return proto === '[object Date]';
+    return Objects.toString(value) === '[object Date]';
   }
 
   /**

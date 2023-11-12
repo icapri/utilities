@@ -1,4 +1,12 @@
+import {Numbers} from './numbers/Numbers';
 import {Objects} from './objects/Objects';
+
+/**
+ * Represents an asynchronous function.
+ */
+type AsyncFunction <
+  TArgs extends Array<any> = Array<any>,
+  TReturn = any> = (...args: TArgs) => Promise<TReturn>;
 
 /**
  * Represents the type of a class.
@@ -13,6 +21,20 @@ type ConstructorType<T = any> = new(...args: any[]) => T;
  * @since v1.5.6
  */
 type FunctionType<T = any> = (...args: any[]) => T;
+
+/**
+ * @private
+ */
+type ThisArgsFn<T = any> = (thisArg: T, ...args: any[]) => T;
+
+/**
+ * Defines the type of a primitive wrapper constructor.
+ */
+interface PrimitiveWrapperCtor {
+  prototype: {
+      valueOf: FunctionType
+  }
+}
 
 /**
  * Defines a base utility class.
@@ -30,18 +52,31 @@ export abstract class Utils {
   /**
    * Gets the global object.
    */
-  public static get globalScope(): typeof globalThis |
+  public static get globalThat(): typeof globalThis |
     (Window & typeof globalThis) {
+    if (Utils.isDefined(globalThis)) {
+      return globalThis;
+    }
+    if (Objects.isObject(global) && global.global === global) {
+      return global;
+    }
     if (Objects.isObject(window) && window.window === window) {
       return window;
     }
     if (Objects.isObject(self) && self.self === self) {
       return self;
     }
-    if (Objects.isObject(global) && global.global === global) {
-      return global;
-    }
     throw new Error('Noop!');
+  }
+
+  /**
+   * Checks whether the specified value is an asynchronous function.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is an asynchronous function.
+   */
+  public static isAsyncFunction(value?: any): value is AsyncFunction {
+    return Objects.toString(value) === '[object AsyncFunction]';
   }
 
   /**
@@ -52,6 +87,22 @@ export abstract class Utils {
    */
   public static isBoolean(value?: any): value is boolean {
     return typeof value === 'boolean';
+  }
+
+  /**
+   * Checks whether the specified value is of type `DataView`.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is of type `DataView`.
+   */
+  public static isDataView(value?: any): value is DataView {
+    return Utils.isDefined(DataView) &&
+      Utils.isDefined(ArrayBuffer) &&
+      Objects.toString(
+          new DataView(new ArrayBuffer(1), 0, 1),
+      ) === '[object DataView]' ?
+        Objects.toString(value) === '[object DataView]' :
+        value instanceof DataView;
   }
 
   /**
@@ -139,13 +190,13 @@ export abstract class Utils {
   }
 
   /**
-   * Checks whether the specified value is an iterable object.
+   * Checks whether the specified value is a generator object.
    *
    * @param {*} value Contains some value.
-   * @return {Boolean} whether the specified value is an iterable object.
+   * @return {Boolean} whether the specified value is a generator object.
    */
-  public static isIterable(value?: any): boolean {
-    return Utils.isNotNil(value) && Utils.isFunction(value[Symbol.iterator]);
+  public static isGeneratorObject(value?: any): value is Generator {
+    return Objects.toString(value) === '[object Generator]';
   }
 
   /**
@@ -233,7 +284,12 @@ export abstract class Utils {
    * @since v1.5.6
    */
   public static isPromise(value?: any): value is Promise<any> {
-    return Objects.toString(value) === '[object Promise]';
+    return (Utils.isDefined(Promise) && value instanceof Promise) ||
+      (Objects.isObject(value) &&
+        Utils.isFunction((value as any).then) &&
+        Utils.isFunction((value as any).catch)
+        // there is a finally method in the newer versions of Promise
+      );
   }
 
   /**
@@ -270,6 +326,19 @@ export abstract class Utils {
   }
 
   /**
+   * Checks whether the specified value is a `Symbol` object.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is a `Symbol` object.
+   */
+  public static isSymbolObject(
+      value?: any,
+  ): value is (typeof Symbol extends undefined ? false : Symbol) {
+    return Utils.isDefined(Symbol) &&
+    Utils.__isPrimitiveWrapperSupported(value, Symbol);
+  }
+
+  /**
    * Checks whether the given value is not falsy i. e. not: `null`, `undefined`,
    * `false`, `NaN`, `0`, `-0`, `0n` or `''`.
    *
@@ -288,11 +357,74 @@ export abstract class Utils {
    * @return {Boolean} whether the given value is not defined.
    */
   public static isUndefined(value?: any): value is undefined {
-    return value === void 0;
+    return typeof value === 'undefined' || value === undefined;
+  }
+
+  /**
+   * Checks whether the specified value is a web assembly module.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is a web assembly module.
+   */
+  public static isWebAssemblyCompiledModule(
+      value?: any,
+  ): value is WebAssembly.Module {
+    return Objects.toString(value) === '[object WebAssembly.Module]';
+  }
+
+  /**
+   * Checks whether the specified value is a primitive wrapper object.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is a primitive wrapper
+   * object.
+   */
+  public static isWrappedPrimitive(value?: any): boolean {
+    const t = Objects.toString(value);
+    return t === '[object Boolean]' ||
+      t === '[object Number]' ||
+      t === '[object String]' ||
+      Numbers.isBigIntObject(value) ||
+      Utils.isSymbolObject(value);
+  }
+
+  /**
+   * Uncurries the specified function.
+   *
+   * @param {Function} func Contains some function.
+   * @return {ThisArgsFn} an uncurried function.
+   */
+  public static uncurry(func: FunctionType): ThisArgsFn {
+    return func.call.bind(func);
+  }
+
+  /**
+   * Checks whether the specified wrapper type is supported.
+   *
+   * @param {*} value Contains some value.
+   * @param {TWrapper} wrapperType Contains the wrapper type constructor.
+   * @return {Boolean} whether the specified wrapper type is supported.
+   *
+   * @private
+   */
+  public static __isPrimitiveWrapperSupported<
+    TWrapper extends PrimitiveWrapperCtor
+  >(value: any, wrapperType: TWrapper): boolean {
+    if (Objects.isObject(value) && Utils.isDefined(wrapperType)) {
+      const valueOfType = Utils.uncurry(wrapperType.prototype.valueOf as any);
+      try {
+        valueOfType(value);
+        return true;
+      } catch (_) {
+        return false;
+      }
+    }
+    return false;
   }
 }
 
 export type {
+  AsyncFunction,
   ConstructorType,
   FunctionType,
 };
