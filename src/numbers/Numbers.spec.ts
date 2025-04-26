@@ -41,7 +41,7 @@ describe('Numbers', () => {
     expect(Numbers.isInteger(-0)).toEqual(true);
     expect(Numbers.isInteger(Number.NaN)).toEqual(false);
     expect(Numbers.isInteger(Number.POSITIVE_INFINITY)).toEqual(false);
-    expect(Numbers.isInteger(Number.MAX_SAFE_INTEGER + 1)).toEqual(false);
+    expect(Numbers.isInteger(Number.MAX_SAFE_INTEGER + 1, true)).toEqual(false);
   });
 
   test('Numbers.isNatural()', () => {
@@ -54,7 +54,7 @@ describe('Numbers', () => {
     expect(Numbers.isNatural(-0)).toEqual(true);
     expect(Numbers.isNatural(Number.NaN)).toEqual(false);
     expect(Numbers.isNatural(Number.POSITIVE_INFINITY)).toEqual(false);
-    expect(Numbers.isNatural(Number.MAX_SAFE_INTEGER + 1)).toEqual(false);
+    expect(Numbers.isNatural(Number.MAX_SAFE_INTEGER + 1, true)).toEqual(false);
   });
 
   test('Numbers.isNotNumber()', () => {
@@ -85,7 +85,8 @@ describe('Numbers', () => {
     expect(Numbers.isPositiveInteger(Number.NaN)).toEqual(false);
     expect(Numbers.isPositiveInteger(Number.POSITIVE_INFINITY)).toEqual(false);
     expect(
-        Numbers.isPositiveInteger(Number.MAX_SAFE_INTEGER + 1)).toEqual(false);
+        Numbers.isPositiveInteger(
+            Number.MAX_SAFE_INTEGER + 1, true)).toEqual(false);
   });
 
   test('Numbers.isPrime()', () => {

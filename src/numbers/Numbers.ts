@@ -6,6 +6,16 @@ import {Utils} from '../Utils';
  */
 export abstract class Numbers {
   /**
+   * Contains the max safe integer.
+   */
+  public static readonly MAX_SAFE_INT: number = 9007199254740991;
+
+  /**
+   * Contains the min safe integer.
+   */
+  public static readonly MIN_SAFE_INT: number = -9007199254740991;
+
+  /**
    * @constructor
    *
    * @private
@@ -77,21 +87,40 @@ export abstract class Numbers {
    * Checks whether the given value is a positive integer.
    *
    * @param {*} value Contains some value.
+   * @param {Boolean} safeInt Contains whether the integer should be between
+   * `Number.MIN_SAFE_INTEGER` and `Number.MAX_SAFE_INTEGER`. Defaults to
+   * `false`.
    * @return {Boolean} whether the given value is an integer.
    */
-  public static isInteger(value?: any): value is number {
-    return Numbers.isNumber(value) && Number.isSafeInteger(value);
+  public static isInteger(
+      value?: any,
+      safeInt: boolean = false,
+  ): value is number {
+    const isIntR = Numbers.isNumber(value) && Math.floor(value) === value;
+    if (safeInt) {
+      return Number.isSafeInteger && isIntR && Number.isSafeInteger(value);
+    }
+
+    return (Number.isInteger && isIntR && Number.isInteger(value)) ||
+      (isIntR && value <= Numbers.MAX_SAFE_INT &&
+        value >= Numbers.MIN_SAFE_INT);
   }
 
   /**
    * Checks whether the given value is greater than or equal 0.
    *
    * @param {*} value Contains some value.
+   * @param {Boolean} safeInt Contains whether the integer should be between
+   * 1 and `Number.MAX_SAFE_INTEGER`. Defaults to
+   * `false`.
    * @return {Boolean} whether the given value is a natural number
    * i. e. greater than or equal 0.
    */
-  public static isNatural(value?: any): value is number {
-    return Numbers.isInteger(value) && value >= 0;
+  public static isNatural(
+      value?: any,
+      safeInt: boolean = false,
+  ): value is number {
+    return Numbers.isInteger(value, safeInt) && value >= 0;
   }
 
   /**
@@ -142,10 +171,16 @@ export abstract class Numbers {
    * Checks whether the given value is a positive integer.
    *
    * @param {*} value Contains some value.
+   * @param {Boolean} safeInt Contains whether the integer should be between
+   * 1 and `Number.MAX_SAFE_INTEGER`. Defaults to
+   * `false`.
    * @return {Boolean} whether the given value is a positive integer.
    */
-  public static isPositiveInteger(value?: any): value is number {
-    return Numbers.isInteger(value) && value > 0;
+  public static isPositiveInteger(
+      value?: any,
+      safeInt: boolean = false,
+  ): value is number {
+    return Numbers.isInteger(value, safeInt) && value > 0;
   }
 
   /**

@@ -70,6 +70,18 @@ export abstract class Utils {
   }
 
   /**
+   * Checks whether the specified value is `arguments`.
+   *
+   * @param {*} value Contains some value.
+   * @return {Boolean} whether the specified value is `arguments`.
+   */
+  public static isArguments(value?: any): value is IArguments {
+    return Objects.isObject(value) &&
+      Numbers.isNumber((value as any).length) &&
+      Objects.toString(value) === '[object Arguments]';
+  }
+
+  /**
    * Checks whether the specified value is an asynchronous function.
    *
    * @param {*} value Contains some value.
@@ -197,6 +209,46 @@ export abstract class Utils {
    */
   public static isGeneratorObject(value?: any): value is Generator {
     return Objects.toString(value) === '[object Generator]';
+  }
+
+  /**
+   * Checks whether the specified value is a JSON string.
+   *
+   * @param {*} value Contains some value.
+   * @param {Boolean} approx Contains whether not to deep check the
+   * specified value whether it is a JSON string.
+   * @return {Boolean} whether the specified value is a JSON string.
+   */
+  public static isJson(value?: any, approx: boolean = false): boolean {
+    let i, r;
+    r = typeof value === 'string' && (value = value.trim()) !== '';
+    if (r) {
+      i = value.length - 1;
+      if (value[0] === '"') { // or v[0] is "'"
+        r = value[i] === value[0];
+        if (r) {
+          return r;
+        }
+      } else if (value[0] === '{') {
+        r = value[i] === '}';
+      } else if (value[0] === '[') {
+        r = value[i] === ']';
+      } else {
+        // eslint-disable-next-line max-len
+        r = value && /^(?:[-+]?(?:[0-9]+))?(?:\.[0-9]*)?(?:[eE][\+\-]?(?:[0-9]+))?$/.test(value);
+        if (r) {
+          return r;
+        }
+      }
+      if (r && !approx) {
+        try {
+          JSON.parse(value);
+        } catch (error) {
+          r = false;
+        }
+      }
+    }
+    return r;
   }
 
   /**

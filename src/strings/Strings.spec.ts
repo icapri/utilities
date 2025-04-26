@@ -707,6 +707,7 @@ describe('Strings', () => {
     expect(Strings.reverse('cba')).toEqual('abc');
     expect(Strings.reverse('cba edf')).toEqual('fde abc');
     expect(Strings.reverse('🤨🤗')).toEqual('🤗🤨');
+    expect(Strings.reverse('😃😄😁😆🤣')).toStrictEqual('🤣😆😁😄😃');
   });
 
   test('Strings.splice()', () => {

@@ -1991,7 +1991,10 @@ export abstract class Strings {
    * @since v1.4.3
    */
   public static reverse(str: string): string {
-    return str.length < 2 ? str : [...str].reverse().join('');
+    const a = [...str];
+    let r = '', l = a.length - 1;
+    while (l >= 0) r += a[l--];
+    return r;
   }
 
   /**
